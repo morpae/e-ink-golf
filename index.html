@@ -22,6 +22,8 @@
     }
     body.dark-mode .legend,
     body.dark-mode #info-panel,
+    body.dark-mode #control-panel,
+    body.dark-mode #perks-panel,
     body.dark-mode .scorecard-box,
     body.dark-mode .player-select-box,
     body.dark-mode .perk-card {
@@ -30,13 +32,15 @@
       border-color: #ffffff;
     }
     body.dark-mode button,
-    body.dark-mode .map-btn {
+    body.dark-mode .map-btn,
+    body.dark-mode .club-btn {
       background-color: #000000;
       color: #ffffff;
       border-color: #ffffff;
     }
     body.dark-mode button:active,
-    body.dark-mode .map-btn:active {
+    body.dark-mode .map-btn:active,
+    body.dark-mode .club-btn.active {
       background-color: #ffffff;
       color: #000000;
     }
@@ -80,8 +84,8 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 6px;
-      font-size: 0.75rem;
+      gap: 5px;
+      font-size: 0.72rem;
       border: 2px solid #000;
       padding: 4px;
       margin: 0 auto 6px auto;
@@ -91,9 +95,9 @@
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       font-weight: bold;
-      padding: 2px 4px;
+      padding: 1px 3px;
       border: 1px solid transparent;
       border-radius: 2px;
     }
@@ -116,14 +120,165 @@
       border-color: #ffffff;
     }
 
+    #canvas-container {
+      display: block;
+      position: relative;
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto 6px auto;
+    }
+
+    canvas#grid {
+      border: 3px solid #000000;
+      background: #ffffff;
+      touch-action: none;
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    #control-panel {
+      max-width: 480px;
+      margin: 0 auto 6px auto;
+      border: 2px solid #000000;
+      background: #fdfdfd;
+      padding: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .club-selector {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .club-btn {
+      flex: 1;
+      min-width: 80px;
+      background-color: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 5px 4px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .club-btn.active {
+      background-color: #000000;
+      color: #ffffff;
+    }
+    body.dark-mode .club-btn.active {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    .club-symbol {
+      font-size: 0.85rem;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .club-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.5px;
+    }
+    .action-group {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      min-width: 110px;
+      justify-content: flex-end;
+    }
+    .btn-action-main {
+      background-color: #000000;
+      color: #ffffff;
+      border: 2px solid #000000;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      min-height: 48px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    body.dark-mode .btn-action-main {
+      background-color: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+
     #info-panel {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: bold;
       margin: 0 auto 6px auto;
       max-width: 480px;
       background: #f0f0f0;
       border: 2px solid #000;
-      padding: 5px;
+      padding: 6px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .info-item {
+      display: inline-block;
+    }
+
+    #perks-panel {
+      max-width: 480px;
+      margin: 0 auto 6px auto;
+      border: 2px dashed #000000;
+      background: #f9f9f9;
+      padding: 6px;
+      font-size: 0.75rem;
+      text-align: left;
+    }
+    .perks-header {
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #000;
+      padding-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+    body.dark-mode .perks-header {
+      border-color: #fff;
+    }
+    .perks-tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .perk-tag {
+      background: #000000;
+      color: #ffffff;
+      padding: 2px 6px;
+      font-size: 0.68rem;
+      font-weight: bold;
+      border-radius: 2px;
+      display: inline-block;
+      border: 1px solid #000000;
+    }
+    body.dark-mode .perk-tag {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     .diff-tag {
@@ -140,52 +295,6 @@
       border-color: #fff;
     }
 
-    #canvas-container {
-      display: inline-block;
-      position: relative;
-      max-width: 480px;
-      width: 100%;
-    }
-
-    canvas#grid {
-      border: 3px solid #000000;
-      background: #ffffff;
-      touch-action: none;
-      display: block;
-      margin: 0 auto;
-      max-width: 100%;
-      height: auto;
-    }
-
-    .map-btn {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      font-size: 1.1rem;
-      font-family: inherit;
-      font-weight: bold;
-      border: 2px solid #000000;
-      background-color: #ffffff;
-      color: #000000;
-      cursor: pointer;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 2px 2px 0px #000000;
-    }
-    body.dark-mode .map-btn {
-      background-color: #000000;
-      color: #ffffff;
-      border-color: #ffffff;
-      box-shadow: 2px 2px 0px #ffffff;
-    }
-
-    #btn-roll { right: 8px; bottom: 42px; }
-    #btn-mulligan { left: 8px; bottom: 42px; }
-    #btn-next-quick { right: 8px; bottom: 42px; }
-
     #putt-banner, #turn-banner {
       display: none;
       background-color: #000000;
@@ -193,7 +302,7 @@
       padding: 5px;
       font-weight: bold;
       font-size: 0.85rem;
-      margin: 6px auto 0 auto;
+      margin: 0 auto 6px auto;
       max-width: 480px;
       border: 2px solid #000;
     }
@@ -297,6 +406,12 @@
       background: #fff;
       color: #000;
     }
+    .perk-card.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      background: #ccc;
+      color: #666;
+    }
     .perk-name {
       font-weight: bold;
       font-size: 0.95rem;
@@ -370,31 +485,62 @@
   </div>
 
   <div class="legend">
-    <div class="legend-item" id="leg-fairway"><canvas id="icon-fairway" width="16" height="16"></canvas> <span id="lbl-fairway">Calle</span></div>
-    <div class="legend-item" id="leg-green"><canvas id="icon-green" width="16" height="16"></canvas> <span id="lbl-green">Green</span></div>
-    <div class="legend-item" id="leg-rough"><canvas id="icon-rough" width="16" height="16"></canvas> <span id="lbl-rough">Rough</span></div>
-    <div class="legend-item" id="leg-water"><canvas id="icon-water" width="16" height="16"></canvas> <span id="lbl-water">Agua</span></div>
-    <div class="legend-item" id="leg-pine"><canvas id="icon-pine" width="16" height="16"></canvas> <span id="lbl-pine">Pino</span></div>
-    <div class="legend-item" id="leg-tree"><canvas id="icon-tree" width="16" height="16"></canvas> <span id="lbl-tree">Árbol</span></div>
-    <div class="legend-item" id="leg-sand"><canvas id="icon-sand" width="16" height="16"></canvas> <span id="lbl-sand">Búnker</span></div>
-    <div class="legend-item" id="leg-tee"><canvas id="icon-tee" width="16" height="16"></canvas> <span id="lbl-tee">Salida</span></div>
-    <div class="legend-item" id="leg-hole"><canvas id="icon-hole" width="16" height="16"></canvas> <span id="lbl-hole">Hoyo</span></div>
-  </div>
-
-  <div id="info-panel">
-    <span id="mode-display">Modo Libre</span><span id="diff-tag" class="diff-tag" style="display:none;">MEDIO</span> | <span id="lbl-dice">Dado</span>: <span id="dice-val">-</span>
+    <div class="legend-item" id="leg-fairway"><canvas id="icon-fairway" width="14" height="14"></canvas> <span id="lbl-fairway">Calle</span></div>
+    <div class="legend-item" id="leg-green"><canvas id="icon-green" width="14" height="14"></canvas> <span id="lbl-green">Green</span></div>
+    <div class="legend-item" id="leg-rough"><canvas id="icon-rough" width="14" height="14"></canvas> <span id="lbl-rough">Rough</span></div>
+    <div class="legend-item" id="leg-water"><canvas id="icon-water" width="14" height="14"></canvas> <span id="lbl-water">Agua</span></div>
+    <div class="legend-item" id="leg-pine"><canvas id="icon-pine" width="14" height="14"></canvas> <span id="lbl-pine">Pino</span></div>
+    <div class="legend-item" id="leg-tree"><canvas id="icon-tree" width="14" height="14"></canvas> <span id="lbl-tree">Árbol</span></div>
+    <div class="legend-item" id="leg-sand"><canvas id="icon-sand" width="14" height="14"></canvas> <span id="lbl-sand">Búnker</span></div>
+    <div class="legend-item" id="leg-tee"><canvas id="icon-tee" width="14" height="14"></canvas> <span id="lbl-tee">Salida</span></div>
+    <div class="legend-item" id="leg-hole"><canvas id="icon-hole" width="14" height="14"></canvas> <span id="lbl-hole">Hoyo</span></div>
   </div>
 
   <div id="turn-banner" style="display:none;">[ TURNO: J1 - 8 CASILLAS AL HOYO ]</div>
 
   <div id="canvas-container">
     <canvas id="grid" width="476" height="588"></canvas>
-    <button id="btn-roll" class="map-btn" title="Tirar Dado">[⚄]</button>
-    <button id="btn-mulligan" class="map-btn" style="display:none;" title="Mulligan">[↺]</button>
-    <button id="btn-next-quick" class="map-btn" style="display:none;" title="Siguiente Hoyo">[➔]</button>
   </div>
 
   <div id="putt-banner">[!] EN GREEN - PUTT DIRECTO ACTIVO</div>
+
+  <div id="control-panel">
+    <div class="club-selector">
+      <button id="club-driver" class="club-btn active" title="Driver (Dado 1 al 6)">
+        <span class="club-symbol">[DRIVER]</span>
+        <span class="club-label">(Dado 1 - 6)</span>
+      </button>
+      <button id="club-iron" class="club-btn" title="Hierro (Dado 1 al 4)">
+        <span class="club-symbol">[HIERRO]</span>
+        <span class="club-label">(Dado 1 - 4)</span>
+      </button>
+      <button id="club-wood" class="club-btn" title="Madera (Dado 1 al 3)">
+        <span class="club-symbol">[MADERA]</span>
+        <span class="club-label">(Dado 1 - 3)</span>
+      </button>
+    </div>
+    <div class="action-group">
+      <button id="btn-roll" class="btn-action-main">[⚄ TIRAR]</button>
+      <button id="btn-mulligan" class="btn-action-main" style="display:none;" title="Mulligan">[↺ MULLIGAN]</button>
+      <button id="btn-next-quick" class="btn-action-main" style="display:none;" title="Siguiente Hoyo">[➔ SIGUIENTE]</button>
+    </div>
+  </div>
+
+  <div id="info-panel">
+    <div class="info-item"><span id="mode-display">Modo Libre</span><span id="diff-tag" class="diff-tag" style="display:none;">MEDIO</span></div>
+    <div class="info-item"><span id="lbl-strokes-info">Golpes: 0/4</span></div>
+    <div class="info-item"><span id="lbl-dice">Dado</span>: <span id="dice-val">-</span></div>
+  </div>
+
+  <div id="perks-panel">
+    <div class="perks-header">
+      <span id="perks-header-title">MODIFICADORES ACTIVOS</span>
+      <span id="perks-count-lbl">0</span>
+    </div>
+    <div id="perks-tags-container" class="perks-tags-container">
+      <span class="perk-tag" style="background:transparent;color:inherit;padding:0;">Sin modificadores activos</span>
+    </div>
+  </div>
 
   <div id="player-select-modal">
     <div class="player-select-box">
@@ -422,9 +568,9 @@
   <div id="perk-modal">
     <div class="scorecard-box">
       <div class="scorecard-title">
-        <span>ELIGE UNA MEJORA</span>
+        <span id="perk-modal-title">ELIGE UNA MEJORA</span>
       </div>
-      <p style="font-size:0.8rem;margin-bottom:10px;">Selecciona una ventaja para los siguientes hoyos:</p>
+      <p id="perk-modal-subtitle" style="font-size:0.8rem;margin-bottom:10px;">Selecciona una ventaja para los siguientes hoyos:</p>
       <div id="perk-options-container" class="perk-grid"></div>
     </div>
   </div>
@@ -491,6 +637,14 @@
         SAND: 4, PINE: 5, DECIDUOUS: 6, TEE: 7, HOLE: 8
       };
 
+      const CLUBS = {
+        DRIVER: { name: 'DRIVER', maxDice: 6, icon: '[DRIVER]', rangeText: '(Dado 1 - 6)' },
+        IRON: { name: 'HIERRO', maxDice: 4, icon: '[HIERRO]', rangeText: '(Dado 1 - 4)' },
+        WOOD: { name: 'MADERA', maxDice: 3, icon: '[MADERA]', rangeText: '(Dado 1 - 3)' }
+      };
+
+      let selectedClub = CLUBS.DRIVER;
+
       const DIFF_LEVELS = { MEDIUM: 0, HARD: 1 };
       const TOTAL_HOLES = 8;
 
@@ -500,32 +654,39 @@
       let soundEnabled = true;
       let audioCtx = null;
 
-      let playerPerks = {
-        diceBonus: 0,
-        mulliganBonus: 0,
-        immuneWater: false,
-        immuneBunker: false,
-        roughTires: false,
-        woodlandShortcut: false,
-        extendedGreen: false,
-        teeGuarantee: false
-      };
+      function createEmptyPerks() {
+        return {
+          diceBonus: 0,
+          mulliganBonus: 0,
+          immuneWater: false,
+          immuneBunker: false,
+          roughTires: false,
+          woodlandShortcut: false,
+          extendedGreen: false,
+          teeGuarantee: false
+        };
+      }
+
+      let playerPerks = createEmptyPerks();
 
       const PERKS_POOL = [
         { id: 'DADO_PLUS_1', name: '+1 a la Tirada', desc: 'Suma +1 a todas tus tiradas de dado.', unique: false },
         { id: 'DADO_PLUS_2', name: '+2 a la Tirada', desc: 'Suma +2 a todas tus tiradas de dado.', unique: false },
-        { id: 'MULLIGAN_PLUS_1', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo.', unique: false },
+        { id: 'MULLIGAN_PLUS_1', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo en la salida.', unique: false },
         { id: 'GARANTIA_SALIDA', name: 'Garantía de Salida', desc: 'En la salida (Tee), las tiradas de 1 o 2 cuentan como 3.', unique: false },
         { id: 'INMUNE_AGUA', name: 'Inmune al Agua', desc: 'La bola no cae al agua ni penaliza; rebota justo antes.', unique: true },
         { id: 'INMUNE_BUNKER', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
         { id: 'NEUMATICOS_ROUGH', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
         { id: 'ATAJO_ARBOLEDA', name: 'Atajo Arboleda', desc: 'La bola atraviesa la vegetación sin ser bloqueada.', unique: true },
-        { id: 'GREEN_AMPLIADO', name: 'Green Ampliado', desc: 'Expande significativamente la superficie del Green alrededor del hoyo.', unique: true }
+        { id: 'GREEN_AMPLIADO', name: 'Putt Extendido', desc: 'Tu alcance de Putt directo en el Green se amplía de 2 a 3 casillas.', unique: true }
       ];
 
       let playerCount = 2;
       let players = [];
       let activePlayerIndex = 0;
+      let multiplayerDraftQueue = [];
+      let currentDraftChoices = [];
+      let takenPerkIdsInDraft = [];
 
       const LANGS = ['ES', 'EN', 'CA', 'FR', 'IT', 'DE'];
       let currentLang = (function() {
@@ -542,12 +703,12 @@
           day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
           fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo",
-          freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", medium: "MEDIO", hard: "DIFÍCIL", dice: "Dado",
-          fairwayBonus: " (+1 Calle = {v})", roughPenalty: " (-1 Rough = {v})", sandLimit: " (Max 3 Búnker = {v})",
+          freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", holeLabel: "Hoyo", medium: "MEDIO", hard: "DIFÍCIL", dice: "Dado",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Búnker)",
           rollTitle: "Tirar Dado", mulliganTitle: "Mulligan (Repetir Tirada)", nextHoleTitle: "Siguiente Hoyo",
           puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO", waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
           strokes: "Golpes", total: "Total", scorecardTitle: "CLASIFICACIÓN", worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
-          endDailyTitle: "FIN DEL DAILY COURSE", scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
+          endDailyTitle: "FIN DEL CIRCUITO", scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
           tableHole: "HOYO", tableDiff: "DIF", tablePar: "PAR", tableStrokes: "GOLPES", tableTotal: "TOTAL", tablePlayer: "JUGADOR",
           evenParResult: "Resultado: PAR DEL CAMPO (E)", overParResult: "Hándicap: +{d}", underParResult: "Hándicap: -{d} ¡BAJO PAR!",
           registerRecord: "REGISTRAR RÉCORD DIARIO", saveBtn: "[ GUARDAR ]", recordSubmitted: "¡Récord enviado con éxito!",
@@ -564,6 +725,46 @@
         let text = (I18N[currentLang] && I18N[currentLang][key]) || (I18N['ES'][key]) || key;
         Object.keys(params).forEach(p => { text = text.replace('{' + p + '}', params[p]); });
         return text;
+      }
+
+      function getActivePlayerPerks() {
+        if (isMultiplayer && players.length > 0 && players[activePlayerIndex]) {
+          return players[activePlayerIndex].perks;
+        }
+        return playerPerks;
+      }
+
+      function updatePerksDisplay() {
+        let container = document.getElementById('perks-tags-container');
+        let countLbl = document.getElementById('perks-count-lbl');
+        let headerTitle = document.getElementById('perks-header-title');
+        if (!container) return;
+
+        let activePerks = getActivePlayerPerks();
+
+        if (isMultiplayer && players.length > 0 && players[activePlayerIndex]) {
+          headerTitle.innerText = "MODIFICADORES ACTIVOS (" + players[activePlayerIndex].name + ")";
+        } else {
+          headerTitle.innerText = "MODIFICADORES ACTIVOS";
+        }
+
+        let activeTags = [];
+        if (activePerks.diceBonus > 0) activeTags.push(`[DADO +${activePerks.diceBonus}]`);
+        if (activePerks.mulliganBonus > 0) activeTags.push(`[MULLIGAN +${activePerks.mulliganBonus}]`);
+        if (activePerks.immuneWater) activeTags.push('[INMUNE AGUA]');
+        if (activePerks.immuneBunker) activeTags.push('[INMUNE BÚNKER]');
+        if (activePerks.roughTires) activeTags.push('[NEUMÁTICOS ROUGH]');
+        if (activePerks.woodlandShortcut) activeTags.push('[ATAJO ARBOLEDA]');
+        if (activePerks.extendedGreen) activeTags.push('[PUTT EXTENDIDO]');
+        if (activePerks.teeGuarantee) activeTags.push('[GARANTÍA SALIDA]');
+
+        countLbl.innerText = activeTags.length;
+
+        if (activeTags.length === 0) {
+          container.innerHTML = '<span class="perk-tag" style="background:transparent;color:inherit;padding:0;">Sin modificadores activos</span>';
+        } else {
+          container.innerHTML = activeTags.map(tag => `<span class="perk-tag">${tag}</span>`).join('');
+        }
       }
 
       function updateLanguageUI() {
@@ -588,20 +789,22 @@
         document.getElementById('lbl-hole').innerText = t('hole');
 
         document.getElementById('lbl-dice').innerText = t('dice');
+        document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
+
         if (isCourseMode) {
           document.getElementById('mode-display').innerText = t('dailyHole') + " " + currentHole + " / " + TOTAL_HOLES;
+          document.getElementById('diff-tag').style.display = 'inline-block';
           document.getElementById('diff-tag').innerText = currentDiff === DIFF_LEVELS.MEDIUM ? t('medium') : t('hard');
         } else if (isMultiplayer) {
-          document.getElementById('mode-display').innerText = t('multiplayerTitle');
+          document.getElementById('mode-display').innerText = t('multiplayerTitle') + " (" + t('holeLabel') + " " + currentHole + "/" + TOTAL_HOLES + ")";
+          document.getElementById('diff-tag').style.display = 'none';
         } else {
-          document.getElementById('mode-display').innerText = t('freeModeTitle');
+          document.getElementById('mode-display').innerText = t('freeModeTitle') + " (" + t('holeLabel') + " " + currentHole + ")";
+          document.getElementById('diff-tag').style.display = 'none';
         }
 
-        document.getElementById('btn-roll').title = t('rollTitle');
-        document.getElementById('btn-mulligan').title = t('mulliganTitle');
-        document.getElementById('btn-next-quick').title = t('nextHoleTitle');
         document.getElementById('putt-banner').innerText = t('puttBanner');
-
+        updatePerksDisplay();
         drawBoard();
       }
 
@@ -620,16 +823,7 @@
       let mulliganAvailableCount = 1;
 
       function resetPlayerPerks() {
-        playerPerks = {
-          diceBonus: 0,
-          mulliganBonus: 0,
-          immuneWater: false,
-          immuneBunker: false,
-          roughTires: false,
-          woodlandShortcut: false,
-          extendedGreen: false,
-          teeGuarantee: false
-        };
+        playerPerks = createEmptyPerks();
       }
 
       function initAudio() {
@@ -782,6 +976,17 @@
         return Math.max(Math.abs(pos.x - holePos.x), Math.abs(pos.y - holePos.y));
       }
 
+      function selectClub(clubObj) {
+        selectedClub = clubObj;
+        document.getElementById('club-driver').classList.toggle('active', clubObj === CLUBS.DRIVER);
+        document.getElementById('club-iron').classList.toggle('active', clubObj === CLUBS.IRON);
+        document.getElementById('club-wood').classList.toggle('active', clubObj === CLUBS.WOOD);
+      }
+
+      document.getElementById('club-driver').onclick = function() { selectClub(CLUBS.DRIVER); };
+      document.getElementById('club-iron').onclick = function() { selectClub(CLUBS.IRON); };
+      document.getElementById('club-wood').onclick = function() { selectClub(CLUBS.WOOD); };
+
       function startQuickGame() {
         isCourseMode = false;
         isMultiplayer = false;
@@ -841,7 +1046,8 @@
         for (let i = 0; i < playerCount; i++) {
           players.push({
             id: i, name: "J" + (i + 1), path: [{ x: teeX, y: teeY }],
-            strokeCount: 0, completed: false, mulliganAvailableCount: 1
+            strokeCount: 0, totalStrokes: 0, completed: false,
+            mulliganAvailableCount: 1, perks: createEmptyPerks()
           });
         }
         activePlayerIndex = 0;
@@ -854,6 +1060,7 @@
         path = p.path;
         strokeCount = p.strokeCount;
         mulliganAvailableCount = p.mulliganAvailableCount;
+        updatePerksDisplay();
       }
 
       function saveActivePlayerData() {
@@ -880,6 +1087,7 @@
           let distA = getDistanceToHole(posA);
           let distB = getDistanceToHole(posB);
           if (distB !== distA) return distB - distA;
+          if (b.totalStrokes !== a.totalStrokes) return b.totalStrokes - a.totalStrokes;
           return a.id - b.id;
         });
 
@@ -912,13 +1120,16 @@
         banner.innerText = t('turnBannerText', { p: p.name, d: dist });
       }
 
-      // --- GENERACIÓN DE MAPA CON FORMULACIÓN ORGÁNICA DE GREEN ---
       function generateHole() {
+        selectClub(CLUBS.DRIVER);
+
         strokeCount = 0;
         currentDice = null;
         validMoves = [];
         isPuttMode = false;
-        mulliganAvailableCount = 1 + playerPerks.mulliganBonus;
+
+        let activePerks = getActivePlayerPerks();
+        mulliganAvailableCount = 1 + activePerks.mulliganBonus;
 
         if (isCourseMode) {
           const dateSeed = parseInt(getDailyDateStr(0), 10);
@@ -930,13 +1141,13 @@
           document.getElementById('turn-banner').style.display = 'none';
         } else if (isMultiplayer) {
           customRandom = Math.random;
-          currentDiff = customRandom() > 0.5 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
-          document.getElementById('mode-display').innerText = t('multiplayerTitle');
+          currentDiff = currentHole <= 4 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
+          document.getElementById('mode-display').innerText = t('multiplayerTitle') + " (" + t('holeLabel') + " " + currentHole + "/" + TOTAL_HOLES + ")";
           document.getElementById('diff-tag').style.display = 'none';
         } else {
           customRandom = Math.random;
           currentDiff = customRandom() > 0.5 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
-          document.getElementById('mode-display').innerText = t('freeModeTitle');
+          document.getElementById('mode-display').innerText = t('freeModeTitle') + " (" + t('holeLabel') + " " + currentHole + ")";
           document.getElementById('diff-tag').style.display = 'none';
           document.getElementById('turn-banner').style.display = 'none';
         }
@@ -978,55 +1189,60 @@
           }
         });
 
-        // GENERACIÓN DE FORMA ORGÁNICA DEL GREEN (Rombo, Óvalo, Rectángulo redondeado o Lágrima)
-        let shapeType = Math.floor(customRandom() * 4); // 0: Rombo, 1: Óvalo horizontal, 2: Óvalo vertical, 3: Trapezoidal
-        let baseRadius = playerPerks.extendedGreen ? 3.0 : 2.0;
+        // GENERACIÓN DE GREEN BASE (Igual e imparcial para todos los jugadores en el mapa)
+        let shapeType = Math.floor(customRandom() * 4);
+        let baseRadius = 2.0;
 
         for (let r = -4; r <= 4; r++) {
           for (let c = -4; c <= 4; c++) {
             let nx = holeX + c, ny = holeY + r;
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
               let isGreenTile = false;
-
               if (shapeType === 0) {
-                // ROMBO (Manhattan Distance)
                 isGreenTile = (Math.abs(c) + Math.abs(r)) <= (baseRadius + 0.2);
               } else if (shapeType === 1) {
-                // ÓVALO HORIZONTAL
                 isGreenTile = ((c * c) / ((baseRadius + 0.8) * (baseRadius + 0.8)) + (r * r) / (baseRadius * baseRadius)) <= 1.0;
               } else if (shapeType === 2) {
-                // ÓVALO VERTICAL
                 isGreenTile = ((c * c) / (baseRadius * baseRadius) + (r * r) / ((baseRadius + 0.8) * (baseRadius + 0.8))) <= 1.0;
               } else {
-                // LÁGRIMA / TRAPEZOIDE (MÁS ANCHO HACIA ABAJO)
                 let factor = (r > 0 ? 1.3 : 0.9);
                 isGreenTile = Math.hypot(c / factor, r) <= baseRadius;
               }
-
-              if (isGreenTile) {
-                map[ny][nx] = TERRAIN.GREEN;
-              }
+              if (isGreenTile) map[ny][nx] = TERRAIN.GREEN;
             }
           }
         }
 
-        // Asegurar que las casillas directamente adyacentes al Hoyo sean Green
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
             let nx = holeX + dc, ny = holeY + dr;
-            if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              map[ny][nx] = TERRAIN.GREEN;
-            }
+            if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) map[ny][nx] = TERRAIN.GREEN;
           }
         }
 
         map[teeY][teeX] = TERRAIN.TEE;
         map[holeY][holeX] = TERRAIN.HOLE;
-        path = [{ x: teeX, y: teeY }];
 
         if (isMultiplayer) {
-          setupMultiplayerPlayers(teeX, teeY);
+          if (currentHole === 1) {
+            setupMultiplayerPlayers(teeX, teeY);
+          } else {
+            players.forEach(p => {
+              p.path = [{ x: teeX, y: teeY }];
+              p.strokeCount = 0;
+              p.completed = false;
+              p.mulliganAvailableCount = 1 + p.perks.mulliganBonus;
+            });
+            let sortedByScore = [...players].sort((a, b) => {
+              if (b.totalStrokes !== a.totalStrokes) return b.totalStrokes - a.totalStrokes;
+              return a.id - b.id;
+            });
+            activePlayerIndex = sortedByScore[0].id;
+            syncActivePlayerData();
+          }
           updateMultiplayerTurnBanner();
+        } else {
+          path = [{ x: teeX, y: teeY }];
         }
 
         function isHoyoAdjacent(x, y) {
@@ -1076,6 +1292,7 @@
         }
 
         parVal = Math.max(3, Math.ceil(fairwayPath.length / (currentDiff === DIFF_LEVELS.MEDIUM ? 3.2 : 2.8)) + (currentDiff === DIFF_LEVELS.MEDIUM ? 1 : 2));
+        updatePerksDisplay();
         drawBoard();
       }
 
@@ -1111,43 +1328,56 @@
 
         playDiceSound();
 
-        let rawDice = Math.floor(Math.random() * 6) + 1;
+        let activePerks = getActivePlayerPerks();
+        let rawDice = Math.floor(Math.random() * selectedClub.maxDice) + 1;
 
-        if (path.length === 1 && playerPerks.teeGuarantee && (rawDice === 1 || rawDice === 2)) {
+        if (path.length === 1 && activePerks.teeGuarantee && (rawDice === 1 || rawDice === 2)) {
           rawDice = 3;
         }
 
-        currentDice = rawDice + playerPerks.diceBonus;
+        let perkBonus = activePerks.diceBonus;
+        currentDice = rawDice + perkBonus;
 
         let currentPos = path[path.length - 1];
         let currentTerrain = map[currentPos.y][currentPos.x];
 
-        let bonusText = "";
+        let modifierDetails = [];
+        if (perkBonus > 0) {
+          modifierDetails.push(`+${perkBonus} Mejora`);
+        }
+
         let effectiveDistance = currentDice;
 
-        if (currentTerrain === TERRAIN.FAIRWAY) {
+        if (currentTerrain === TERRAIN.TEE) {
           effectiveDistance += 1;
-          bonusText = t('fairwayBonus', { v: effectiveDistance });
+          modifierDetails.push("+1 Salida");
+        } else if (currentTerrain === TERRAIN.FAIRWAY) {
+          // Calle neutra
         } else if (currentTerrain === TERRAIN.ROUGH) {
-          if (playerPerks.roughTires) {
-            bonusText = " (Neumáticos Rough)";
+          if (activePerks.roughTires) {
+            modifierDetails.push("Neumáticos Rough");
           } else {
             effectiveDistance = Math.max(1, currentDice - 1);
-            bonusText = t('roughPenalty', { v: effectiveDistance });
+            modifierDetails.push("-1 Rough");
           }
         } else if (currentTerrain === TERRAIN.SAND) {
-          if (playerPerks.immuneBunker) {
-            bonusText = " (Búnker Libre)";
+          if (activePerks.immuneBunker) {
+            modifierDetails.push("Búnker Libre");
           } else {
             effectiveDistance = Math.min(3, currentDice);
-            bonusText = t('sandLimit', { v: effectiveDistance });
+            modifierDetails.push("Max 3 Búnker");
           }
         }
 
-        document.getElementById('dice-val').innerText = currentDice + bonusText;
+        let modStr = modifierDetails.length > 0 ? ` (${modifierDetails.join(', ')}) = ${effectiveDistance}` : ` = ${effectiveDistance}`;
+        document.getElementById('dice-val').innerText = `${selectedClub.name} [Dado ${rawDice}]${modStr}`;
 
-        if (mulliganAvailableCount > 0) {
+        if (path.length === 1 && mulliganAvailableCount > 0) {
+          document.getElementById('btn-roll').style.display = 'none';
           document.getElementById('btn-mulligan').style.display = 'flex';
+        } else {
+          document.getElementById('btn-roll').style.display = 'flex';
+          document.getElementById('btn-mulligan').style.display = 'none';
         }
 
         calculateValidMoves(effectiveDistance);
@@ -1155,25 +1385,25 @@
       }
 
       function useMulligan() {
-        if (mulliganAvailableCount > 0) {
+        if (path.length === 1 && mulliganAvailableCount > 0) {
           mulliganAvailableCount--;
           if (isMultiplayer && players[activePlayerIndex]) {
             players[activePlayerIndex].mulliganAvailableCount--;
           }
           playMulliganSound();
-          if (mulliganAvailableCount <= 0) {
-            document.getElementById('btn-mulligan').style.display = 'none';
-          }
+
+          document.getElementById('btn-mulligan').style.display = 'none';
+          document.getElementById('btn-roll').style.display = 'flex';
+
           validMoves = [];
           rollDice();
         }
       }
 
-      // --- MOVIMIENTO TÁCTICO CON FRENADO / CONTROL DE FUERZA ---
-      // Permite seleccionar CUALQUIER paso válido en la trayectoria (1..distancia) para poder frenar en el Green o evitar hazards!
       function calculateValidMoves(distance) {
         validMoves = [];
         let currentPos = path[path.length - 1];
+        let activePerks = getActivePlayerPerks();
 
         let dirs = [
           {x: 0, y: -1}, {x: 0, y: 1}, {x: -1, y: 0}, {x: 1, y: 0},
@@ -1181,25 +1411,22 @@
         ];
 
         dirs.forEach(function(d) {
-          for (let step = 1; step <= distance; step++) {
+          let step = distance;
+          while (step > 0) {
             let nx = currentPos.x + d.x * step;
             let ny = currentPos.y + d.y * step;
 
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (playerPerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
+              if (activePerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
                 if (isLineClear(currentPos.x, currentPos.y, nx, ny)) {
                   if (!validMoves.some(function(m) { return m.x === nx && m.y === ny; })) {
                     validMoves.push({ x: nx, y: ny });
                   }
-                } else {
-                  break; // Bloqueado por árbol
+                  break;
                 }
-              } else {
-                break; // Obstáculo
               }
-            } else {
-              break; // Fuera de mapa
             }
+            step--;
           }
         });
       }
@@ -1228,11 +1455,13 @@
         if (targetMove) {
           strokeCount++;
           document.getElementById('btn-mulligan').style.display = 'none';
+          document.getElementById('btn-roll').style.display = 'flex';
 
           let landTerrain = map[targetMove.y][targetMove.x];
+          let activePerks = getActivePlayerPerks();
 
           if (landTerrain === TERRAIN.WATER) {
-            if (playerPerks.immuneWater) {
+            if (activePerks.immuneWater) {
               playMoveSound();
               path.push({ x: targetMove.x, y: targetMove.y });
             } else {
@@ -1251,6 +1480,7 @@
 
           validMoves = [];
           document.getElementById('dice-val').innerText = '-';
+          document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
 
           let lastPos = path[path.length - 1];
 
@@ -1291,12 +1521,15 @@
 
       function calculatePuttMoves(currentPos) {
         validMoves = [];
-        for (let r = -2; r <= 2; r++) {
-          for (let c = -2; c <= 2; c++) {
+        let activePerks = getActivePlayerPerks();
+        let puttReach = activePerks.extendedGreen ? 3 : 2;
+
+        for (let r = -puttReach; r <= puttReach; r++) {
+          for (let c = -puttReach; c <= puttReach; c++) {
             if (r === 0 && c === 0) continue;
             let nx = currentPos.x + c, ny = currentPos.y + r;
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (playerPerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
+              if (activePerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
                 validMoves.push({ x: nx, y: ny });
               }
             }
@@ -1308,40 +1541,151 @@
       function multiplayerHoleCompleted() {
         drawBoard();
         document.getElementById('btn-roll').style.display = 'none';
+        document.getElementById('btn-mulligan').style.display = 'none';
         document.getElementById('putt-banner').style.display = 'none';
         document.getElementById('leaderboard-section').style.display = 'none';
         document.getElementById('online-submission-box').style.display = 'none';
         document.getElementById('final-handicap').innerText = '';
-        document.getElementById('scorecard-header').innerText = t('multiplayerTitle');
+
+        players.forEach(p => {
+          p.totalStrokes += p.strokeCount;
+        });
+
+        if (currentHole === 2 || currentHole === 4 || currentHole === 6) {
+          startMultiplayerPerkDraft();
+        } else {
+          showMultiplayerScorecardModal();
+        }
+      }
+
+      function showMultiplayerScorecardModal() {
+        document.getElementById('scorecard-header').innerText = t('multiplayerTitle') + " (" + t('holeLabel') + " " + currentHole + "/" + TOTAL_HOLES + ")";
 
         let tableHeadRow = document.getElementById('table-head-row');
-        tableHeadRow.innerHTML = '<th>' + t('tablePlayer') + '</th><th>' + t('tablePar') + '</th><th>' + t('tableStrokes') + '</th><th>' + t('tableDiff') + '</th>';
+        tableHeadRow.innerHTML = '<th>' + t('tablePlayer') + '</th><th>' + t('tablePar') + '</th><th>' + t('tableStrokes') + '</th><th>' + t('tableTotal') + '</th>';
 
         let tbody = document.getElementById('score-tbody');
         tbody.innerHTML = '';
 
-        players.sort((a, b) => a.strokeCount - b.strokeCount);
+        let sorted = [...players].sort((a, b) => a.totalStrokes - b.totalStrokes);
 
-        players.forEach(function(p) {
-          let diff = p.strokeCount - parVal;
-          let diffStr = diff === 0 ? 'E' : (diff > 0 ? '+' + diff : '' + diff);
-          tbody.innerHTML += '<tr><td><b>' + p.name + '</b></td><td>' + parVal + '</td><td>' + p.strokeCount + '</td><td>' + diffStr + '</td></tr>';
+        sorted.forEach(function(p) {
+          tbody.innerHTML += '<tr><td><b>' + p.name + '</b></td><td>' + parVal + '</td><td>' + p.strokeCount + '</td><td>' + p.totalStrokes + '</td></tr>';
         });
 
         document.getElementById('total-row-container').style.display = 'none';
         let btnContinue = document.getElementById('btn-continue-course');
-        btnContinue.innerText = t('btnNextHole');
-        btnContinue.onclick = function() {
-          document.getElementById('scorecard-modal').style.display = 'none';
-          forceEinkRefresh(generateHole);
-        };
+
+        if (currentHole < TOTAL_HOLES) {
+          btnContinue.innerText = t('btnNextHole');
+          btnContinue.onclick = function() {
+            currentHole++;
+            document.getElementById('scorecard-modal').style.display = 'none';
+            forceEinkRefresh(generateHole);
+          };
+        } else {
+          document.getElementById('scorecard-header').innerText = t('multiplayerTitle') + " - " + t('endDailyTitle');
+          document.getElementById('final-handicap').innerText = "¡GANADOR: " + sorted[0].name + " CON " + sorted[0].totalStrokes + " GOLPES!";
+          btnContinue.innerText = t('btnNewCourse');
+          btnContinue.onclick = function() {
+            startMultiplayerGame(playerCount);
+          };
+        }
+
         document.getElementById('scorecard-modal').style.display = 'flex';
+      }
+
+      // --- DRAFT MULTIJUGADOR CON VERIFICACIÓN DE REPETICIÓN POR JUGADOR ---
+      function startMultiplayerPerkDraft() {
+        let sorted = [...players].sort((a, b) => a.totalStrokes - b.totalStrokes);
+        multiplayerDraftQueue = sorted.map(p => p.id);
+        takenPerkIdsInDraft = [];
+
+        let availablePool = PERKS_POOL.slice();
+        let shuffled = availablePool.sort(() => 0.5 - Math.random());
+        currentDraftChoices = shuffled.slice(0, 4);
+
+        processNextMultiplayerDraftPick();
+      }
+
+      function playerHasPerk(pObj, perkId) {
+        if (!pObj || !pObj.perks) return false;
+        let p = pObj.perks;
+        if (perkId === 'INMUNE_AGUA' && p.immuneWater) return true;
+        if (perkId === 'INMUNE_BUNKER' && p.immuneBunker) return true;
+        if (perkId === 'NEUMATICOS_ROUGH' && p.roughTires) return true;
+        if (perkId === 'ATAJO_ARBOLEDA' && p.woodlandShortcut) return true;
+        if (perkId === 'GREEN_AMPLIADO' && p.extendedGreen) return true;
+        if (perkId === 'GARANTIA_SALIDA' && p.teeGuarantee) return true;
+        return false;
+      }
+
+      function processNextMultiplayerDraftPick() {
+        if (multiplayerDraftQueue.length === 0) {
+          document.getElementById('perk-modal').style.display = 'none';
+          showMultiplayerScorecardModal();
+          return;
+        }
+
+        let pId = multiplayerDraftQueue.shift();
+        let p = players.find(player => player.id === pId);
+
+        document.getElementById('perk-modal-title').innerText = "ELECCIÓN DE MEJORA: " + p.name;
+        document.getElementById('perk-modal-subtitle').innerText = "Elige una ventaja para las siguientes rondas (El 1º elige primero):";
+
+        let container = document.getElementById('perk-options-container');
+        container.innerHTML = '';
+
+        currentDraftChoices.forEach(function(perk) {
+          let card = document.createElement('div');
+          let isTakenByOther = takenPerkIdsInDraft.includes(perk.id);
+          let alreadyOwned = playerHasPerk(p, perk.id);
+
+          let isBlocked = isTakenByOther;
+          let labelText = perk.name;
+          if (isTakenByOther) labelText += ' [RESERVADO]';
+          else if (alreadyOwned) labelText += ' [YA POSEÍDO]';
+
+          card.className = 'perk-card' + (isBlocked ? ' disabled' : '');
+          card.innerHTML = `<div class="perk-name">${labelText}</div><div class="perk-desc">${perk.desc}</div>`;
+
+          card.onclick = function() {
+            if (isTakenByOther) return;
+            if (alreadyOwned) {
+              alert("¡No puedes escoger esta modificación porque ya la tienes!");
+              return;
+            }
+
+            applyPerkToPlayer(p, perk.id);
+            takenPerkIdsInDraft.push(perk.id);
+            processNextMultiplayerDraftPick();
+          };
+
+          container.appendChild(card);
+        });
+
+        document.getElementById('perk-modal').style.display = 'flex';
+      }
+
+      function applyPerkToPlayer(pObj, perkId) {
+        switch (perkId) {
+          case 'DADO_PLUS_1': pObj.perks.diceBonus += 1; break;
+          case 'DADO_PLUS_2': pObj.perks.diceBonus += 2; break;
+          case 'MULLIGAN_PLUS_1': pObj.perks.mulliganBonus += 1; break;
+          case 'GARANTIA_SALIDA': pObj.perks.teeGuarantee = true; break;
+          case 'INMUNE_AGUA': pObj.perks.immuneWater = true; break;
+          case 'INMUNE_BUNKER': pObj.perks.immuneBunker = true; break;
+          case 'NEUMATICOS_ROUGH': pObj.perks.roughTires = true; break;
+          case 'ATAJO_ARBOLEDA': pObj.perks.woodlandShortcut = true; break;
+          case 'GREEN_AMPLIADO': pObj.perks.extendedGreen = true; break;
+        }
       }
 
       function holeCompleted() {
         playHoleSound();
         drawBoard();
         document.getElementById('btn-roll').style.display = 'none';
+        document.getElementById('btn-mulligan').style.display = 'none';
         document.getElementById('putt-banner').style.display = 'none';
 
         if (isCourseMode) {
@@ -1353,35 +1697,48 @@
             showScorecardModal();
           }
         } else {
-          document.getElementById('btn-next-quick').style.display = 'flex';
+          if (currentHole % 2 === 0) {
+            triggerPerkSelection();
+          } else {
+            document.getElementById('btn-next-quick').style.display = 'flex';
+          }
         }
       }
 
       function triggerPerkSelection() {
-        let availablePool = PERKS_POOL.filter(function(p) {
-          if (!p.unique) return true;
-          if (p.id === 'INMUNE_AGUA' && playerPerks.immuneWater) return false;
-          if (p.id === 'INMUNE_BUNKER' && playerPerks.immuneBunker) return false;
-          if (p.id === 'NEUMATICOS_ROUGH' && playerPerks.roughTires) return false;
-          if (p.id === 'ATAJO_ARBOLEDA' && playerPerks.woodlandShortcut) return false;
-          if (p.id === 'GREEN_AMPLIADO' && playerPerks.extendedGreen) return false;
-          return true;
-        });
+        document.getElementById('perk-modal-title').innerText = "ELIGE UNA MEJORA";
+        document.getElementById('perk-modal-subtitle').innerText = "Selecciona una ventaja para los siguientes hoyos:";
 
+        let activePerks = getActivePlayerPerks();
+
+        let availablePool = PERKS_POOL.slice();
         let shuffled = availablePool.sort(() => 0.5 - Math.random());
-        let choices = shuffled.slice(0, 3);
+        let choices = shuffled.slice(0, 4);
 
         let container = document.getElementById('perk-options-container');
         container.innerHTML = '';
 
         choices.forEach(function(perk) {
           let card = document.createElement('div');
+          let alreadyOwned = playerHasPerk({ perks: activePerks }, perk.id);
+
+          let labelText = perk.name + (alreadyOwned ? ' [YA POSEÍDO]' : '');
           card.className = 'perk-card';
-          card.innerHTML = `<div class="perk-name">${perk.name}</div><div class="perk-desc">${perk.desc}</div>`;
+          card.innerHTML = `<div class="perk-name">${labelText}</div><div class="perk-desc">${perk.desc}</div>`;
+
           card.onclick = function() {
+            if (alreadyOwned) {
+              alert("¡No puedes escoger esta modificación porque ya la tienes!");
+              return;
+            }
+
             applyPerk(perk.id);
             document.getElementById('perk-modal').style.display = 'none';
-            showScorecardModal();
+            if (isCourseMode) {
+              showScorecardModal();
+            } else {
+              document.getElementById('btn-next-quick').style.display = 'flex';
+            }
           };
           container.appendChild(card);
         });
@@ -1390,17 +1747,19 @@
       }
 
       function applyPerk(perkId) {
+        let activePerks = getActivePlayerPerks();
         switch (perkId) {
-          case 'DADO_PLUS_1': playerPerks.diceBonus += 1; break;
-          case 'DADO_PLUS_2': playerPerks.diceBonus += 2; break;
-          case 'MULLIGAN_PLUS_1': playerPerks.mulliganBonus += 1; break;
-          case 'GARANTIA_SALIDA': playerPerks.teeGuarantee = true; break;
-          case 'INMUNE_AGUA': playerPerks.immuneWater = true; break;
-          case 'INMUNE_BUNKER': playerPerks.immuneBunker = true; break;
-          case 'NEUMATICOS_ROUGH': playerPerks.roughTires = true; break;
-          case 'ATAJO_ARBOLEDA': playerPerks.woodlandShortcut = true; break;
-          case 'GREEN_AMPLIADO': playerPerks.extendedGreen = true; break;
+          case 'DADO_PLUS_1': activePerks.diceBonus += 1; break;
+          case 'DADO_PLUS_2': activePerks.diceBonus += 2; break;
+          case 'MULLIGAN_PLUS_1': activePerks.mulliganBonus += 1; break;
+          case 'GARANTIA_SALIDA': activePerks.teeGuarantee = true; break;
+          case 'INMUNE_AGUA': activePerks.immuneWater = true; break;
+          case 'INMUNE_BUNKER': activePerks.immuneBunker = true; break;
+          case 'NEUMATICOS_ROUGH': activePerks.roughTires = true; break;
+          case 'ATAJO_ARBOLEDA': activePerks.woodlandShortcut = true; break;
+          case 'GREEN_AMPLIADO': activePerks.extendedGreen = true; break;
         }
+        updatePerksDisplay();
       }
 
       function openModalViewOnly() {
@@ -1578,7 +1937,8 @@
       }
 
       function isLineClear(x0, y0, x1, y1) {
-        if (playerPerks.woodlandShortcut) return true;
+        let activePerks = getActivePlayerPerks();
+        if (activePerks.woodlandShortcut) return true;
         let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
         let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy, cx = x0, cy = y0;
         while (true) {
@@ -1819,47 +2179,6 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
-        const barHeight = 44;
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
-        ctx.strokeStyle = strokeColor; ctx.lineWidth = 2;
-        ctx.strokeRect(0, canvas.height - barHeight, canvas.width, barHeight);
-
-        ctx.fillStyle = strokeColor;
-        ctx.font = 'bold 11px monospace';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-
-        if (isCourseMode) {
-          let totalAccStrokes = circuitHistory.reduce((acc, h) => acc + h.strokes, 0) + strokeCount;
-          let totalAccPar = circuitHistory.reduce((acc, h) => acc + h.par, 0) + parVal;
-          ctx.fillText(t('dailyHole') + " " + currentHole + "/8", 8, canvas.height - barHeight + 5);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 165, canvas.height - barHeight + 5);
-          ctx.fillText(t('total') + ": " + totalAccStrokes + "/" + totalAccPar, 325, canvas.height - barHeight + 5);
-
-          let perkTags = [];
-          if (playerPerks.diceBonus > 0) perkTags.push(`[DADO+${playerPerks.diceBonus}]`);
-          if (playerPerks.mulliganBonus > 0) perkTags.push(`[MULL+${playerPerks.mulliganBonus}]`);
-          if (playerPerks.immuneWater) perkTags.push('[NO-AGUA]');
-          if (playerPerks.immuneBunker) perkTags.push('[NO-BÚNKER]');
-          if (playerPerks.roughTires) perkTags.push('[R-TIRES]');
-          if (playerPerks.woodlandShortcut) perkTags.push('[ATAJO]');
-          if (playerPerks.extendedGreen) perkTags.push('[GREEN+]');
-          if (playerPerks.teeGuarantee) perkTags.push('[TEE-G]');
-
-          ctx.font = '9px monospace';
-          ctx.fillText(perkTags.length > 0 ? perkTags.join(' ') : '[SIN MEJORAS]', 8, canvas.height - barHeight + 24);
-
-        } else if (isMultiplayer) {
-          let activeP = players[activePlayerIndex];
-          let pName = activeP ? activeP.name : 'J1';
-          ctx.fillText(t('multiplayerTitle') + " [" + pName + "]", 8, canvas.height - barHeight + 14);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - barHeight + 14);
-        } else {
-          ctx.fillText(t('freeModeTitle'), 8, canvas.height - barHeight + 14);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - barHeight + 14);
-        }
-
         highlightCurrentTerrain();
       }
 
@@ -1905,7 +2224,10 @@
       document.getElementById('btn-roll').onclick = rollDice;
       document.getElementById('btn-mulligan').onclick = useMulligan;
       document.getElementById('btn-submit-score').onclick = submitScoreOnline;
-      document.getElementById('btn-next-quick').onclick = function() { forceEinkRefresh(generateHole); };
+      document.getElementById('btn-next-quick').onclick = function() {
+        currentHole++;
+        forceEinkRefresh(generateHole);
+      };
 
       document.getElementById('btn-close-modal').onclick = function() { document.getElementById('scorecard-modal').style.display = 'none'; };
       document.getElementById('btn-close-player-select').onclick = function() { document.getElementById('player-select-modal').style.display = 'none'; };
