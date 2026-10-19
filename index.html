@@ -131,8 +131,37 @@
     }
     #canvas-container.xxl-mode {
       max-height: 55vh;
-      overflow-y: auto;
+      overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: #000000 #f1f1f1;
+    }
+
+    body.dark-mode #canvas-container.xxl-mode {
+      scrollbar-color: #ffffff #222222;
+    }
+
+    #canvas-container.xxl-mode::-webkit-scrollbar {
+      width: 8px;
+      display: block !important;
+    }
+
+    #canvas-container.xxl-mode::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    #canvas-container.xxl-mode::-webkit-scrollbar-thumb {
+      background: #000000;
+      border-radius: 4px;
+    }
+
+    body.dark-mode #canvas-container.xxl-mode::-webkit-scrollbar-track {
+      background: #222222;
+    }
+
+    body.dark-mode #canvas-container.xxl-mode::-webkit-scrollbar-thumb {
+      background: #ffffff;
     }
     body.dark-mode #canvas-container {
       border-color: #ffffff;
@@ -141,7 +170,7 @@
 
     canvas#grid {
       background: #ffffff;
-      touch-action: none;
+      touch-action: pan-y;
       display: block;
       margin: 0 auto;
       width: 100%;
@@ -840,6 +869,7 @@
         }
 
         document.getElementById('putt-banner').innerText = t('puttBanner');
+        spawnBirds(mapTypeVal);
         updatePerksDisplay();
         drawBoard();
       }
@@ -1140,6 +1170,17 @@
           checkPuttCondition();
           drawBoard();
         }
+      }
+
+      function updateMultiplayerTurnBanner() {
+        if (!isMultiplayer) return;
+        let p = players[activePlayerIndex];
+        if (!p) return;
+        let pos = p.path[p.path.length - 1];
+        let dist = getDistanceToHole(pos);
+        let banner = document.getElementById('turn-banner');
+        banner.style.display = 'block';
+        banner.innerText = t('turnBannerText', { p: p.name, d: dist });
       }
 
       
