@@ -126,16 +126,29 @@
       max-width: 480px;
       width: 100%;
       margin: 0 auto 6px auto;
+      border: 3px solid #000000;
+      background: #ffffff;
+    }
+    #canvas-container.xxl-mode {
+      max-height: 55vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    body.dark-mode #canvas-container {
+      border-color: #ffffff;
+      background: #000000;
     }
 
     canvas#grid {
-      border: 3px solid #000000;
       background: #ffffff;
       touch-action: none;
       display: block;
       margin: 0 auto;
-      max-width: 100%;
+      width: 100%;
       height: auto;
+    }
+    body.dark-mode canvas#grid {
+      background: #000000;
     }
 
     #control-panel {
@@ -481,6 +494,7 @@
       <button id="btn-night-toggle" class="btn-top">[ DÍA ]</button>
       <button id="btn-ranking" class="btn-top">[ RANKING ]</button>
       <button id="btn-mode-toggle" class="btn-top">[ DAILY COURSE ]</button>
+      <button id="btn-freemode-type" class="btn-top" style="display:none;">[ TIPO: NORMAL ]</button>
     </div>
   </div>
 
@@ -494,25 +508,26 @@
     <div class="legend-item" id="leg-sand"><canvas id="icon-sand" width="14" height="14"></canvas> <span id="lbl-sand">Búnker</span></div>
     <div class="legend-item" id="leg-tee"><canvas id="icon-tee" width="14" height="14"></canvas> <span id="lbl-tee">Salida</span></div>
     <div class="legend-item" id="leg-hole"><canvas id="icon-hole" width="14" height="14"></canvas> <span id="lbl-hole">Hoyo</span></div>
+    <div class="legend-item" id="leg-bird" style="display:none;"><canvas id="icon-bird" width="14" height="14"></canvas> <span id="lbl-bird">Pájaro</span></div>
   </div>
 
   <div id="turn-banner" style="display:none;">[ TURNO: J1 - 8 CASILLAS AL HOYO ]</div>
 
   <div id="canvas-container">
-    <canvas id="grid" width="476" height="588"></canvas>
+    <canvas id="grid" width="476" height="544"></canvas>
   </div>
 
   <div id="putt-banner">[!] EN GREEN - PUTT DIRECTO ACTIVO</div>
 
   <div id="control-panel">
     <div class="club-selector">
-      <button id="club-driver" class="club-btn active" title="Driver (Dado 1 al 6)">
+      <button id="club-driver" class="club-btn active" title="Driver (Dado 4 al 6)">
         <span class="club-symbol">[DRIVER]</span>
-        <span class="club-label">(Dado 1 - 6)</span>
+        <span class="club-label">(Dado 4 - 6)</span>
       </button>
-      <button id="club-iron" class="club-btn" title="Hierro (Dado 1 al 4)">
+      <button id="club-iron" class="club-btn" title="Hierro (Dado 2 al 4)">
         <span class="club-symbol">[HIERRO]</span>
-        <span class="club-label">(Dado 1 - 4)</span>
+        <span class="club-label">(Dado 2 - 4)</span>
       </button>
       <button id="club-wood" class="club-btn" title="Madera (Dado 1 al 3)">
         <span class="club-symbol">[MADERA]</span>
@@ -527,7 +542,7 @@
   </div>
 
   <div id="info-panel">
-    <div class="info-item"><span id="mode-display">Modo Libre</span><span id="diff-tag" class="diff-tag" style="display:none;">MEDIO</span></div>
+    <div class="info-item"><span id="mode-display">Modo Libre</span><span id="diff-tag" class="diff-tag" style="display:none;">NORMAL</span></div>
     <div class="info-item"><span id="lbl-strokes-info">Golpes: 0/4</span></div>
     <div class="info-item"><span id="lbl-dice">Dado</span>: <span id="dice-val">-</span></div>
   </div>
@@ -627,7 +642,8 @@
 
   <script>
     window.addEventListener('DOMContentLoaded', function() {
-      const COLS = 14, ROWS = 16, TILE_SIZE = 34;
+      const COLS = 14, TILE_SIZE = 34;
+      let ROWS = 16;
       const canvas = document.getElementById('grid');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -638,15 +654,16 @@
       };
 
       const CLUBS = {
-        DRIVER: { name: 'DRIVER', maxDice: 6, icon: '[DRIVER]', rangeText: '(Dado 1 - 6)' },
-        IRON: { name: 'HIERRO', maxDice: 4, icon: '[HIERRO]', rangeText: '(Dado 1 - 4)' },
-        WOOD: { name: 'MADERA', maxDice: 3, icon: '[MADERA]', rangeText: '(Dado 1 - 3)' }
+        DRIVER: { name: 'DRIVER', diceValues: [4, 5, 6], icon: '[DRIVER]', rangeText: '(Dado 4 - 6)' },
+        IRON: { name: 'HIERRO', diceValues: [2, 3, 4], icon: '[HIERRO]', rangeText: '(Dado 2 - 4)' },
+        WOOD: { name: 'MADERA', diceValues: [1, 2, 3], icon: '[MADERA]', rangeText: '(Dado 1 - 3)' }
       };
 
       let selectedClub = CLUBS.DRIVER;
 
-      const DIFF_LEVELS = { MEDIUM: 0, HARD: 1 };
-      const TOTAL_HOLES = 8;
+      const MAP_TYPES = { NORMAL: 0, AVANZADO: 1, XXL: 2 };
+      let freeModeMapType = MAP_TYPES.NORMAL;
+      const TOTAL_HOLES = 9;
 
       let isCourseMode = false;
       let isMultiplayer = false;
@@ -673,7 +690,7 @@
         { id: 'DADO_PLUS_1', name: '+1 a la Tirada', desc: 'Suma +1 a todas tus tiradas de dado.', unique: false },
         { id: 'DADO_PLUS_2', name: '+2 a la Tirada', desc: 'Suma +2 a todas tus tiradas de dado.', unique: false },
         { id: 'MULLIGAN_PLUS_1', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo en la salida.', unique: false },
-        { id: 'GARANTIA_SALIDA', name: 'Garantía de Salida', desc: 'En la salida (Tee), las tiradas de 1 o 2 cuentan como 3.', unique: false },
+        { id: 'GARANTIA_SALIDA', name: 'Super Salida', desc: 'En la salida (Tee), consigues un bono especial de +3 a la distancia (en lugar de +1).', unique: false },
         { id: 'INMUNE_AGUA', name: 'Inmune al Agua', desc: 'La bola no cae al agua ni penaliza; rebota justo antes.', unique: true },
         { id: 'INMUNE_BUNKER', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
         { id: 'NEUMATICOS_ROUGH', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
@@ -702,8 +719,9 @@
           langBtn: "[ LANG: ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
-          fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo",
-          freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", holeLabel: "Hoyo", medium: "MEDIO", hard: "DIFÍCIL", dice: "Dado",
+          fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo", bird: "Pájaro",
+          freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", holeLabel: "Hoyo",
+          normal: "NORMAL", avanzado: "AVANZADO", xxl: "XXL", dice: "Dado",
           fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Búnker)",
           rollTitle: "Tirar Dado", mulliganTitle: "Mulligan (Repetir Tirada)", nextHoleTitle: "Siguiente Hoyo",
           puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO", waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
@@ -756,7 +774,7 @@
         if (activePerks.roughTires) activeTags.push('[NEUMÁTICOS ROUGH]');
         if (activePerks.woodlandShortcut) activeTags.push('[ATAJO ARBOLEDA]');
         if (activePerks.extendedGreen) activeTags.push('[PUTT EXTENDIDO]');
-        if (activePerks.teeGuarantee) activeTags.push('[GARANTÍA SALIDA]');
+        if (activePerks.teeGuarantee) activeTags.push('[SUPER SALIDA (+3)]');
 
         countLbl.innerText = activeTags.length;
 
@@ -787,20 +805,38 @@
         document.getElementById('lbl-sand').innerText = t('sand');
         document.getElementById('lbl-tee').innerText = t('tee');
         document.getElementById('lbl-hole').innerText = t('hole');
+        if (document.getElementById('lbl-bird')) document.getElementById('lbl-bird').innerText = t('bird');
 
         document.getElementById('lbl-dice').innerText = t('dice');
         document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
 
+        let freemodeTypeBtn = document.getElementById('btn-freemode-type');
+        if (!isCourseMode && !isMultiplayer) {
+          freemodeTypeBtn.style.display = 'inline-block';
+          let typeName = freeModeMapType === MAP_TYPES.NORMAL ? t('normal') : (freeModeMapType === MAP_TYPES.AVANZADO ? t('avanzado') : t('xxl'));
+          freemodeTypeBtn.innerText = '[ TIPO: ' + typeName + ' ]';
+        } else {
+          freemodeTypeBtn.style.display = 'none';
+        }
+
         if (isCourseMode) {
           document.getElementById('mode-display').innerText = t('dailyHole') + " " + currentHole + " / " + TOTAL_HOLES;
           document.getElementById('diff-tag').style.display = 'inline-block';
-          document.getElementById('diff-tag').innerText = currentDiff === DIFF_LEVELS.MEDIUM ? t('medium') : t('hard');
+          if (currentHole <= 3) document.getElementById('diff-tag').innerText = t('normal');
+          else if (currentHole <= 6) document.getElementById('diff-tag').innerText = t('avanzado');
+          else document.getElementById('diff-tag').innerText = t('xxl');
         } else if (isMultiplayer) {
           document.getElementById('mode-display').innerText = t('multiplayerTitle') + " (" + t('holeLabel') + " " + currentHole + "/" + TOTAL_HOLES + ")";
-          document.getElementById('diff-tag').style.display = 'none';
+          document.getElementById('diff-tag').style.display = 'inline-block';
+          if (currentHole <= 3) document.getElementById('diff-tag').innerText = t('normal');
+          else if (currentHole <= 6) document.getElementById('diff-tag').innerText = t('avanzado');
+          else document.getElementById('diff-tag').innerText = t('xxl');
         } else {
           document.getElementById('mode-display').innerText = t('freeModeTitle') + " (" + t('holeLabel') + " " + currentHole + ")";
-          document.getElementById('diff-tag').style.display = 'none';
+          document.getElementById('diff-tag').style.display = 'inline-block';
+          if (freeModeMapType === MAP_TYPES.NORMAL) document.getElementById('diff-tag').innerText = t('normal');
+          else if (freeModeMapType === MAP_TYPES.AVANZADO) document.getElementById('diff-tag').innerText = t('avanzado');
+          else document.getElementById('diff-tag').innerText = t('xxl');
         }
 
         document.getElementById('putt-banner').innerText = t('puttBanner');
@@ -809,9 +845,9 @@
       }
 
       let currentHole = 1;
-      let currentDiff = DIFF_LEVELS.MEDIUM;
       let circuitHistory = [];
       let activeLbTab = 'today';
+      let birds = [];
 
       let map = [];
       let path = []; 
@@ -996,7 +1032,6 @@
         customRandom = Math.random;
         document.getElementById('turn-banner').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('freeMode');
-        document.getElementById('diff-tag').style.display = 'none';
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
@@ -1012,7 +1047,6 @@
         resetPlayerPerks();
         document.getElementById('turn-banner').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('dailyCourse');
-        document.getElementById('diff-tag').style.display = 'inline-block';
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
@@ -1036,7 +1070,6 @@
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('multiplayer');
-        document.getElementById('diff-tag').style.display = 'none';
         updateLanguageUI();
         forceEinkRefresh(generateHole);
       }
@@ -1109,15 +1142,63 @@
         }
       }
 
-      function updateMultiplayerTurnBanner() {
-        if (!isMultiplayer) return;
-        let p = players[activePlayerIndex];
-        if (!p) return;
-        let pos = p.path[p.path.length - 1];
-        let dist = getDistanceToHole(pos);
-        let banner = document.getElementById('turn-banner');
-        banner.style.display = 'block';
-        banner.innerText = t('turnBannerText', { p: p.name, d: dist });
+      
+      function placeBirdInRowRange(minY, maxY) {
+        let candidates = [];
+        for (let r = minY; r <= maxY; r++) {
+          for (let c = 0; c < COLS; c++) {
+            if (map[r] && map[r][c] === TERRAIN.FAIRWAY) {
+              candidates.push({ x: c, y: r });
+            }
+          }
+        }
+        if (candidates.length > 0) {
+          let chosen = candidates[Math.floor(customRandom() * candidates.length)];
+          birds.push({ x: chosen.x, y: chosen.y });
+        }
+      }
+
+      function spawnBirds(mapTypeVal) {
+        birds = [];
+        let legBird = document.getElementById('leg-bird');
+        if (mapTypeVal === MAP_TYPES.AVANZADO) {
+          if (legBird) legBird.style.display = 'flex';
+          placeBirdInRowRange(Math.floor(ROWS * 0.35), Math.floor(ROWS * 0.65));
+        } else if (mapTypeVal === MAP_TYPES.XXL) {
+          if (legBird) legBird.style.display = 'flex';
+          placeBirdInRowRange(Math.floor(ROWS * 0.20), Math.floor(ROWS * 0.45));
+          placeBirdInRowRange(Math.floor(ROWS * 0.55), Math.floor(ROWS * 0.80));
+        } else {
+          if (legBird) legBird.style.display = 'none';
+        }
+      }
+
+      function moveBirds() {
+        if (!birds || birds.length === 0) return;
+        birds.forEach(function(b) {
+          let validAdj = [];
+          let fairwayAdj = [];
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              let nx = b.x + dc, ny = b.y + dr;
+              if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
+                if (!birds.some(other => other !== b && other.x === nx && other.y === ny)) {
+                  validAdj.push({ x: nx, y: ny });
+                  if (map[ny][nx] === TERRAIN.FAIRWAY) {
+                    fairwayAdj.push({ x: nx, y: ny });
+                  }
+                }
+              }
+            }
+          }
+          let choices = fairwayAdj.length > 0 ? fairwayAdj : validAdj;
+          if (choices.length > 0) {
+            let nextPos = choices[Math.floor(Math.random() * choices.length)];
+            b.x = nextPos.x;
+            b.y = nextPos.y;
+          }
+        });
       }
 
       function generateHole() {
@@ -1131,26 +1212,45 @@
         let activePerks = getActivePlayerPerks();
         mulliganAvailableCount = 1 + activePerks.mulliganBonus;
 
+        let mapTypeVal = MAP_TYPES.NORMAL;
+
         if (isCourseMode) {
           const dateSeed = parseInt(getDailyDateStr(0), 10);
           customRandom = createSeededRandom(dateSeed + currentHole * 997);
-          currentDiff = currentHole <= 4 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
+          if (currentHole <= 3) mapTypeVal = MAP_TYPES.NORMAL;
+          else if (currentHole <= 6) mapTypeVal = MAP_TYPES.AVANZADO;
+          else mapTypeVal = MAP_TYPES.XXL;
+
           document.getElementById('mode-display').innerText = t('dailyHole') + " " + currentHole + " / " + TOTAL_HOLES;
-          document.getElementById('diff-tag').style.display = 'inline-block';
-          document.getElementById('diff-tag').innerText = currentDiff === DIFF_LEVELS.MEDIUM ? t('medium') : t('hard');
           document.getElementById('turn-banner').style.display = 'none';
         } else if (isMultiplayer) {
           customRandom = Math.random;
-          currentDiff = currentHole <= 4 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
+          if (currentHole <= 3) mapTypeVal = MAP_TYPES.NORMAL;
+          else if (currentHole <= 6) mapTypeVal = MAP_TYPES.AVANZADO;
+          else mapTypeVal = MAP_TYPES.XXL;
+
           document.getElementById('mode-display').innerText = t('multiplayerTitle') + " (" + t('holeLabel') + " " + currentHole + "/" + TOTAL_HOLES + ")";
-          document.getElementById('diff-tag').style.display = 'none';
         } else {
           customRandom = Math.random;
-          currentDiff = customRandom() > 0.5 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
+          mapTypeVal = freeModeMapType;
           document.getElementById('mode-display').innerText = t('freeModeTitle') + " (" + t('holeLabel') + " " + currentHole + ")";
-          document.getElementById('diff-tag').style.display = 'none';
           document.getElementById('turn-banner').style.display = 'none';
         }
+
+        let isXXL = (mapTypeVal === MAP_TYPES.XXL);
+        let isAvanzado = (mapTypeVal === MAP_TYPES.AVANZADO || mapTypeVal === MAP_TYPES.XXL);
+
+        ROWS = isXXL ? 32 : 16;
+        const canvasContainer = document.getElementById('canvas-container');
+        if (canvasContainer) {
+          if (isXXL) {
+            canvasContainer.classList.add('xxl-mode');
+          } else {
+            canvasContainer.classList.remove('xxl-mode');
+          }
+        }
+        canvas.width = COLS * TILE_SIZE;
+        canvas.height = ROWS * TILE_SIZE;
 
         document.getElementById('dice-val').innerText = '-';
         document.getElementById('putt-banner').style.display = 'none';
@@ -1160,22 +1260,47 @@
 
         map = Array.from({ length: ROWS }, function() { return Array(COLS).fill(TERRAIN.ROUGH); });
 
-        let teeX = Math.floor(COLS / 2) + Math.floor(customRandom() * 3 - 1);
+        // 1. DIVERSIFICACIÓN DE SALIDA Y HOYO (TEE & HOLE POSITIONS)
+        let teeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
         let teeY = ROWS - 2;
-        let holeX = Math.floor(COLS / 2) + Math.floor(customRandom() * 7 - 3);
-        holeX = Math.max(2, Math.min(COLS - 3, holeX));
+        let holeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
         let holeY = 2;
 
-        let doglegOffset = currentDiff === DIFF_LEVELS.MEDIUM ? 2 : 3;
-        let midX = Math.floor((teeX + holeX) / 2) + (customRandom() > 0.5 ? doglegOffset : -doglegOffset);
-        midX = Math.max(2, Math.min(COLS - 3, midX));
-        let midY = Math.floor(ROWS / 2);
+        // 2. TIPOS DE DISEÑO Y PUNTOS DE CONTROL DE LA CALLE (CONTROL POINTS)
+        let controlPoints = [{ x: teeX, y: teeY }];
+        let layoutType = Math.floor(customRandom() * 4); // 0: Recto/Sutil, 1: Dogleg Izq, 2: Dogleg Der, 3: S-Curve / Doble curva
 
+        if (layoutType === 1) { // Dogleg Izquierda
+          let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
+          let midX = Math.max(2, Math.min(teeX, holeX) - (2 + Math.floor(customRandom() * 3)));
+          controlPoints.push({ x: midX, y: midY });
+        } else if (layoutType === 2) { // Dogleg Derecha
+          let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
+          let midX = Math.min(COLS - 3, Math.max(teeX, holeX) + (2 + Math.floor(customRandom() * 3)));
+          controlPoints.push({ x: midX, y: midY });
+        } else if (layoutType === 3 && (isAvanzado || isXXL)) { // S-Curve (Curva en S)
+          let midY1 = Math.floor(ROWS * 0.7);
+          let midX1 = Math.max(2, teeX + (customRandom() > 0.5 ? 3 : -3));
+          let midY2 = Math.floor(ROWS * 0.35);
+          let midX2 = Math.min(COLS - 3, Math.max(2, holeX + (customRandom() > 0.5 ? 3 : -3)));
+          controlPoints.push({ x: midX1, y: midY1 });
+          controlPoints.push({ x: midX2, y: midY2 });
+        } else { // Recto / Ondulado sutil
+          let midY = Math.floor(ROWS * 0.5);
+          let midX = Math.floor((teeX + holeX) / 2) + Math.floor(customRandom() * 3 - 1);
+          controlPoints.push({ x: midX, y: midY });
+        }
+        controlPoints.push({ x: holeX, y: holeY });
+
+        // Trazado continuo de la calle a través de los puntos de control
         let fairwayPath = [];
-        fairwayPath.push.apply(fairwayPath, interpolatePoints(teeX, teeY, midX, midY));
-        fairwayPath.push.apply(fairwayPath, interpolatePoints(midX, midY, holeX, holeY));
+        for (let i = 0; i < controlPoints.length - 1; i++) {
+          let pts = interpolatePoints(controlPoints[i].x, controlPoints[i].y, controlPoints[i+1].x, controlPoints[i+1].y);
+          fairwayPath.push.apply(fairwayPath, pts);
+        }
 
-        let fwRadius = currentDiff === DIFF_LEVELS.MEDIUM ? 2.0 : 1.6;
+        // Ancho de calle según dificultad (Normal: 2.2, Avanzado: 1.8, XXL: 1.7)
+        let fwRadius = !isAvanzado ? 2.2 : (isXXL ? 1.7 : 1.8);
 
         fairwayPath.forEach(function(pt) {
           let r_int = Math.ceil(fwRadius);
@@ -1189,7 +1314,7 @@
           }
         });
 
-        // GENERACIÓN DE GREEN BASE (Igual e imparcial para todos los jugadores en el mapa)
+        // 3. GENERACIÓN DE GREEN VARIADO Y LIMPIO
         let shapeType = Math.floor(customRandom() * 4);
         let baseRadius = 2.0;
 
@@ -1213,6 +1338,7 @@
           }
         }
 
+        // Núcleo garantizado del Green
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
             let nx = holeX + dc, ny = holeY + dr;
@@ -1245,53 +1371,83 @@
           path = [{ x: teeX, y: teeY }];
         }
 
-        function isHoyoAdjacent(x, y) {
-          return Math.abs(x - holeX) <= 1 && Math.abs(y - holeY) <= 1;
+        function isProtectedArea(x, y) {
+          // Protege área inmediata de salida, hoyo y la calle principal para evitar trampas infranqueables
+          if (Math.abs(x - teeX) <= 1 && Math.abs(y - teeY) <= 1) return true;
+          if (Math.abs(x - holeX) <= 1 && Math.abs(y - holeY) <= 1) return true;
+          return false;
         }
 
-        function safeCreateBlob(cx, cy, radius, terrainType) {
+        function safeCreateHazard(cx, cy, radius, terrainType) {
           for (let r = -Math.ceil(radius); r <= Math.ceil(radius); r++) {
             for (let c = -Math.ceil(radius); c <= Math.ceil(radius); c++) {
               let nx = cx + c, ny = cy + r;
               if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && Math.hypot(r, c) <= radius) {
-                if (map[ny][nx] !== TERRAIN.TEE && map[ny][nx] !== TERRAIN.HOLE && !isHoyoAdjacent(nx, ny)) {
-                  map[ny][nx] = terrainType;
+                if (!isProtectedArea(nx, ny) && map[ny][nx] !== TERRAIN.TEE && map[ny][nx] !== TERRAIN.HOLE) {
+                  // No tapar la calle por completo: si es calle, solo cambiar si mantenemos alternativa
+                  if (map[ny][nx] === TERRAIN.FAIRWAY) {
+                    if (terrainType === TERRAIN.SAND) {
+                      map[ny][nx] = terrainType; // Búnker en calle es jugable
+                    }
+                  } else {
+                    map[ny][nx] = terrainType;
+                  }
                 }
               }
             }
           }
         }
 
-        if (currentDiff === DIFF_LEVELS.MEDIUM) {
-          safeCreateBlob(midX + (midX < COLS/2 ? 2 : -2), midY, 2.0, TERRAIN.SAND);
-          safeCreateBlob(holeX + (customRandom() > 0.5 ? 2 : -2), holeY + 3, 1.6, TERRAIN.SAND);
-          if (customRandom() > 0.4) {
-            safeCreateBlob(midX + (midX < COLS/2 ? -2 : 2), midY - 2, 1.8, TERRAIN.WATER);
-          }
-        } else {
-          safeCreateBlob(holeX + (holeX < COLS/2 ? 3 : -3), holeY + 3, 2.2, TERRAIN.WATER);
-          safeCreateBlob(midX, midY, 2.2, TERRAIN.WATER);
-          safeCreateBlob(holeX - 2, holeY + 3, 1.5, TERRAIN.SAND);
-          safeCreateBlob(holeX + 2, holeY + 3, 1.5, TERRAIN.SAND);
+        // 4. COLOCACIÓN ESTRATÉGICA Y SEGURA DE HAZARDS (BÚNKERS Y AGUA)
+        // Búnkers defensivos alrededor del Green
+        let bunkerAngle = customRandom() * Math.PI * 2;
+        let b1X = Math.round(holeX + Math.cos(bunkerAngle) * 3);
+        let b1Y = Math.round(holeY + Math.sin(bunkerAngle) * 3);
+        safeCreateHazard(b1X, b1Y, 1.6, TERRAIN.SAND);
+
+        if (isAvanzado) {
+          let b2X = Math.round(holeX - Math.cos(bunkerAngle) * 3);
+          let b2Y = Math.round(holeY - Math.sin(bunkerAngle) * 3);
+          safeCreateHazard(b2X, b2Y, 1.5, TERRAIN.SAND);
         }
 
-        for (let r = 1; r < ROWS - 1; r++) {
+        // Lagos / Agua según tipo de mapa
+        let numWaterLakes = !isAvanzado ? (customRandom() > 0.5 ? 1 : 0) : (isXXL ? 2 : 1);
+        for (let w = 0; w < numWaterLakes; w++) {
+          let targetPathIdx = Math.floor(fairwayPath.length * (0.3 + customRandom() * 0.4));
+          let pt = fairwayPath[targetPathIdx] || { x: Math.floor(COLS/2), y: Math.floor(ROWS/2) };
+          let lakeX = pt.x + (customRandom() > 0.5 ? 3 : -3);
+          let lakeY = pt.y + Math.floor(customRandom() * 3 - 1);
+          safeCreateHazard(lakeX, lakeY, isAvanzado ? 2.0 : 1.6, TERRAIN.WATER);
+        }
+
+        // Búnkers de calle adicionales
+        if (isAvanzado || isXXL) {
+          let midIdx = Math.floor(fairwayPath.length * 0.5);
+          let pt = fairwayPath[midIdx] || { x: Math.floor(COLS/2), y: Math.floor(ROWS/2) };
+          safeCreateHazard(pt.x + (customRandom() > 0.5 ? 2 : -2), pt.y, 1.6, TERRAIN.SAND);
+        }
+
+        // 5. VEGETACIÓN Y ÁRBOLES JUSTOS (NO BLOQUEANTES EN LA CALLE)
+        for (let r = 0; r < ROWS; r++) {
           for (let c = 0; c < COLS; c++) {
-            let isEdge = (c <= 1 || c >= COLS - 2);
-            let nearFairway = hasAdjacentTerrain(c, r, TERRAIN.FAIRWAY);
+            if (map[r][c] === TERRAIN.ROUGH && !isProtectedArea(c, r)) {
+              let isEdge = (c <= 1 || c >= COLS - 2);
+              let nearFairway = hasAdjacentTerrain(c, r, TERRAIN.FAIRWAY);
 
-            if (map[r][c] === TERRAIN.ROUGH) {
-              let rand = customRandom();
-              let treeChance = isEdge ? 0.85 : (nearFairway ? 0.65 : 0.45);
-
-              if (rand < treeChance) {
+              let treeChance = isEdge ? 0.70 : (nearFairway ? 0.35 : 0.20);
+              if (customRandom() < treeChance) {
                 map[r][c] = (customRandom() > 0.5) ? TERRAIN.PINE : TERRAIN.DECIDUOUS;
               }
             }
           }
         }
 
-        parVal = Math.max(3, Math.ceil(fairwayPath.length / (currentDiff === DIFF_LEVELS.MEDIUM ? 3.2 : 2.8)) + (currentDiff === DIFF_LEVELS.MEDIUM ? 1 : 2));
+        // 6. CÁLCULO DE PAR AJUSTADO Y JUSTO
+        let divisor = !isAvanzado ? 3.4 : (isXXL ? 3.8 : 3.0);
+        parVal = Math.max(3, Math.ceil(fairwayPath.length / divisor) + (!isAvanzado ? 1 : 2));
+
+        spawnBirds(mapTypeVal);
         updatePerksDisplay();
         drawBoard();
       }
@@ -1329,11 +1485,7 @@
         playDiceSound();
 
         let activePerks = getActivePlayerPerks();
-        let rawDice = Math.floor(Math.random() * selectedClub.maxDice) + 1;
-
-        if (path.length === 1 && activePerks.teeGuarantee && (rawDice === 1 || rawDice === 2)) {
-          rawDice = 3;
-        }
+        let rawDice = selectedClub.diceValues[Math.floor(Math.random() * selectedClub.diceValues.length)];
 
         let perkBonus = activePerks.diceBonus;
         currentDice = rawDice + perkBonus;
@@ -1349,8 +1501,9 @@
         let effectiveDistance = currentDice;
 
         if (currentTerrain === TERRAIN.TEE) {
-          effectiveDistance += 1;
-          modifierDetails.push("+1 Salida");
+          let teeBonus = activePerks.teeGuarantee ? 3 : 1;
+          effectiveDistance += teeBonus;
+          modifierDetails.push(`+${teeBonus} Salida`);
         } else if (currentTerrain === TERRAIN.FAIRWAY) {
           // Calle neutra
         } else if (currentTerrain === TERRAIN.ROUGH) {
@@ -1411,22 +1564,47 @@
         ];
 
         dirs.forEach(function(d) {
-          let step = distance;
-          while (step > 0) {
+          let blockedByBird = false;
+          let birdBlockedStep = -1;
+
+          for (let step = 1; step <= distance; step++) {
             let nx = currentPos.x + d.x * step;
             let ny = currentPos.y + d.y * step;
 
-            if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (activePerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
-                if (isLineClear(currentPos.x, currentPos.y, nx, ny)) {
-                  if (!validMoves.some(function(m) { return m.x === nx && m.y === ny; })) {
-                    validMoves.push({ x: nx, y: ny });
-                  }
-                  break;
+            if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) break;
+
+            // Arboles bloquean linea a menos que tenga Atajo Arboleda
+            if (!activePerks.woodlandShortcut && (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS)) {
+              break;
+            }
+
+            // Comprobar si hay pajaro en esta casilla
+            let hasBird = birds.some(b => b.x === nx && b.y === ny);
+            if (hasBird) {
+              blockedByBird = true;
+              birdBlockedStep = step - 1; // La bola queda justo en la casilla anterior al pajaro
+              break;
+            }
+          }
+
+          if (blockedByBird) {
+            if (birdBlockedStep > 0) {
+              let bx = currentPos.x + d.x * birdBlockedStep;
+              let by = currentPos.y + d.y * birdBlockedStep;
+              if (!validMoves.some(m => m.x === bx && m.y === by)) {
+                validMoves.push({ x: bx, y: by });
+              }
+            }
+          } else {
+            let targetX = currentPos.x + d.x * distance;
+            let targetY = currentPos.y + d.y * distance;
+            if (targetX >= 0 && targetX < COLS && targetY >= 0 && targetY < ROWS) {
+              if (activePerks.woodlandShortcut || (map[targetY][targetX] !== TERRAIN.PINE && map[targetY][targetX] !== TERRAIN.DECIDUOUS)) {
+                if (!validMoves.some(m => m.x === targetX && m.y === targetY)) {
+                  validMoves.push({ x: targetX, y: targetY });
                 }
               }
             }
-            step--;
           }
         });
       }
@@ -1478,6 +1656,7 @@
             path.push({ x: targetMove.x, y: targetMove.y });
           }
 
+          moveBirds();
           validMoves = [];
           document.getElementById('dice-val').innerText = '-';
           document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
@@ -1551,7 +1730,7 @@
           p.totalStrokes += p.strokeCount;
         });
 
-        if (currentHole === 2 || currentHole === 4 || currentHole === 6) {
+        if (currentHole === 2 || currentHole === 4 || currentHole === 6 || currentHole === 8) {
           startMultiplayerPerkDraft();
         } else {
           showMultiplayerScorecardModal();
@@ -1595,7 +1774,6 @@
         document.getElementById('scorecard-modal').style.display = 'flex';
       }
 
-      // --- DRAFT MULTIJUGADOR CON VERIFICACIÓN DE REPETICIÓN POR JUGADOR ---
       function startMultiplayerPerkDraft() {
         let sorted = [...players].sort((a, b) => a.totalStrokes - b.totalStrokes);
         multiplayerDraftQueue = sorted.map(p => p.id);
@@ -1689,15 +1867,16 @@
         document.getElementById('putt-banner').style.display = 'none';
 
         if (isCourseMode) {
-          circuitHistory.push({ hole: currentHole, diff: currentDiff === DIFF_LEVELS.MEDIUM ? t('medium') : t('hard'), par: parVal, strokes: strokeCount });
+          let diffName = currentHole <= 3 ? t('normal') : (currentHole <= 6 ? t('avanzado') : t('xxl'));
+          circuitHistory.push({ hole: currentHole, diff: diffName, par: parVal, strokes: strokeCount });
           
-          if (currentHole === 2 || currentHole === 4 || currentHole === 6) {
+          if (currentHole === 2 || currentHole === 4 || currentHole === 6 || currentHole === 8) {
             triggerPerkSelection();
           } else {
             showScorecardModal();
           }
         } else {
-          if (currentHole % 2 === 0) {
+          if (currentHole % 3 === 0) {
             triggerPerkSelection();
           } else {
             document.getElementById('btn-next-quick').style.display = 'flex';
@@ -1962,6 +2141,22 @@
         return { x: 0, y: 0 };
       }
 
+            function drawBirdSymbol(cCtx, cx, cy, size, color) {
+        cCtx.save();
+        cCtx.fillStyle = color;
+        cCtx.strokeStyle = color;
+        cCtx.lineWidth = 2;
+        cCtx.beginPath();
+        // Stylized vector flying bird silhouette in black/white monochrome
+        cCtx.moveTo(cx - size, cy + size * 0.2);
+        cCtx.quadraticCurveTo(cx - size * 0.5, cy - size * 0.8, cx, cy - size * 0.2);
+        cCtx.quadraticCurveTo(cx + size * 0.5, cy - size * 0.8, cx + size, cy + size * 0.2);
+        cCtx.quadraticCurveTo(cx + size * 0.5, cy - size * 0.2, cx, cy + size * 0.4);
+        cCtx.quadraticCurveTo(cx - size * 0.5, cy - size * 0.2, cx - size, cy + size * 0.2);
+        cCtx.fill();
+        cCtx.restore();
+      }
+
       function drawLegendIcons() {
         const bgColor = isDarkMode ? '#000000' : '#ffffff';
         const strokeColor = isDarkMode ? '#ffffff' : '#000000';
@@ -1972,7 +2167,7 @@
           { id: 'icon-rough', type: 'rough' }, { id: 'icon-water', type: 'water' },
           { id: 'icon-pine', type: 'pine' }, { id: 'icon-tree', type: 'tree' },
           { id: 'icon-sand', type: 'sand' }, { id: 'icon-tee', type: 'tee' },
-          { id: 'icon-hole', type: 'hole' }
+          { id: 'icon-hole', type: 'hole' }, { id: 'icon-bird', type: 'bird' }
         ];
 
         icons.forEach(function(icon) {
@@ -2016,6 +2211,9 @@
             cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
             cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
             cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
+          } else if (icon.type === 'bird') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
           } else if (icon.type === 'hole') {
             cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
             cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
@@ -2023,6 +2221,15 @@
             cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
           }
         });
+      }
+
+      function scrollToPlayer() {
+        const canvasContainer = document.getElementById('canvas-container');
+        if (canvasContainer && canvasContainer.classList.contains('xxl-mode') && path && path.length > 0) {
+          let pos = path[path.length - 1];
+          let targetY = pos.y * TILE_SIZE - (canvasContainer.clientHeight / 2);
+          canvasContainer.scrollTop = Math.max(0, targetY);
+        }
       }
 
       function drawBoard() {
@@ -2179,7 +2386,18 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
+        
+        // Dibujar pájaros en el tablero con silueta vectorial monocroma
+        if (birds && birds.length > 0) {
+          birds.forEach(function(b) {
+            let bx = b.x * TILE_SIZE + TILE_SIZE/2;
+            let by = b.y * TILE_SIZE + TILE_SIZE/2;
+            drawBirdSymbol(ctx, bx, by, 11, strokeColor);
+          });
+        }
+
         highlightCurrentTerrain();
+        scrollToPlayer();
       }
 
       function drawPine(x, y, color) {
@@ -2219,6 +2437,12 @@
         soundEnabled = !soundEnabled;
         this.innerText = soundEnabled ? t('soundOn') : t('soundOff');
         if (soundEnabled) playMoveSound();
+      };
+
+      document.getElementById('btn-freemode-type').onclick = function() {
+        freeModeMapType = (freeModeMapType + 1) % 3;
+        updateLanguageUI();
+        forceEinkRefresh(generateHole);
       };
 
       document.getElementById('btn-roll').onclick = rollDice;
