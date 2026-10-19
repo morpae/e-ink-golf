@@ -814,6 +814,15 @@
         }
       }
 
+            function getCurrentMapType() {
+        if (isCourseMode || isMultiplayer) {
+          if (currentHole <= 3) return MAP_TYPES.NORMAL;
+          if (currentHole <= 6) return MAP_TYPES.AVANZADO;
+          return MAP_TYPES.XXL;
+        }
+        return freeModeMapType;
+      }
+
       function updateLanguageUI() {
         document.getElementById('btn-lang-toggle').innerText = t('langBtn');
         document.getElementById('btn-sound-toggle').innerText = soundEnabled ? t('soundOn') : t('soundOff');
@@ -869,7 +878,7 @@
         }
 
         document.getElementById('putt-banner').innerText = t('puttBanner');
-        spawnBirds(mapTypeVal);
+        spawnBirds(getCurrentMapType());
         updatePerksDisplay();
         drawBoard();
       }
@@ -1488,7 +1497,7 @@
         let divisor = !isAvanzado ? 3.4 : (isXXL ? 3.8 : 3.0);
         parVal = Math.max(3, Math.ceil(fairwayPath.length / divisor) + (!isAvanzado ? 1 : 2));
 
-        spawnBirds(mapTypeVal);
+        spawnBirds(getCurrentMapType());
         updatePerksDisplay();
         drawBoard();
       }
