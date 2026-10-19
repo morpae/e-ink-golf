@@ -514,16 +514,19 @@
     }
     .player-btn-grid button { padding: 10px; font-size: 0.95rem; }
 
-    #mystery-modal, #bird-minigame-modal {
+    #mystery-modal, #bird-minigame-modal, #guide-modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(255, 255, 255, 0.98);
-      z-index: 110;
+      z-index: 120;
       justify-content: center;
       align-items: center;
       padding: 10px;
       overflow-y: auto;
+    }
+    body.dark-mode #guide-modal {
+      background: rgba(0, 0, 0, 0.98);
     }
 
   </style>
@@ -536,6 +539,7 @@
       <button id="btn-lang-toggle" class="btn-top">[ LANG: ES ]</button>
       <button id="btn-sound-toggle" class="btn-top">[ SOUND: ON ]</button>
       <button id="btn-night-toggle" class="btn-top">[ DÍA ]</button>
+      <button id="btn-guide" class="btn-top">[ GUÍA ]</button>
       <button id="btn-ranking" class="btn-top">[ RANKING ]</button>
       <button id="btn-mode-toggle" class="btn-top">[ DAILY COURSE ]</button>
       <button id="btn-freemode-type" class="btn-top" style="display:none;">[ TIPO: NORMAL ]</button>
@@ -712,6 +716,71 @@
       </div>
       <p id="bird-game-status" style="font-size:0.8rem; font-weight:bold; min-height:1.4em;">Toca los pájaros antes de que crucen el recuadro.</p>
       <button id="btn-bird-game-finish" style="display:none; width:100%; padding:10px; font-size:1rem; margin-top:8px;">[ CONTINUAR ]</button>
+    </div>
+  </div>
+
+      <div id="guide-modal" style="display:none;">
+    <div class="scorecard-box" style="max-width:480px; text-align:left; max-height:92vh; overflow-y:auto; padding:14px;">
+      <div class="scorecard-title">
+        <span>[ GUÍA DEL JUEGO ]</span>
+        <button id="btn-close-guide" style="padding:2px 8px;font-size:0.75rem;">[X]</button>
+      </div>
+      
+      <div style="font-size:0.78rem; line-height:1.45; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div>
+          <b>1. MECÁNICAS PRINCIPALES</b><br>
+          • <b>Selección de Palo:</b> <span class="perk-tag" style="padding:1px 4px;">[DRIVER]</span> (Dado 4-6), <span class="perk-tag" style="padding:1px 4px;">[HIERRO]</span> (Dado 2-4) y <span class="perk-tag" style="padding:1px 4px;">[MADERA]</span> (Dado 1-3).<br>
+          • <b>Tirada y Movimiento:</b> Tira el dado para avanzar por las casillas válidas <span style="border:1px dashed #000; padding:0 2px;">(···)</span> esquivando obstáculos.<br>
+          • <b>Green y Putt:</b> Al pisar el <span class="perk-tag" style="padding:1px 4px;">[GREEN]</span>, se activa el Putt directo (alcance de 2 casillas o 3 con mejora) para embocar al <span class="perk-tag" style="padding:1px 4px;">[HOYO]</span>.
+        </div>
+
+        <div>
+          <b>2. SÍMBOLOS Y TERRENOS</b><br>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:6px;">
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tee" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Salida (Tee):</b> Inicio del hoyo (+3 o +1 bono).</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-fairway" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Calle (Fairway):</b> Terreno óptimo y neutro.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-green" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Green:</b> Superficie para putt directo.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-rough" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Rough:</b> Resta -1 casilla a tu tirada.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-sand" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Búnker:</b> Limita tirada máxima a 3.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-water" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Agua:</b> +1 golpe y penalización.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-pine" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pino:</b> Obstáculo natural bloqueante.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tree" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Árbol:</b> Vegetación densa de ruta.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-bird" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pájaro:</b> Minijuego de reflejos.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-mystery" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Casilla ?:</b> Evento aleatorio sorpresa.</span></div>
+            <div style="display:flex; align-items:center; gap:5px; grid-column: span 2;"><canvas id="g-icon-hole" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Hoyo:</b> Meta final del recorrido.</span></div>
+          </div>
+        </div>
+
+        <div>
+          <b>3. CASILLA MISTERIOSA [?]</b><br>
+          Al caer en una casilla con interrogante <span class="perk-tag" style="padding:1px 4px;">[?]</span>, se activa un evento aleatorio de bonificación o riesgo:<br>
+          • <b>-1 Golpe:</b> Resta directamente un golpe a tu contador.<br>
+          • <b>+1 Golpe:</b> Añade un golpe de penalización.<br>
+          • <b>Teletransporte al Green:</b> Envía la bola directamente a una casilla aleatoria del Green.<br>
+          • <b>Retorno al Tee:</b> La bola vuelve penalizada al punto de salida inicial.<br>
+          • <b>Minijuego de Pájaros:</b> Minijuego interactivo donde debes tocar 5 pájaros rápidos en movimiento. Si aciertas todos, te salvas; si fallas alguno, sumas +3 golpes.
+        </div>
+
+        <div>
+          <b>4. SISTEMA DE MODIFICADORES (PERKS)</b><br>
+          Cada pocos hoyos en el Circuito Diario o Multijugador (y cada 3 hoyos en modo libre), puedes elegir ventajas permanentes:<br>
+          • <b>+1 / +2 a la Tirada:</b> Incrementa tu dado base.<br>
+          • <b>+1 Mulligan:</b> Permite repetir la tirada inicial de salida.<br>
+          • <b>Super Salida (+3):</b> Otorga mayor distancia de salida en el Tee.<br>
+          • <b>Inmune al Agua / Búnker / Rough:</b> Anula las penalizaciones de dichos terrenos.<br>
+          • <b>Atajo Arboleda:</b> Permite atravesar los árboles sin bloqueo.<br>
+          • <b>Putt Extendido:</b> Amplía el alcance del Putt directo en el Green de 2 a 3 casillas.
+        </div>
+
+        <div>
+          <b>5. MODOS DE JUEGO & LEADERBOARD</b><br>
+          • <b>Modo Libre:</b> Partidas rápidas personalizables (Normal, Avanzado, XXL).<br>
+          • <b>Daily Course:</b> Circuito oficial diario de 9 hoyos con progresión de dificultad y ranking mundial (Daily Leaderboard con tus iniciales).<br>
+          • <b>Multijugador Local:</b> Competición por turnos compartiendo dispositivo (2 a 4 jugadores) con draft de mejoras integrado.
+        </div>
+      </div>
+      
+      <button id="btn-guide-ok" style="width:100%; padding:8px; font-size:0.85rem; margin-top:12px;">[ CERRAR GUÍA ]</button>
     </div>
   </div>
 
@@ -2855,15 +2924,187 @@
         drawBoard();
       };
 
+      const guideModal = document.getElementById('guide-modal');
+      document.getElementById('btn-guide').onclick = function() {
+        guideModal.style.display = 'flex';
+        drawGuideIcons();
+      };
+      document.getElementById('btn-close-guide').onclick = function() {
+        guideModal.style.display = 'none';
+      };
+      document.getElementById('btn-guide-ok').onclick = function() {
+        guideModal.style.display = 'none';
+      };
+
       document.getElementById('btn-mode-toggle').onclick = function() {
         if (!isCourseMode && !isMultiplayer) {
           startCircuit();
         } else if (isCourseMode) {
           openPlayerSelectModal();
         } else if (isMultiplayer) {
-          if (confirm(t('confirmFreeMode'))) startQuickGame();
+          if (confirm(t('confirmFreeMode'))) 
+      function drawGuideIcons() {
+        const iconConfigs = [
+          { id: 'g-icon-tee', type: 'tee' },
+          { id: 'g-icon-fairway', type: 'fairway' },
+          { id: 'g-icon-green', type: 'green' },
+          { id: 'g-icon-rough', type: 'rough' },
+          { id: 'g-icon-sand', type: 'sand' },
+          { id: 'g-icon-water', type: 'water' },
+          { id: 'g-icon-pine', type: 'pine' },
+          { id: 'g-icon-tree', type: 'tree' },
+          { id: 'g-icon-bird', type: 'bird' },
+          { id: 'g-icon-mystery', type: 'mystery' },
+          { id: 'g-icon-hole', type: 'hole' }
+        ];
+        
+        const bgColor = isDarkMode ? '#000000' : '#ffffff';
+        const strokeColor = isDarkMode ? '#ffffff' : '#000000';
+        const fairwayColor = isDarkMode ? '#222222' : '#e5e5e5';
+
+        iconConfigs.forEach(function(icon) {
+          let c = document.getElementById(icon.id);
+          if (!c) return;
+          let cCtx = c.getContext('2d');
+          let w = c.width, h = c.height;
+
+          cCtx.clearRect(0, 0, w, h);
+          cCtx.fillStyle = bgColor; cCtx.fillRect(0, 0, w, h);
+
+          if (icon.type === 'fairway') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+          } else if (icon.type === 'green') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            for (let i = 2; i < w; i += 4) {
+              for (let j = 2; j < h; j += 4) {
+                cCtx.fillRect(i, j, 1.2, 1.2);
+              }
+            }
+          } else if (icon.type === 'rough') {
+            cCtx.fillStyle = isDarkMode ? '#444444' : '#aaaaaa';
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'water') {
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1;
+            cCtx.beginPath(); cCtx.moveTo(0, h); cCtx.lineTo(w, 0); cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0); cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2); cCtx.stroke();
+          } else if (icon.type === 'sand') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'pine') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.moveTo(w/2, 1); cCtx.lineTo(2, 7); cCtx.lineTo(w - 2, 7); cCtx.closePath(); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 4); cCtx.lineTo(1, 12); cCtx.lineTo(w - 1, 12); cCtx.closePath(); cCtx.fill();
+            cCtx.fillRect(w/2 - 0.5, 12, 1, 3);
+          } else if (icon.type === 'tree') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
+            cCtx.fillRect(w/2 - 1, 10, 2, 4);
+          } else if (icon.type === 'tee') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
+          } else if (icon.type === 'bird') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
+          } else if (icon.type === 'mystery') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            cCtx.font = 'bold 10px monospace';
+            cCtx.textAlign = 'center';
+            cCtx.textBaseline = 'middle';
+            cCtx.fillText('?', w/2, h/2 + 1);
+          } else if (icon.type === 'hole') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
+          }
+        });
+      }
+
+      startQuickGame();
         }
       };
+
+      
+      function drawGuideIcons() {
+        const iconConfigs = [
+          { id: 'g-icon-tee', type: 'tee' },
+          { id: 'g-icon-fairway', type: 'fairway' },
+          { id: 'g-icon-green', type: 'green' },
+          { id: 'g-icon-rough', type: 'rough' },
+          { id: 'g-icon-sand', type: 'sand' },
+          { id: 'g-icon-water', type: 'water' },
+          { id: 'g-icon-pine', type: 'pine' },
+          { id: 'g-icon-tree', type: 'tree' },
+          { id: 'g-icon-bird', type: 'bird' },
+          { id: 'g-icon-mystery', type: 'mystery' },
+          { id: 'g-icon-hole', type: 'hole' }
+        ];
+        
+        const bgColor = isDarkMode ? '#000000' : '#ffffff';
+        const strokeColor = isDarkMode ? '#ffffff' : '#000000';
+        const fairwayColor = isDarkMode ? '#222222' : '#e5e5e5';
+
+        iconConfigs.forEach(function(icon) {
+          let c = document.getElementById(icon.id);
+          if (!c) return;
+          let cCtx = c.getContext('2d');
+          let w = c.width, h = c.height;
+
+          cCtx.clearRect(0, 0, w, h);
+          cCtx.fillStyle = bgColor; cCtx.fillRect(0, 0, w, h);
+
+          if (icon.type === 'fairway') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+          } else if (icon.type === 'green') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            for (let i = 2; i < w; i += 4) {
+              for (let j = 2; j < h; j += 4) {
+                cCtx.fillRect(i, j, 1.2, 1.2);
+              }
+            }
+          } else if (icon.type === 'rough') {
+            cCtx.fillStyle = isDarkMode ? '#444444' : '#aaaaaa';
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'water') {
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1;
+            cCtx.beginPath(); cCtx.moveTo(0, h); cCtx.lineTo(w, 0); cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0); cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2); cCtx.stroke();
+          } else if (icon.type === 'sand') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'pine') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.moveTo(w/2, 1); cCtx.lineTo(2, 7); cCtx.lineTo(w - 2, 7); cCtx.closePath(); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 4); cCtx.lineTo(1, 12); cCtx.lineTo(w - 1, 12); cCtx.closePath(); cCtx.fill();
+            cCtx.fillRect(w/2 - 0.5, 12, 1, 3);
+          } else if (icon.type === 'tree') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
+            cCtx.fillRect(w/2 - 1, 10, 2, 4);
+          } else if (icon.type === 'tee') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
+          } else if (icon.type === 'bird') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
+          } else if (icon.type === 'mystery') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            cCtx.font = 'bold 10px monospace';
+            cCtx.textAlign = 'center';
+            cCtx.textBaseline = 'middle';
+            cCtx.fillText('?', w/2, h/2 + 1);
+          } else if (icon.type === 'hole') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
+          }
+        });
+      }
 
       startQuickGame();
     });
