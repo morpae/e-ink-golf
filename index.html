@@ -520,7 +520,7 @@
         { id: 'INMUNE_BUNKER', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
         { id: 'NEUMATICOS_ROUGH', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
         { id: 'ATAJO_ARBOLEDA', name: 'Atajo Arboleda', desc: 'La bola atraviesa la vegetación sin ser bloqueada.', unique: true },
-        { id: 'GREEN_AMPLIADO', name: 'Green Ampliado', desc: 'Expande el área de Green alrededor del hoyo para facilitar el Putt.', unique: true }
+        { id: 'GREEN_AMPLIADO', name: 'Green Ampliado', desc: 'Expande significativamente la superficie del Green alrededor del hoyo.', unique: true }
       ];
 
       let playerCount = 2;
@@ -912,7 +912,7 @@
         banner.innerText = t('turnBannerText', { p: p.name, d: dist });
       }
 
-      // --- GENERACIÓN DE MAPAS MEJORADA (GREEN, BÚNKERES, AGUA Y ARBOLEDAS) ---
+      // --- GENERACIÓN DE MAPA CON FORMULACIÓN ORGÁNICA DE GREEN ---
       function generateHole() {
         strokeCount = 0;
         currentDice = null;
@@ -978,22 +978,39 @@
           }
         });
 
-        // GENERACIÓN DEL GREEN ORGÁNICO
-        // Si el jugador tiene la mejora GREEN_AMPLIADO en el Daily, el radio del green crece
-        let greenBaseRadius = playerPerks.extendedGreen ? 2.3 : 1.6;
-        for (let r = -3; r <= 3; r++) {
-          for (let c = -3; c <= 3; c++) {
+        // GENERACIÓN DE FORMA ORGÁNICA DEL GREEN (Rombo, Óvalo, Rectángulo redondeado o Lágrima)
+        let shapeType = Math.floor(customRandom() * 4); // 0: Rombo, 1: Óvalo horizontal, 2: Óvalo vertical, 3: Trapezoidal
+        let baseRadius = playerPerks.extendedGreen ? 3.0 : 2.0;
+
+        for (let r = -4; r <= 4; r++) {
+          for (let c = -4; c <= 4; c++) {
             let nx = holeX + c, ny = holeY + r;
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              let dist = Math.hypot(r, c);
-              if (dist <= greenBaseRadius) {
+              let isGreenTile = false;
+
+              if (shapeType === 0) {
+                // ROMBO (Manhattan Distance)
+                isGreenTile = (Math.abs(c) + Math.abs(r)) <= (baseRadius + 0.2);
+              } else if (shapeType === 1) {
+                // ÓVALO HORIZONTAL
+                isGreenTile = ((c * c) / ((baseRadius + 0.8) * (baseRadius + 0.8)) + (r * r) / (baseRadius * baseRadius)) <= 1.0;
+              } else if (shapeType === 2) {
+                // ÓVALO VERTICAL
+                isGreenTile = ((c * c) / (baseRadius * baseRadius) + (r * r) / ((baseRadius + 0.8) * (baseRadius + 0.8))) <= 1.0;
+              } else {
+                // LÁGRIMA / TRAPEZOIDE (MÁS ANCHO HACIA ABAJO)
+                let factor = (r > 0 ? 1.3 : 0.9);
+                isGreenTile = Math.hypot(c / factor, r) <= baseRadius;
+              }
+
+              if (isGreenTile) {
                 map[ny][nx] = TERRAIN.GREEN;
               }
             }
           }
         }
 
-        // Colocar siempre GREEN en las 8 casillas adyacentes directas al Hoyo
+        // Asegurar que las casillas directamente adyacentes al Hoyo sean Green
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
             let nx = holeX + dc, ny = holeY + dr;
@@ -1012,7 +1029,6 @@
           updateMultiplayerTurnBanner();
         }
 
-        // TRAMPAS DE AGUA Y BÚNKERES (Jamás en casillas adyacentes al Hoyo)
         function isHoyoAdjacent(x, y) {
           return Math.abs(x - holeX) <= 1 && Math.abs(y - holeY) <= 1;
         }
@@ -1043,7 +1059,6 @@
           safeCreateBlob(holeX + 2, holeY + 3, 1.5, TERRAIN.SAND);
         }
 
-        // GENERACIÓN DE ARBOLEDAS FRONDOSAS EN LOS MÁRGENES Y BORDES DEL MAPA
         for (let r = 1; r < ROWS - 1; r++) {
           for (let c = 0; c < COLS; c++) {
             let isEdge = (c <= 1 || c >= COLS - 2);
@@ -1154,6 +1169,8 @@
         }
       }
 
+      // --- MOVIMIENTO TÁCTICO CON FRENADO / CONTROL DE FUERZA ---
+      // Permite seleccionar CUALQUIER paso válido en la trayectoria (1..distancia) para poder frenar en el Green o evitar hazards!
       function calculateValidMoves(distance) {
         validMoves = [];
         let currentPos = path[path.length - 1];
@@ -1164,8 +1181,7 @@
         ];
 
         dirs.forEach(function(d) {
-          let step = distance;
-          while (step > 0) {
+          for (let step = 1; step <= distance; step++) {
             let nx = currentPos.x + d.x * step;
             let ny = currentPos.y + d.y * step;
 
@@ -1175,11 +1191,15 @@
                   if (!validMoves.some(function(m) { return m.x === nx && m.y === ny; })) {
                     validMoves.push({ x: nx, y: ny });
                   }
-                  break;
+                } else {
+                  break; // Bloqueado por árbol
                 }
+              } else {
+                break; // Obstáculo
               }
+            } else {
+              break; // Fuera de mapa
             }
-            step--;
           }
         });
       }
@@ -1256,7 +1276,6 @@
 
       canvas.addEventListener('click', handleCanvasClick);
 
-      // NUEVA LÓGICA DE PUTT DIRECTO: Activa si estás en cualquier casilla GREEN
       function checkPuttCondition() {
         let currentPos = path[path.length - 1];
 
@@ -1583,7 +1602,6 @@
         return { x: 0, y: 0 };
       }
 
-      // ICONOS EN LEYENDA SUPERIOR
       function drawLegendIcons() {
         const bgColor = isDarkMode ? '#000000' : '#ffffff';
         const strokeColor = isDarkMode ? '#ffffff' : '#000000';
@@ -1647,7 +1665,6 @@
         });
       }
 
-      // DIBUJO DEL CAMPO EN CANVAS
       function drawBoard() {
         drawLegendIcons();
         if (!map || map.length === 0) return;
@@ -1668,7 +1685,6 @@
               ctx.fillStyle = fairwayColor; ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
             }
 
-            // NUEVO RENDERIZADO VISUAL DEL GREEN (PATRÓN DE PUNTOS MONOCROMO)
             if (map[r][c] === TERRAIN.GREEN) {
               ctx.fillStyle = fairwayColor; ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
               ctx.fillStyle = strokeColor;
@@ -1803,7 +1819,6 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
-        // BARRA INFERIOR CON EQUIPAMIENTO (PERKS)
         const barHeight = 44;
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
