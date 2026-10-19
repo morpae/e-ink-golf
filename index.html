@@ -383,7 +383,9 @@
     body.dark-mode #scorecard-modal,
     body.dark-mode #player-select-modal,
     body.dark-mode #pass-turn-modal,
-    body.dark-mode #perk-modal {
+    body.dark-mode #perk-modal,
+    body.dark-mode #mystery-modal,
+    body.dark-mode #bird-minigame-modal {
       background: rgba(0, 0, 0, 0.98);
     }
     .scorecard-box, .player-select-box {
@@ -511,6 +513,19 @@
       margin: 12px 0;
     }
     .player-btn-grid button { padding: 10px; font-size: 0.95rem; }
+
+    #mystery-modal, #bird-minigame-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      z-index: 110;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
   </style>
 </head>
 <body class="dark-mode">
@@ -538,6 +553,7 @@
     <div class="legend-item" id="leg-tee"><canvas id="icon-tee" width="14" height="14"></canvas> <span id="lbl-tee">Salida</span></div>
     <div class="legend-item" id="leg-hole"><canvas id="icon-hole" width="14" height="14"></canvas> <span id="lbl-hole">Hoyo</span></div>
     <div class="legend-item" id="leg-bird" style="display:none;"><canvas id="icon-bird" width="14" height="14"></canvas> <span id="lbl-bird">Pájaro</span></div>
+    <div class="legend-item" id="leg-mystery" style="display:none;"><canvas id="icon-mystery" width="14" height="14"></canvas> <span id="lbl-mystery">?</span></div>
   </div>
 
   <div id="turn-banner" style="display:none;">[ TURNO: J1 - 8 CASILLAS AL HOYO ]</div>
@@ -666,6 +682,36 @@
       </div>
 
       <button id="btn-continue-course" style="margin-top:10px;width:100%;">[ CONTINUAR ]</button>
+    </div>
+  </div>
+
+  
+  <div id="mystery-modal">
+    <div class="scorecard-box" style="text-align:center; max-width:380px;">
+      <div class="scorecard-title" style="justify-content:center;">
+        <span id="mystery-modal-title">¡CASILLA MISTERIO! ?</span>
+      </div>
+      <div id="mystery-modal-icon" style="font-size:3rem; margin:8px 0; font-family:monospace; font-weight:bold;">?</div>
+      <p id="mystery-modal-msg" style="font-size:0.95rem; font-weight:bold; margin-bottom:16px; line-height:1.4;"></p>
+      <button id="btn-mystery-ok" style="width:100%; padding:10px; font-size:1rem;">[ CONTINUAR ]</button>
+    </div>
+  </div>
+
+  <div id="bird-minigame-modal">
+    <div class="scorecard-box" style="text-align:center; max-width:420px; width:100%;">
+      <div class="scorecard-title" style="justify-content:space-between;">
+        <span>¡EVENTO PÁJAROS! ?</span>
+        <span id="bird-score-counter">0 / 5</span>
+      </div>
+      <div id="bird-game-container" style="position:relative; width:100%; height:260px; background:#ffffff; border:3px solid #000000; margin:10px 0; overflow:hidden;">
+        <canvas id="bird-canvas" width="380" height="260" style="width:100%; height:100%; display:block; touch-action:none;"></canvas>
+        <div id="bird-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10; color:#000000;">
+          <div id="bird-overlay-title" style="font-size:0.95rem; font-weight:bold; text-transform:uppercase; margin-bottom:12px; padding:0 10px;">¡OH NO! ¡HAS CAÍDO SOBRE UN NIDO DE PÁJAROS!</div>
+          <div id="bird-countdown" style="font-size:3.5rem; font-weight:bold; font-family:monospace;">3</div>
+        </div>
+      </div>
+      <p id="bird-game-status" style="font-size:0.8rem; font-weight:bold; min-height:1.4em;">Toca los pájaros antes de que crucen el recuadro.</p>
+      <button id="btn-bird-game-finish" style="display:none; width:100%; padding:10px; font-size:1rem; margin-top:8px;">[ CONTINUAR ]</button>
     </div>
   </div>
 
@@ -883,6 +929,7 @@
         drawBoard();
       }
 
+      let mysteryTile = null;
       let currentHole = 1;
       let circuitHistory = [];
       let activeLbTab = 'today';
@@ -1061,6 +1108,217 @@
       document.getElementById('club-driver').onclick = function() { selectClub(CLUBS.DRIVER); };
       document.getElementById('club-iron').onclick = function() { selectClub(CLUBS.IRON); };
       document.getElementById('club-wood').onclick = function() { selectClub(CLUBS.WOOD); };
+
+      
+      function triggerMysteryEvent(onComplete) {
+        let option = Math.floor(Math.random() * 5) + 1;
+        let modal = document.getElementById('mystery-modal');
+        let msgElem = document.getElementById('mystery-modal-msg');
+        let btnOk = document.getElementById('btn-mystery-ok');
+
+        if (option === 1) {
+          strokeCount = Math.max(0, strokeCount - 1);
+          msgElem.innerText = "¡BUENA SUERTE! \nRestas -1 golpe a tu contador actual.";
+          modal.style.display = 'flex';
+          btnOk.onclick = function() {
+            modal.style.display = 'none';
+            if (onComplete) onComplete();
+          };
+        } else if (option === 2) {
+          strokeCount += 1;
+          msgElem.innerText = "¡MALA SUERTE! \nSumas +1 golpe a tu contador actual.";
+          modal.style.display = 'flex';
+          btnOk.onclick = function() {
+            modal.style.display = 'none';
+            if (onComplete) onComplete();
+          };
+        } else if (option === 3) {
+          let holePos = findHolePos();
+          let greenCandidates = [];
+          for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+              if (map[r][c] === TERRAIN.GREEN && !(c === holePos.x && r === holePos.y)) {
+                greenCandidates.push({ x: c, y: r });
+              }
+            }
+          }
+          if (greenCandidates.length > 0) {
+            let dest = greenCandidates[Math.floor(Math.random() * greenCandidates.length)];
+            path.push({ x: dest.x, y: dest.y });
+          }
+          msgElem.innerText = "¡MENUDO TIRO! \nTu bola ha volado directamente al Green.";
+          modal.style.display = 'flex';
+          btnOk.onclick = function() {
+            modal.style.display = 'none';
+            if (onComplete) onComplete();
+          };
+        } else if (option === 4) {
+          for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+              if (map[r][c] === TERRAIN.TEE) {
+                path.push({ x: c, y: r });
+                break;
+              }
+            }
+          }
+          msgElem.innerText = "¡MAS SUERTE LA PROXIMA VEZ! \nLa bola se ha teletransportado de vuelta al Tee.";
+          modal.style.display = 'flex';
+          btnOk.onclick = function() {
+            modal.style.display = 'none';
+            if (onComplete) onComplete();
+          };
+        } else if (option === 5) {
+          startBirdMinigame(onComplete);
+        }
+      }
+
+      function startBirdMinigame(onComplete) {
+        let modal = document.getElementById('bird-minigame-modal');
+        let bCanvas = document.getElementById('bird-canvas');
+        let bCtx = bCanvas.getContext('2d');
+        let overlay = document.getElementById('bird-overlay');
+        let countdownElem = document.getElementById('bird-countdown');
+        let scoreCounter = document.getElementById('bird-score-counter');
+        let statusElem = document.getElementById('bird-game-status');
+        let btnFinish = document.getElementById('btn-bird-game-finish');
+
+        modal.style.display = 'flex';
+        overlay.style.display = 'flex';
+        btnFinish.style.display = 'none';
+        statusElem.innerText = "¡Prepárate para pulsar sobre los 5 pájaros!";
+        scoreCounter.innerText = "0 / 5";
+        countdownElem.innerText = "3";
+
+        let caughtCount = 0;
+        let totalBirds = 5;
+        let gameDuration = 10000;
+        let minigameBirds = [];
+        let animReq = null;
+        let startTime = null;
+        let gameState = 'COUNTDOWN';
+        let countdownStep = 3;
+
+        let fastBirdIndex = Math.floor(Math.random() * totalBirds);
+        for (let i = 0; i < totalBirds; i++) {
+          let side = (i % 2 === 0) ? 'left' : 'right';
+          let spawnY = 30 + Math.random() * (bCanvas.height - 60);
+          let baseSpeed = 190 + Math.random() * 70;
+          let speed = (i === fastBirdIndex) ? baseSpeed * 2 : baseSpeed;
+          let spawnDelay = i * 1200;
+          minigameBirds.push({
+            id: i,
+            x: side === 'left' ? -25 : bCanvas.width + 25,
+            y: spawnY,
+            vx: side === 'left' ? speed : -speed,
+            side: side,
+            delay: spawnDelay,
+            spawned: false,
+            caught: false,
+            escaped: false,
+            radius: 22
+          });
+        }
+
+        let cdInterval = setInterval(function() {
+          countdownStep--;
+          if (countdownStep === 0) {
+            countdownElem.innerText = "¡YA!";
+          } else if (countdownStep < 0) {
+            clearInterval(cdInterval);
+            overlay.style.display = 'none';
+            gameState = 'PLAYING';
+            startTime = performance.now();
+            statusElem.innerText = "¡Pulsa sobre los 5 pájaros antes de que crucen!";
+          } else {
+            countdownElem.innerText = String(countdownStep);
+          }
+        }, 750);
+
+        function minigameLoop(now) {
+          if (gameState === 'PLAYING') {
+            let elapsed = now - startTime;
+            bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height);
+
+            bCtx.fillStyle = isDarkMode ? '#000000' : '#ffffff';
+            bCtx.fillRect(0, 0, bCanvas.width, bCanvas.height);
+
+            let strokeColor = isDarkMode ? '#ffffff' : '#000000';
+
+            minigameBirds.forEach(function(b) {
+              if (!b.spawned && elapsed >= b.delay) {
+                b.spawned = true;
+              }
+              if (b.spawned && !b.caught && !b.escaped) {
+                b.x += b.vx * (16 / 1000);
+
+                if ((b.vx > 0 && b.x > bCanvas.width + 30) || (b.vx < 0 && b.x < -30)) {
+                  b.escaped = true;
+                }
+
+                drawBirdSymbol(bCtx, b.x, b.y, 12, strokeColor);
+              }
+            });
+
+            let allProcessed = minigameBirds.every(b => b.caught || b.escaped);
+            if (elapsed >= gameDuration || allProcessed) {
+              gameState = 'FINISHED';
+              let uncaught = minigameBirds.filter(b => !b.caught).length;
+              if (uncaught === 0) {
+                statusElem.innerText = "¡VICTORIA! has esquivado los 5 pájaros. 0 Penalización.";
+              } else {
+                statusElem.innerText = `¡FALLO! Se escaparon ${uncaught} pájaros. +3 Golpes de penalización.`;
+                strokeCount += 3;
+              }
+              btnFinish.style.display = 'block';
+            }
+          }
+
+          if (gameState !== 'FINISHED') {
+            animReq = requestAnimationFrame(minigameLoop);
+          }
+        }
+
+        function handleBirdTouch(e) {
+          if (gameState !== 'PLAYING') return;
+          let rect = bCanvas.getBoundingClientRect();
+          let scaleX = bCanvas.width / rect.width;
+          let scaleY = bCanvas.height / rect.height;
+
+          let clientX = e.clientX;
+          let clientY = e.clientY;
+          if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+          }
+
+          let clickX = (clientX - rect.left) * scaleX;
+          let clickY = (clientY - rect.top) * scaleY;
+
+          minigameBirds.forEach(function(b) {
+            if (b.spawned && !b.caught && !b.escaped) {
+              let dist = Math.hypot(b.x - clickX, b.y - clickY);
+              if (dist <= b.radius + 12) {
+                b.caught = true;
+                caughtCount++;
+                playMoveSound();
+                scoreCounter.innerText = `${caughtCount} / 5`;
+              }
+            }
+          });
+        }
+
+        bCanvas.onclick = handleBirdTouch;
+        bCanvas.ontouchstart = handleBirdTouch;
+
+        animReq = requestAnimationFrame(minigameLoop);
+
+        btnFinish.onclick = function() {
+          if (cdInterval) clearInterval(cdInterval);
+          if (animReq) cancelAnimationFrame(animReq);
+          modal.style.display = 'none';
+          if (onComplete) onComplete();
+        };
+      }
 
       function startQuickGame() {
         isCourseMode = false;
@@ -1495,6 +1753,24 @@
 
         // 6. CÁLCULO DE PAR AJUSTADO Y JUSTO
         let divisor = !isAvanzado ? 3.4 : (isXXL ? 3.8 : 3.0);
+        mysteryTile = null;
+        if (customRandom() < 0.4) {
+          let candidates = [];
+          for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+              let tType = map[r][c];
+              if ((tType === TERRAIN.FAIRWAY || tType === TERRAIN.ROUGH || tType === TERRAIN.GREEN) &&
+                  !(c === teeX && r === teeY) && !(c === holeX && r === holeY)) {
+                candidates.push({ x: c, y: r });
+              }
+            }
+          }
+          if (candidates.length > 0) {
+            let chosen = candidates[Math.floor(customRandom() * candidates.length)];
+            mysteryTile = { x: chosen.x, y: chosen.y, active: true };
+          }
+        }
+
         parVal = Math.max(3, Math.ceil(fairwayPath.length / divisor) + (!isAvanzado ? 1 : 2));
 
         spawnBirds(getCurrentMapType());
@@ -1711,9 +1987,25 @@
           document.getElementById('dice-val').innerText = '-';
           document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
 
-          let lastPos = path[path.length - 1];
+          let hitMystery = (mysteryTile && mysteryTile.active && targetMove.x === mysteryTile.x && targetMove.y === mysteryTile.y);
+          if (hitMystery) {
+            mysteryTile.active = false;
+            drawBoard();
+            triggerMysteryEvent(function() {
+              processTurnPostMystery();
+            });
+            return;
+          }
 
-          if (isMultiplayer) {
+          processTurnPostMystery();
+        }
+      }
+
+      function processTurnPostMystery() {
+        document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
+        let lastPos = path[path.length - 1];
+
+        if (isMultiplayer) {
             saveActivePlayerData();
             if (map[lastPos.y][lastPos.x] === TERRAIN.HOLE) {
               players[activePlayerIndex].completed = true;
@@ -1731,7 +2023,6 @@
           checkPuttCondition();
           drawBoard();
         }
-      }
 
       canvas.addEventListener('click', handleCanvasClick);
 
@@ -2217,7 +2508,7 @@
           { id: 'icon-rough', type: 'rough' }, { id: 'icon-water', type: 'water' },
           { id: 'icon-pine', type: 'pine' }, { id: 'icon-tree', type: 'tree' },
           { id: 'icon-sand', type: 'sand' }, { id: 'icon-tee', type: 'tee' },
-          { id: 'icon-hole', type: 'hole' }, { id: 'icon-bird', type: 'bird' }
+          { id: 'icon-hole', type: 'hole' }, { id: 'icon-bird', type: 'bird' }, { id: 'icon-mystery', type: 'mystery' }
         ];
 
         icons.forEach(function(icon) {
@@ -2264,6 +2555,13 @@
           } else if (icon.type === 'bird') {
             cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
             drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
+          } else if (icon.type === 'mystery') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            cCtx.font = 'bold 11px monospace';
+            cCtx.textAlign = 'center';
+            cCtx.textBaseline = 'middle';
+            cCtx.fillText('?', w/2, h/2 + 1);
           } else if (icon.type === 'hole') {
             cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
             cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
@@ -2429,6 +2727,22 @@
           });
         }
 
+        if (mysteryTile && mysteryTile.active) {
+          let mx = mysteryTile.x * TILE_SIZE;
+          let my = mysteryTile.y * TILE_SIZE;
+          ctx.save();
+          ctx.fillStyle = strokeColor;
+          ctx.fillRect(mx + 3, my + 3, TILE_SIZE - 6, TILE_SIZE - 6);
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(mx + 5, my + 5, TILE_SIZE - 10, TILE_SIZE - 10);
+          ctx.fillStyle = strokeColor;
+          ctx.font = 'bold 18px Courier New, monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('?', mx + TILE_SIZE/2, my + TILE_SIZE/2 + 1);
+          ctx.restore();
+        }
+
         validMoves.forEach(function(m) {
           let mx = m.x * TILE_SIZE + TILE_SIZE/2, my = m.y * TILE_SIZE + TILE_SIZE/2;
           ctx.beginPath(); ctx.arc(mx, my, 9, 0, Math.PI * 2);
@@ -2436,7 +2750,6 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
-        
         // Dibujar pájaros en el tablero con silueta vectorial monocroma
         if (birds && birds.length > 0) {
           birds.forEach(function(b) {
@@ -2445,6 +2758,9 @@
             drawBirdSymbol(ctx, bx, by, 11, strokeColor);
           });
         }
+
+        let legMystery = document.getElementById('leg-mystery');
+        if (legMystery) legMystery.style.display = (mysteryTile && mysteryTile.active) ? 'flex' : 'none';
 
         highlightCurrentTerrain();
         scrollToPlayer();
