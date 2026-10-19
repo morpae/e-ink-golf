@@ -16,7 +16,6 @@
       -webkit-user-select: none;
     }
     
-    /* MODO OSCURO PREDETERMINADO */
     body.dark-mode {
       background-color: #000000;
       color: #ffffff;
@@ -24,7 +23,8 @@
     body.dark-mode .legend,
     body.dark-mode #info-panel,
     body.dark-mode .scorecard-box,
-    body.dark-mode .player-select-box {
+    body.dark-mode .player-select-box,
+    body.dark-mode .perk-card {
       background-color: #000000;
       color: #ffffff;
       border-color: #ffffff;
@@ -77,7 +77,7 @@
       cursor: pointer;
     }
 
-    /* Leyenda Monocromo con mini-canvases */
+    /* Leyenda */
     .legend {
       display: flex;
       justify-content: center;
@@ -118,7 +118,6 @@
       border-color: #ffffff;
     }
 
-    /* Panel de Estado */
     #info-panel {
       font-size: 0.88rem;
       font-weight: bold;
@@ -143,7 +142,6 @@
       border-color: #fff;
     }
 
-    /* Contenedor del Mapa con Botones Integrados Monocromo */
     #canvas-container {
       display: inline-block;
       position: relative;
@@ -161,7 +159,6 @@
       height: auto;
     }
 
-    /* BOTONES MONOCROMO INTEGRADOS EN EL MAPA */
     .map-btn {
       position: absolute;
       width: 40px;
@@ -187,20 +184,9 @@
       box-shadow: 2px 2px 0px #ffffff;
     }
 
-    #btn-roll {
-      right: 8px;
-      bottom: 38px;
-    }
-
-    #btn-mulligan {
-      left: 8px;
-      bottom: 38px;
-    }
-
-    #btn-next-quick {
-      right: 8px;
-      bottom: 38px;
-    }
+    #btn-roll { right: 8px; bottom: 42px; }
+    #btn-mulligan { left: 8px; bottom: 42px; }
+    #btn-next-quick { right: 8px; bottom: 42px; }
 
     #putt-banner, #turn-banner {
       display: none;
@@ -234,8 +220,8 @@
       color: #ffffff;
     }
 
-    /* Modal / Pantalla de Resultados y Leaderboard */
-    #scorecard-modal, #player-select-modal, #pass-turn-modal {
+    /* Modales */
+    #scorecard-modal, #player-select-modal, #pass-turn-modal, #perk-modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -248,7 +234,8 @@
     }
     body.dark-mode #scorecard-modal,
     body.dark-mode #player-select-modal,
-    body.dark-mode #pass-turn-modal {
+    body.dark-mode #pass-turn-modal,
+    body.dark-mode #perk-modal {
       background: rgba(0, 0, 0, 0.98);
     }
     .scorecard-box, .player-select-box {
@@ -273,9 +260,8 @@
       justify-content: space-between;
       align-items: center;
     }
-    body.dark-mode .scorecard-title {
-      border-color: #fff;
-    }
+    body.dark-mode .scorecard-title { border-color: #fff; }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -287,24 +273,46 @@
       padding: 4px 2px;
       text-align: center;
     }
-    body.dark-mode th, body.dark-mode td {
-      border-color: #fff;
+    body.dark-mode th, body.dark-mode td { border-color: #fff; }
+    th { background: #f0f0f0; }
+    body.dark-mode th { background: #222; }
+    tr.total-row { font-weight: bold; background: #e0e0e0; }
+    body.dark-mode tr.total-row { background: #333; }
+
+    /* Modal de Selección de Perk */
+    .perk-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
     }
-    th {
-      background: #f0f0f0;
+    .perk-card {
+      border: 2px solid #000;
+      background: #fdfdfd;
+      padding: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.1s;
     }
-    body.dark-mode th {
-      background: #222;
+    .perk-card:hover, .perk-card:active {
+      background: #000;
+      color: #fff;
     }
-    tr.total-row {
+    body.dark-mode .perk-card:hover, body.dark-mode .perk-card:active {
+      background: #fff;
+      color: #000;
+    }
+    .perk-name {
       font-weight: bold;
-      background: #e0e0e0;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      text-transform: uppercase;
     }
-    body.dark-mode tr.total-row {
-      background: #333;
+    .perk-desc {
+      font-size: 0.78rem;
+      line-height: 1.2;
     }
 
-    /* Pestañas Leaderboard */
     .lb-tabs {
       display: flex;
       justify-content: center;
@@ -320,28 +328,16 @@
       cursor: pointer;
       font-weight: bold;
     }
-    .lb-tab.active-tab {
-      background: #000;
-      color: #fff;
-    }
-    body.dark-mode .lb-tab {
-      border-color: #fff;
-      background: #000;
-      color: #fff;
-    }
-    body.dark-mode .lb-tab.active-tab {
-      background: #fff;
-      color: #000;
-    }
+    .lb-tab.active-tab { background: #000; color: #fff; }
+    body.dark-mode .lb-tab { border-color: #fff; background: #000; color: #fff; }
+    body.dark-mode .lb-tab.active-tab { background: #fff; color: #000; }
 
     .online-section {
       margin-top: 10px;
       border-top: 2px dashed #000;
       padding-top: 8px;
     }
-    body.dark-mode .online-section {
-      border-color: #fff;
-    }
+    body.dark-mode .online-section { border-color: #fff; }
     .initials-input {
       font-size: 1rem;
       text-transform: uppercase;
@@ -354,11 +350,7 @@
       background: #fff;
       color: #000;
     }
-    body.dark-mode .initials-input {
-      border-color: #fff;
-      background: #000;
-      color: #fff;
-    }
+    body.dark-mode .initials-input { border-color: #fff; background: #000; color: #fff; }
 
     .player-btn-grid {
       display: flex;
@@ -366,10 +358,7 @@
       gap: 8px;
       margin: 12px 0;
     }
-    .player-btn-grid button {
-      padding: 10px;
-      font-size: 0.95rem;
-    }
+    .player-btn-grid button { padding: 10px; font-size: 0.95rem; }
   </style>
 </head>
 <body class="dark-mode">
@@ -386,7 +375,7 @@
     </div>
   </div>
 
-  <!-- Leyenda Monocromo con Canvases Interactivos -->
+  <!-- Leyenda Monocromo -->
   <div class="legend">
     <div class="legend-item" id="leg-fairway"><canvas id="icon-fairway" width="16" height="16"></canvas> <span id="lbl-fairway">Calle/Green</span></div>
     <div class="legend-item" id="leg-rough"><canvas id="icon-rough" width="16" height="16"></canvas> <span id="lbl-rough">Rough</span></div>
@@ -405,11 +394,10 @@
 
   <div id="turn-banner" style="display:none;">[ TURNO: J1 - 8 CASILLAS AL HOYO ]</div>
 
-  <!-- Contenedor del Mapa con Botones Integrados -->
+  <!-- Contenedor del Mapa -->
   <div id="canvas-container">
-    <canvas id="grid" width="476" height="574"></canvas>
+    <canvas id="grid" width="476" height="588"></canvas>
     
-    <!-- Botones Monocromo sobre el mapa -->
     <button id="btn-roll" class="map-btn" title="Tirar Dado">[⚄]</button>
     <button id="btn-mulligan" class="map-btn" style="display:none;" title="Mulligan">[↺]</button>
     <button id="btn-next-quick" class="map-btn" style="display:none;" title="Siguiente Hoyo">[➔]</button>
@@ -417,14 +405,14 @@
 
   <div id="putt-banner">[!] EN GREEN - PUTT DIRECTO ACTIVO</div>
 
-  <!-- Modal Selección de Jugadores Multijugador -->
+  <!-- Modal Selección de Jugadores -->
   <div id="player-select-modal">
     <div class="player-select-box">
       <div class="scorecard-title">
         <span id="lbl-multi-select-title">MULTIJUGADOR LOCAL</span>
         <button id="btn-close-player-select" style="padding:2px 8px;font-size:0.75rem;">[X]</button>
       </div>
-      <p style="font-size:0.85rem;margin:8px 0;" id="lbl-select-num-players">Selecciona el número de jugadores (Pasa el móvil):</p>
+      <p style="font-size:0.85rem;margin:8px 0;" id="lbl-select-num-players">Selecciona el número de jugadores:</p>
       <div class="player-btn-grid">
         <button id="btn-select-2p">[ 2 JUGADORES ]</button>
         <button id="btn-select-3p">[ 3 JUGADORES ]</button>
@@ -433,12 +421,23 @@
     </div>
   </div>
 
-  <!-- Modal Pasar el Móvil (Aviso de Turno) -->
+  <!-- Modal Pasar el Móvil -->
   <div id="pass-turn-modal">
     <div class="scorecard-box" style="text-align:center;">
       <h3 id="pass-turn-title" style="font-size:1.2rem;margin-bottom:12px;">¡PASA EL MÓVIL!</h3>
       <p id="pass-turn-msg" style="font-size:1rem;font-weight:bold;margin-bottom:16px;">Turno de J2</p>
       <button id="btn-start-turn" style="width:100%;padding:10px;font-size:1rem;">[ ¡LISTO PARA TIRAR! ]</button>
+    </div>
+  </div>
+
+  <!-- Modal de Elección de Mejoras (Perks) -->
+  <div id="perk-modal">
+    <div class="scorecard-box">
+      <div class="scorecard-title">
+        <span>ELIGE UNA MEJORA</span>
+      </div>
+      <p style="font-size:0.8rem;margin-bottom:10px;">Selecciona una ventaja para los siguientes hoyos:</p>
+      <div id="perk-options-container" class="perk-grid"></div>
     </div>
   </div>
 
@@ -474,14 +473,12 @@
         <div id="final-handicap" style="font-weight: bold; font-size: 0.9rem; margin: 6px 0;"></div>
       </div>
 
-      <!-- Envío de Récord Online (Solo en Daily Course finalizado) -->
       <div class="online-section" id="online-submission-box" style="display:none;">
         <div id="lbl-register-record" style="font-size:0.8rem;font-weight:bold;margin-bottom:5px;">REGISTRAR RÉCORD DIARIO</div>
         <input type="text" id="player-initials" class="initials-input" maxlength="3" value="AAA">
         <button id="btn-submit-score" style="padding: 4px 8px; font-size: 0.8rem;">[ GUARDAR ]</button>
       </div>
 
-      <!-- Pestañas de Leaderboard (Hoy / Ayer) -->
       <div class="online-section" id="leaderboard-section">
         <div id="lbl-world-lb" style="font-size:0.85rem;font-weight:bold;margin-bottom:4px;">LEADERBOARD MUNDIAL</div>
         <div class="lb-tabs">
@@ -502,27 +499,50 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
-
       const TERRAIN = {
         ROUGH: 0, FAIRWAY: 1, GREEN: 2, WATER: 3,
         SAND: 4, PINE: 5, DECIDUOUS: 6, TEE: 7, HOLE: 8
       };
 
       const DIFF_LEVELS = { MEDIUM: 0, HARD: 1 };
-
       const TOTAL_HOLES = 8;
+
       let isCourseMode = false;
       let isMultiplayer = false;
       let isDarkMode = true;
       let soundEnabled = true;
       let audioCtx = null;
 
+      // --- SISTEMA DE MEJORAS (PERKS) ---
+      let playerPerks = {
+        diceBonus: 0,
+        mulliganBonus: 0,
+        immuneWater: false,
+        immuneBunker: false,
+        roughTires: false,
+        woodlandShortcut: false,
+        extendedGreen: false,
+        teeGuarantee: false
+      };
+
+      const PERKS_POOL = [
+        { id: 'DADO_PLUS_1', name: '+1 a la Tirada', desc: 'Suma +1 a todas tus tiradas de dado.', unique: false },
+        { id: 'DADO_PLUS_2', name: '+2 a la Tirada', desc: 'Suma +2 a todas tus tiradas de dado.', unique: false },
+        { id: 'MULLIGAN_PLUS_1', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo.', unique: false },
+        { id: 'GARANTIA_SALIDA', name: 'Garantía de Salida', desc: 'En la salida (Tee), las tiradas de 1 o 2 cuentan como 3.', unique: false },
+        { id: 'INMUNE_AGUA', name: 'Inmune al Agua', desc: 'La bola no cae al agua ni penaliza; rebota justo antes.', unique: true },
+        { id: 'INMUNE_BUNKER', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
+        { id: 'NEUMATICOS_ROUGH', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
+        { id: 'ATAJO_ARBOLEDA', name: 'Atajo Arboleda', desc: 'La bola atraviesa la vegetación sin ser bloqueada.', unique: true },
+        { id: 'GREEN_AMPLIADO', name: 'Green Ampliado', desc: 'Activa el Putt directo a 3 casillas o menos del hoyo.', unique: true }
+      ];
+
       // --- MULTIJUGADOR LOCAL ---
       let playerCount = 2;
       let players = [];
       let activePlayerIndex = 0;
 
-      // --- SISTEMA INTERNACIONALIZACIÓN (I18N) MULTI-IDIOMA ---
+      // --- I18N ---
       const LANGS = ['ES', 'EN', 'CA', 'FR', 'IT', 'DE'];
       let currentLang = (function() {
         try {
@@ -534,528 +554,52 @@
 
       const I18N = {
         ES: {
-          langBtn: "[ LANG: ES ]",
-          soundOn: "[ SOUND: ON ]",
-          soundOff: "[ SOUND: OFF ]",
-          day: "[ DÍA ]",
-          night: "[ NOCHE ]",
-          ranking: "[ RANKING ]",
-          dailyCourse: "[ DAILY COURSE ]",
-          freeMode: "[ MODO LIBRE ]",
-          multiplayer: "[ MULTIJUGADOR ]",
-
-          fairwayGreen: "Calle/Green",
-          rough: "Rough",
-          water: "Agua",
-          pine: "Pino",
-          tree: "Árbol",
-          sand: "Búnker",
-          tee: "Salida",
-          hole: "Hoyo",
-
-          freeModeTitle: "Modo Libre",
-          multiplayerTitle: "Multijugador",
-          dailyHole: "Daily Hoyo",
-          medium: "MEDIO",
-          hard: "DIFÍCIL",
-          dice: "Dado",
-
-          fairwayBonus: " (+1 Calle = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Max 3 Búnker = {v})",
-
-          rollTitle: "Tirar Dado",
-          mulliganTitle: "Mulligan (Repetir Tirada)",
-          nextHoleTitle: "Siguiente Hoyo",
-          puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO",
-
-          waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
-
-          strokes: "Golpes",
-          total: "Total",
-
-          scorecardTitle: "CLASIFICACIÓN",
-          worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
-          endDailyTitle: "FIN DEL DAILY COURSE",
-          scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
-
-          tableHole: "HOYO",
-          tableDiff: "DIF",
-          tablePar: "PAR",
-          tableStrokes: "GOLPES",
-          tableTotal: "TOTAL",
-          tablePlayer: "JUGADOR",
-
-          evenParResult: "Resultado: PAR DEL CAMPO (E)",
-          overParResult: "Hándicap: +{d}",
-          underParResult: "Hándicap: -{d} ¡BAJO PAR!",
-
-          registerRecord: "REGISTRAR RÉCORD DIARIO",
-          saveBtn: "[ GUARDAR ]",
-          recordSubmitted: "¡Récord enviado con éxito!",
-          recordSavedLocal: "Récord guardado localmente (sin conexión online).",
-
-          leaderboardTitle: "LEADERBOARD MUNDIAL",
-          tabToday: "HOY",
-          tabYesterday: "AYER",
-          tableRank: "#",
-          tableScore: "GOLPES",
-          noRecords: "Sin récords registrados aún.",
-          loadingLb: "Cargando leaderboard...",
-
-          btnClose: "[ CERRAR ]",
-          btnNextHole: "[ HOYO SIGUIENTE ]",
-          btnNewCourse: "[ NUEVO CIRCUITO ]",
-          btnContinue: "[ CONTINUAR ]",
-
-          confirmFreeMode: "¿Quieres volver al Modo Libre?",
-          selectPlayersTitle: "MULTIJUGADOR LOCAL",
-          selectPlayersPrompt: "Selecciona número de jugadores (Pasa el móvil):",
-          players2: "[ 2 JUGADORES ]",
-          players3: "[ 3 JUGADORES ]",
-          players4: "[ 4 JUGADORES ]",
-          passPhoneTitle: "¡PASA EL MÓVIL!",
-          passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)",
-          readyBtn: "[ ¡LISTO PARA TIRAR! ]",
-          turnBannerText: "TURNO: {p} ({d} casillas al hoyo)"
+          langBtn: "[ LANG: ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
+          fairwayGreen: "Calle/Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo",
+          freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", medium: "MEDIO", hard: "DIFÍCIL", dice: "Dado",
+          fairwayBonus: " (+1 Calle = {v})", roughPenalty: " (-1 Rough = {v})", sandLimit: " (Max 3 Búnker = {v})",
+          rollTitle: "Tirar Dado", mulliganTitle: "Mulligan (Repetir Tirada)", nextHoleTitle: "Siguiente Hoyo",
+          puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO", waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
+          strokes: "Golpes", total: "Total", scorecardTitle: "CLASIFICACIÓN", worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
+          endDailyTitle: "FIN DEL DAILY COURSE", scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
+          tableHole: "HOYO", tableDiff: "DIF", tablePar: "PAR", tableStrokes: "GOLPES", tableTotal: "TOTAL", tablePlayer: "JUGADOR",
+          evenParResult: "Resultado: PAR DEL CAMPO (E)", overParResult: "Hándicap: +{d}", underParResult: "Hándicap: -{d} ¡BAJO PAR!",
+          registerRecord: "REGISTRAR RÉCORD DIARIO", saveBtn: "[ GUARDAR ]", recordSubmitted: "¡Récord enviado con éxito!",
+          recordSavedLocal: "Récord guardado localmente (sin conexión online).", leaderboardTitle: "LEADERBOARD MUNDIAL",
+          tabToday: "HOY", tabYesterday: "AYER", tableRank: "#", tableScore: "GOLPES", noRecords: "Sin récords registrados aún.",
+          loadingLb: "Cargando leaderboard...", btnClose: "[ CERRAR ]", btnNextHole: "[ HOYO SIGUIENTE ]", btnNewCourse: "[ NUEVO CIRCUITO ]",
+          btnContinue: "[ CONTINUAR ]", confirmFreeMode: "¿Quieres volver al Modo Libre?", selectPlayersTitle: "MULTIJUGADOR LOCAL",
+          selectPlayersPrompt: "Selecciona número de jugadores:", players2: "[ 2 JUGADORS ]", players3: "[ 3 JUGADORS ]", players4: "[ 4 JUGADORS ]",
+          passPhoneTitle: "¡PASA EL MÓVIL!", passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)", readyBtn: "[ ¡LISTO PARA TIRAR! ]", turnBannerText: "TURNO: {p} ({d} casillas al hoyo)"
         },
         EN: {
-          langBtn: "[ LANG: EN ]",
-          soundOn: "[ SOUND: ON ]",
-          soundOff: "[ SOUND: OFF ]",
-          day: "[ DAY ]",
-          night: "[ NIGHT ]",
-          ranking: "[ RANKING ]",
-          dailyCourse: "[ DAILY COURSE ]",
-          freeMode: "[ FREE MODE ]",
-          multiplayer: "[ MULTIPLAYER ]",
-
-          fairwayGreen: "Fairway/Green",
-          rough: "Rough",
-          water: "Water",
-          pine: "Pine",
-          tree: "Tree",
-          sand: "Bunker",
-          tee: "Tee",
-          hole: "Hole",
-
-          freeModeTitle: "Free Mode",
-          multiplayerTitle: "Multiplayer",
-          dailyHole: "Daily Hole",
-          medium: "MEDIUM",
-          hard: "HARD",
-          dice: "Dice",
-
-          fairwayBonus: " (+1 Fairway = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Max 3 Bunker = {v})",
-
-          rollTitle: "Roll Dice",
-          mulliganTitle: "Mulligan (Reroll)",
-          nextHoleTitle: "Next Hole",
-          puttBanner: "[!] ON GREEN - DIRECT PUTT ACTIVE",
-
-          waterAlert: "Ball in water! +1 Penalty stroke.",
-
-          strokes: "Strokes",
-          total: "Total",
-
-          scorecardTitle: "SCORECARD",
-          worldLeaderboardTitle: "WORLD LEADERBOARD",
-          endDailyTitle: "END OF DAILY COURSE",
-          scorecardHoleHeader: "SCORECARD (HOLE {h})",
-
-          tableHole: "HOLE",
-          tableDiff: "DIFF",
-          tablePar: "PAR",
-          tableStrokes: "STROKES",
-          tableTotal: "TOTAL",
-          tablePlayer: "PLAYER",
-
-          evenParResult: "Result: EVEN PAR (E)",
-          overParResult: "Handicap: +{d}",
-          underParResult: "Handicap: -{d} UNDER PAR!",
-
-          registerRecord: "REGISTER DAILY RECORD",
-          saveBtn: "[ SAVE ]",
-          recordSubmitted: "Record submitted successfully!",
-          recordSavedLocal: "Record saved locally (no online connection).",
-
-          leaderboardTitle: "WORLD LEADERBOARD",
-          tabToday: "TODAY",
-          tabYesterday: "YESTERDAY",
-          tableRank: "#",
-          tableScore: "STROKES",
-          noRecords: "No records registered yet.",
-          loadingLb: "Loading leaderboard...",
-
-          btnClose: "[ CLOSE ]",
-          btnNextHole: "[ NEXT HOLE ]",
-          btnNewCourse: "[ NEW COURSE ]",
-          btnContinue: "[ CONTINUE ]",
-
-          confirmFreeMode: "Return to Free Mode?",
-          selectPlayersTitle: "LOCAL MULTIPLAYER",
-          selectPlayersPrompt: "Select number of players (Pass & Play):",
-          players2: "[ 2 PLAYERS ]",
-          players3: "[ 3 PLAYERS ]",
-          players4: "[ 4 PLAYERS ]",
-          passPhoneTitle: "PASS THE PHONE!",
-          passPhoneMsg: "{p}'s Turn ({d} tiles to hole)",
-          readyBtn: "[ READY TO SHOT! ]",
-          turnBannerText: "TURN: {p} ({d} tiles to hole)"
-        },
-        CA: {
-          langBtn: "[ LANG: CA ]",
-          soundOn: "[ SO: ON ]",
-          soundOff: "[ SO: OFF ]",
-          day: "[ DIA ]",
-          night: "[ NIT ]",
-          ranking: "[ RÀNQUING ]",
-          dailyCourse: "[ CIRCUIT DIARI ]",
-          freeMode: "[ MODE LLIURE ]",
-          multiplayer: "[ MULTIJUGADOR ]",
-
-          fairwayGreen: "Carrer/Green",
-          rough: "Rough",
-          water: "Aigua",
-          pine: "Pi",
-          tree: "Arbre",
-          sand: "Búnquer",
-          tee: "Sortida",
-          hole: "Forat",
-
-          freeModeTitle: "Mode Lliure",
-          multiplayerTitle: "Multijugador",
-          dailyHole: "Daily Forat",
-          medium: "MITJÀ",
-          hard: "DIFÍCIL",
-          dice: "Dau",
-
-          fairwayBonus: " (+1 Carrer = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Màx 3 Búnquer = {v})",
-
-          rollTitle: "Tirar Dau",
-          mulliganTitle: "Mulligan (Repetir Tirada)",
-          nextHoleTitle: "Següent Forat",
-          puttBanner: "[!] AL GREEN - PUTT DIRECTE ACTIU",
-
-          waterAlert: "Bola a l'aigua! +1 Cops de penalització.",
-
-          strokes: "Cops",
-          total: "Total",
-
-          scorecardTitle: "CLASSIFICACIÓ",
-          worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
-          endDailyTitle: "FI DEL DAILY COURSE",
-          scorecardHoleHeader: "CLASSIFICACIÓ (FORAT {h})",
-
-          tableHole: "FORAT",
-          tableDiff: "DIF",
-          tablePar: "PAR",
-          tableStrokes: "COPS",
-          tableTotal: "TOTAL",
-          tablePlayer: "JUGADOR",
-
-          evenParResult: "Resultat: PAR DEL CAMP (E)",
-          overParResult: "Hàndicap: +{d}",
-          underParResult: "Hàndicap: -{d} SOTA PAR!",
-
-          registerRecord: "REGISTRAR RÈCORD DIARI",
-          saveBtn: "[ DESAR ]",
-          recordSubmitted: "Rècord enviat amb èxit!",
-          recordSavedLocal: "Rècord desat localment (sense connexió online).",
-
-          leaderboardTitle: "LEADERBOARD MUNDIAL",
-          tabToday: "AVUI",
-          tabYesterday: "AHIR",
-          tableRank: "#",
-          tableScore: "COPS",
-          noRecords: "Sense rècords registrats encara.",
-          loadingLb: "Carregant leaderboard...",
-
-          btnClose: "[ TANCAR ]",
-          btnNextHole: "[ SEGÜENT FORAT ]",
-          btnNewCourse: "[ NOU CIRCUIT ]",
-          btnContinue: "[ CONTINUAR ]",
-
-          confirmFreeMode: "Vols tornar al Mode Lliure?",
-          selectPlayersTitle: "MULTIJUGADOR LOCAL",
-          selectPlayersPrompt: "Selecciona el nombre de jugadors (Passa el mòbil):",
-          players2: "[ 2 JUGADORS ]",
-          players3: "[ 3 JUGADORS ]",
-          players4: "[ 4 JUGADORS ]",
-          passPhoneTitle: "PASSA EL MÒBIL!",
-          passPhoneMsg: "Torn de {p} ({d} caselles al forat)",
-          readyBtn: "[ PREPARAT PER TIRAR! ]",
-          turnBannerText: "TORN: {p} ({d} caselles al forat)"
-        },
-        FR: {
-          langBtn: "[ LANG: FR ]",
-          soundOn: "[ SON: ON ]",
-          soundOff: "[ SON: OFF ]",
-          day: "[ JOUR ]",
-          night: "[ NUIT ]",
-          ranking: "[ CLASSEMENT ]",
-          dailyCourse: "[ PARCOURS QUOTIDIEN ]",
-          freeMode: "[ MODE LIBRE ]",
-          multiplayer: "[ MULTIJOUEUR ]",
-
-          fairwayGreen: "Fairway/Green",
-          rough: "Rough",
-          water: "Eau",
-          pine: "Pin",
-          tree: "Arbre",
-          sand: "Bunker",
-          tee: "Départ",
-          hole: "Trou",
-
-          freeModeTitle: "Mode Libre",
-          multiplayerTitle: "Multijoueur",
-          dailyHole: "Trou Quotidien",
-          medium: "MOYEN",
-          hard: "DIFFICILE",
-          dice: "Dé",
-
-          fairwayBonus: " (+1 Fairway = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Max 3 Bunker = {v})",
-
-          rollTitle: "Lancer le dé",
-          mulliganTitle: "Mulligan (Relancer)",
-          nextHoleTitle: "Trou Suivant",
-          puttBanner: "[!] SUR LE GREEN - PUTT DIRECT ACTIF",
-
-          waterAlert: "Balle dans l'eau! +1 Coup de pénalité.",
-
-          strokes: "Coups",
-          total: "Total",
-
-          scorecardTitle: "CLASSEMENT",
-          worldLeaderboardTitle: "CLASSEMENT MONDIAL",
-          endDailyTitle: "FIN DU PARCOURS QUOTIDIEN",
-          scorecardHoleHeader: "CLASSEMENT (TROU {h})",
-
-          tableHole: "TROU",
-          tableDiff: "DÉF",
-          tablePar: "PAR",
-          tableStrokes: "COUPS",
-          tableTotal: "TOTAL",
-          tablePlayer: "JOUEUR",
-
-          evenParResult: "Résultat: PAR (E)",
-          overParResult: "Handicap: +{d}",
-          underParResult: "Handicap: -{d} SOUS LE PAR!",
-
-          registerRecord: "ENREGISTRER RECORD DIURNAL",
-          saveBtn: "[ ENREGISTRER ]",
-          recordSubmitted: "Record envoyé avec succès!",
-          recordSavedLocal: "Record enregistré localement (hors ligne).",
-
-          leaderboardTitle: "CLASSEMENT MONDIAL",
-          tabToday: "AUJOURD'HUI",
-          tabYesterday: "HIER",
-          tableRank: "#",
-          tableScore: "COUPS",
-          noRecords: "Aucun record enregistré pour le moment.",
-          loadingLb: "Chargement du classement...",
-
-          btnClose: "[ FERMER ]",
-          btnNextHole: "[ TROU SUIVANT ]",
-          btnNewCourse: "[ NOUVEAU PARCOURS ]",
-          btnContinue: "[ CONTINUER ]",
-
-          confirmFreeMode: "Revenir au Mode Libre?",
-          selectPlayersTitle: "MULTIJOUEUR LOCAL",
-          selectPlayersPrompt: "Sélectionnez le nombre de joueurs:",
-          players2: "[ 2 JOUEURS ]",
-          players3: "[ 3 JOUEURS ]",
-          players4: "[ 4 JOUEURS ]",
-          passPhoneTitle: "PASSEZ LE TÉLÉPHONE!",
-          passPhoneMsg: "Tour de {p} ({d} cases du trou)",
-          readyBtn: "[ PRÊT À JOUER! ]",
-          turnBannerText: "TOUR: {p} ({d} cases du trou)"
-        },
-        IT: {
-          langBtn: "[ LANG: IT ]",
-          soundOn: "[ SUONO: ON ]",
-          soundOff: "[ SUONO: OFF ]",
-          day: "[ GIORNO ]",
-          night: "[ NOTTE ]",
-          ranking: "[ CLASSIFICA ]",
-          dailyCourse: "[ PERCORSO GIORNALIERO ]",
-          freeMode: "[ MODALITÀ LIBERA ]",
-          multiplayer: "[ MULTIPLAYER ]",
-
-          fairwayGreen: "Fairway/Green",
-          rough: "Rough",
-          water: "Acqua",
-          pine: "Pino",
-          tree: "Albero",
-          sand: "Bunker",
-          tee: "Partenza",
-          hole: "Buca",
-
-          freeModeTitle: "Modalità Libera",
-          multiplayerTitle: "Multiplayer",
-          dailyHole: "Buca Giornaliera",
-          medium: "MEDIO",
-          hard: "DIFFICILE",
-          dice: "Dado",
-
-          fairwayBonus: " (+1 Fairway = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Max 3 Bunker = {v})",
-
-          rollTitle: "Lancia il dado",
-          mulliganTitle: "Mulligan (Rilancia)",
-          nextHoleTitle: "Buca Successiva",
-          puttBanner: "[!] SUL GREEN - PUTT DIRETTO ATTIVO",
-
-          waterAlert: "Palla in acqua! +1 Colpo di penalità.",
-
-          strokes: "Colpi",
-          total: "Totale",
-
-          scorecardTitle: "CLASSIFICA",
-          worldLeaderboardTitle: "CLASSIFICA MONDIALE",
-          endDailyTitle: "FINE DEL PERCORSO GIORNALIERO",
-          scorecardHoleHeader: "CLASSIFICA (BUCA {h})",
-
-          tableHole: "BUCA",
-          tableDiff: "DIF",
-          tablePar: "PAR",
-          tableStrokes: "COLPI",
-          tableTotal: "TOTALE",
-          tablePlayer: "GIOCATORE",
-
-          evenParResult: "Risultato: PAR (E)",
-          overParResult: "Handicap: +{d}",
-          underParResult: "Handicap: -{d} SOTTO IL PAR!",
-
-          registerRecord: "REGISTRA RECORD GIORNALIERO",
-          saveBtn: "[ SALVA ]",
-          recordSubmitted: "Record inviato con successo!",
-          recordSavedLocal: "Record salvato localmente (senza connessione).",
-
-          leaderboardTitle: "CLASSIFICA MONDIALE",
-          tabToday: "OGGI",
-          tabYesterday: "IERI",
-          tableRank: "#",
-          tableScore: "COLPI",
-          noRecords: "Nessun record registrato finora.",
-          loadingLb: "Caricamento classifica...",
-
-          btnClose: "[ CHIUDI ]",
-          btnNextHole: "[ BUCA SUCCESSIVA ]",
-          btnNewCourse: "[ NUOVO PERCORSO ]",
-          btnContinue: "[ CONTINUA ]",
-
-          confirmFreeMode: "Tornare alla Modalità Libera?",
-          selectPlayersTitle: "MULTIPLAYER LOCALE",
-          selectPlayersPrompt: "Seleziona il numero di giocatori:",
-          players2: "[ 2 GIOCATORI ]",
-          players3: "[ 3 GIOCATORI ]",
-          players4: "[ 4 GIOCATORI ]",
-          passPhoneTitle: "PASSA IL TELEFONO!",
-          passPhoneMsg: "Turno di {p} ({d} caselle alla buca)",
-          readyBtn: "[ PRONTO A TIRARE! ]",
-          turnBannerText: "TURNO: {p} ({d} caselle alla buca)"
-        },
-        DE: {
-          langBtn: "[ LANG: DE ]",
-          soundOn: "[ TON: ON ]",
-          soundOff: "[ TON: OFF ]",
-          day: "[ TAG ]",
-          night: "[ NACHT ]",
-          ranking: "[ RANGLISTE ]",
-          dailyCourse: "[ TÄGLICHER KURS ]",
-          freeMode: "[ FREIER MODUS ]",
-          multiplayer: "[ MEHRSPIELER ]",
-
-          fairwayGreen: "Fairway/Green",
-          rough: "Rough",
-          water: "Wasser",
-          pine: "Kiefer",
-          tree: "Baum",
-          sand: "Bunker",
-          tee: "Abschlag",
-          hole: "Loch",
-
-          freeModeTitle: "Freier Modus",
-          multiplayerTitle: "Mehrspieler",
-          dailyHole: "Tägl. Loch",
-          medium: "MITTEL",
-          hard: "SCHWER",
-          dice: "Würfel",
-
-          fairwayBonus: " (+1 Fairway = {v})",
-          roughPenalty: " (-1 Rough = {v})",
-          sandLimit: " (Max 3 Bunker = {v})",
-
-          rollTitle: "Würfeln",
-          mulliganTitle: "Mulligan (Neu würfeln)",
-          nextHoleTitle: "Nächstes Loch",
-          puttBanner: "[!] AUF DEM GREEN - DIREKTES PUTT AKTIV",
-
-          waterAlert: "Ball im Wasser! +1 Strafschlag.",
-
-          strokes: "Schläge",
-          total: "Gesamt",
-
-          scorecardTitle: "ERGEBNISSE",
-          worldLeaderboardTitle: "WELTRANGLISTE",
-          endDailyTitle: "ENDE DES TÄGLICHEN KURSES",
-          scorecardHoleHeader: "ERGEBNISSE (LOCH {h})",
-
-          tableHole: "LOCH",
-          tableDiff: "DIFF",
-          tablePar: "PAR",
-          tableStrokes: "SCHLÄGE",
-          tableTotal: "GESAMT",
-          tablePlayer: "SPIELER",
-
-          evenParResult: "Ergebnis: PAR (E)",
-          overParResult: "Handicap: +{d}",
-          underParResult: "Handicap: -{d} UNTER PAR!",
-
-          registerRecord: "TÄGLICHEN REKORD REGISTRIEREN",
-          saveBtn: "[ SPEICHERN ]",
-          recordSubmitted: "Rekord erfolgreich gesendet!",
-          recordSavedLocal: "Rekord lokal gespeichert (keine Online-Verbindung).",
-
-          leaderboardTitle: "WELTRANGLISTE",
-          tabToday: "HEUTE",
-          tabYesterday: "GESTERN",
-          tableRank: "#",
-          tableScore: "SCHLÄGE",
-          noRecords: "Noch keine Rekorde registriert.",
-          loadingLb: "Rangliste wird geladen...",
-
-          btnClose: "[ SCHLIESSEN ]",
-          btnNextHole: "[ NÄCHSTES LOCH ]",
-          btnNewCourse: "[ NEUER KURS ]",
-          btnContinue: "[ WEITER ]",
-
-          confirmFreeMode: "Zum freien Modus zurückkehren?",
-          selectPlayersTitle: "LOKALER MEHRSPIELER",
-          selectPlayersPrompt: "Wählen Sie die Anzahl der Spieler:",
-          players2: "[ 2 SPIELER ]",
-          players3: "[ 3 SPIELER ]",
-          players4: "[ 4 SPIELER ]",
-          passPhoneTitle: "TELEFON WEITERGEBEN!",
-          passPhoneMsg: "{p} ist am Zug ({d} Felder zum Loch)",
-          readyBtn: "[ BEREIT ZUM SCHUSS! ]",
-          turnBannerText: "ZUG: {p} ({d} Felder zum Loch)"
+          langBtn: "[ LANG: EN ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ DAY ]", night: "[ NIGHT ]", ranking: "[ RANKING ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREE MODE ]", multiplayer: "[ MULTIPLAYER ]",
+          fairwayGreen: "Fairway/Green", rough: "Rough", water: "Water", pine: "Pine", tree: "Tree", sand: "Bunker", tee: "Tee", hole: "Hole",
+          freeModeTitle: "Free Mode", multiplayerTitle: "Multiplayer", dailyHole: "Daily Hole", medium: "MEDIUM", hard: "HARD", dice: "Dice",
+          fairwayBonus: " (+1 Fairway = {v})", roughPenalty: " (-1 Rough = {v})", sandLimit: " (Max 3 Bunker = {v})",
+          rollTitle: "Roll Dice", mulliganTitle: "Mulligan (Reroll)", nextHoleTitle: "Next Hole",
+          puttBanner: "[!] ON GREEN - DIRECT PUTT ACTIVE", waterAlert: "Ball in water! +1 Penalty stroke.",
+          strokes: "Strokes", total: "Total", scorecardTitle: "SCORECARD", worldLeaderboardTitle: "WORLD LEADERBOARD",
+          endDailyTitle: "END OF DAILY COURSE", scorecardHoleHeader: "SCORECARD (HOLE {h})",
+          tableHole: "HOLE", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "STROKES", tableTotal: "TOTAL", tablePlayer: "PLAYER",
+          evenParResult: "Result: EVEN PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} UNDER PAR!",
+          registerRecord: "REGISTER DAILY RECORD", saveBtn: "[ SAVE ]", recordSubmitted: "Record submitted successfully!",
+          recordSavedLocal: "Record saved locally.", leaderboardTitle: "WORLD LEADERBOARD",
+          tabToday: "TODAY", tabYesterday: "YESTERDAY", tableRank: "#", tableScore: "STROKES", noRecords: "No records registered yet.",
+          loadingLb: "Loading leaderboard...", btnClose: "[ CLOSE ]", btnNextHole: "[ NEXT HOLE ]", btnNewCourse: "[ NEW COURSE ]",
+          btnContinue: "[ CONTINUE ]", confirmFreeMode: "Return to Free Mode?", selectPlayersTitle: "LOCAL MULTIPLAYER",
+          selectPlayersPrompt: "Select number of players:", players2: "[ 2 PLAYERS ]", players3: "[ 3 PLAYERS ]", players4: "[ 4 PLAYERS ]",
+          passPhoneTitle: "PASS THE PHONE!", passPhoneMsg: "{p}'s Turn ({d} tiles to hole)", readyBtn: "[ READY TO SHOT! ]", turnBannerText: "TURN: {p} ({d} tiles to hole)"
         }
       };
 
       function t(key, params = {}) {
         let text = (I18N[currentLang] && I18N[currentLang][key]) || (I18N['ES'][key]) || key;
-        Object.keys(params).forEach(p => {
-          text = text.replace('{' + p + '}', params[p]);
-        });
+        Object.keys(params).forEach(p => { text = text.replace('{' + p + '}', params[p]); });
         return text;
       }
 
@@ -1070,7 +614,6 @@
         else if (isMultiplayer) modeBtnText = t('multiplayer');
         document.getElementById('btn-mode-toggle').innerText = modeBtnText;
 
-        // Legend
         document.getElementById('lbl-fairway').innerText = t('fairwayGreen');
         document.getElementById('lbl-rough').innerText = t('rough');
         document.getElementById('lbl-water').innerText = t('water');
@@ -1080,7 +623,6 @@
         document.getElementById('lbl-tee').innerText = t('tee');
         document.getElementById('lbl-hole').innerText = t('hole');
 
-        // Panel
         document.getElementById('lbl-dice').innerText = t('dice');
         if (isCourseMode) {
           document.getElementById('mode-display').innerText = t('dailyHole') + " " + currentHole + " / " + TOTAL_HOLES;
@@ -1091,13 +633,11 @@
           document.getElementById('mode-display').innerText = t('freeModeTitle');
         }
 
-        // Map Buttons
         document.getElementById('btn-roll').title = t('rollTitle');
         document.getElementById('btn-mulligan').title = t('mulliganTitle');
         document.getElementById('btn-next-quick').title = t('nextHoleTitle');
         document.getElementById('putt-banner').innerText = t('puttBanner');
 
-        // Modal Labels
         document.getElementById('lbl-multi-select-title').innerText = t('selectPlayersTitle');
         document.getElementById('lbl-select-num-players').innerText = t('selectPlayersPrompt');
         document.getElementById('btn-select-2p').innerText = t('players2');
@@ -1106,7 +646,6 @@
         document.getElementById('pass-turn-title').innerText = t('passPhoneTitle');
         document.getElementById('btn-start-turn').innerText = t('readyBtn');
 
-        // Table headers
         document.getElementById('th-hole').innerText = t('tableHole');
         document.getElementById('th-diff').innerText = t('tableDiff');
         document.getElementById('th-par').innerText = t('tablePar');
@@ -1114,7 +653,6 @@
         document.getElementById('th-tot-diff').innerText = t('tableDiff');
         document.getElementById('td-total-lbl').innerText = t('tableTotal');
 
-        // Online section
         document.getElementById('lbl-register-record').innerText = t('registerRecord');
         document.getElementById('btn-submit-score').innerText = t('saveBtn');
         document.getElementById('lbl-world-lb').innerText = t('worldLeaderboardTitle');
@@ -1122,7 +660,6 @@
         document.getElementById('tab-yesterday').innerText = t('tabYesterday');
 
         if (isMultiplayer) updateMultiplayerTurnBanner();
-
         drawBoard();
       }
 
@@ -1138,23 +675,33 @@
       let parVal = 4;
       let validMoves = [];
       let isPuttMode = false;
-      let mulliganAvailable = true;
+      let mulliganAvailableCount = 1;
 
-      // --- SINTETIZADOR DE EFECTOS DE SONIDO WEB AUDIO API (8-BIT RETRO) ---
+      function resetPlayerPerks() {
+        playerPerks = {
+          diceBonus: 0,
+          mulliganBonus: 0,
+          immuneWater: false,
+          immuneBunker: false,
+          roughTires: false,
+          woodlandShortcut: false,
+          extendedGreen: false,
+          teeGuarantee: false
+        };
+      }
+
+      // --- SINTETIZADOR DE SONIDO ---
       function initAudio() {
         if (!audioCtx) {
           const AudioContextClass = window.AudioContext || window.webkitAudioContext;
           if (AudioContextClass) audioCtx = new AudioContextClass();
         }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       }
 
       function playDiceSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const now = audioCtx.currentTime;
         for (let i = 0; i < 4; i++) {
           const osc = audioCtx.createOscillator();
@@ -1163,17 +710,14 @@
           osc.frequency.setValueAtTime(220 + Math.random() * 380, now + i * 0.045);
           gain.gain.setValueAtTime(0.08, now + i * 0.045);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.045 + 0.035);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now + i * 0.045);
-          osc.stop(now + i * 0.045 + 0.035);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.045); osc.stop(now + i * 0.045 + 0.035);
         }
       }
 
       function playMoveSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -1182,16 +726,13 @@
         osc.frequency.exponentialRampToValueAtTime(90, now + 0.08);
         gain.gain.setValueAtTime(0.15, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.08);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.08);
       }
 
       function playWaterSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -1200,41 +741,28 @@
         osc.frequency.linearRampToValueAtTime(50, now + 0.28);
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.28);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.28);
       }
 
       function playSandSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const now = audioCtx.currentTime;
         const bufferSize = audioCtx.sampleRate * 0.09;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(450, now);
-        const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
+        const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.setValueAtTime(450, now);
+        const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
         noise.start(now);
       }
 
       function playMulliganSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -1243,16 +771,13 @@
         osc.frequency.exponentialRampToValueAtTime(550, now + 0.14);
         gain.gain.setValueAtTime(0.1, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.14);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.14);
       }
 
       function playHoleSound() {
         if (!soundEnabled) return;
-        initAudio();
-        if (!audioCtx) return;
+        initAudio(); if (!audioCtx) return;
         const notes = [261.63, 329.63, 392.00, 523.25];
         const now = audioCtx.currentTime;
         notes.forEach(function(freq, idx) {
@@ -1262,10 +787,8 @@
           osc.frequency.setValueAtTime(freq, now + idx * 0.08);
           gain.gain.setValueAtTime(0.12, now + idx * 0.08);
           gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.16);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.16);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.16);
         });
       }
 
@@ -1306,17 +829,10 @@
       function forceEinkRefresh(callback) {
         const c1 = isDarkMode ? '#ffffff' : '#000000';
         const c2 = isDarkMode ? '#000000' : '#ffffff';
-
-        ctx.fillStyle = c1;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+        ctx.fillStyle = c1; ctx.fillRect(0, 0, canvas.width, canvas.height);
         setTimeout(function() {
-          ctx.fillStyle = c2;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          setTimeout(function() {
-            if (callback) callback();
-          }, 60);
+          ctx.fillStyle = c2; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          setTimeout(function() { if (callback) callback(); }, 60);
         }, 60);
       }
 
@@ -1330,12 +846,14 @@
         isMultiplayer = false;
         currentHole = 1;
         circuitHistory = [];
+        resetPlayerPerks();
         customRandom = Math.random;
         document.getElementById('turn-banner').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('freeMode');
         document.getElementById('diff-tag').style.display = 'none';
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
+        document.getElementById('perk-modal').style.display = 'none';
         updateLanguageUI();
         forceEinkRefresh(generateHole);
       }
@@ -1345,11 +863,13 @@
         isMultiplayer = false;
         currentHole = 1;
         circuitHistory = [];
+        resetPlayerPerks();
         document.getElementById('turn-banner').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('dailyCourse');
         document.getElementById('diff-tag').style.display = 'inline-block';
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
+        document.getElementById('perk-modal').style.display = 'none';
         updateLanguageUI();
         forceEinkRefresh(generateHole);
       }
@@ -1364,10 +884,11 @@
         playerCount = numP;
         currentHole = 1;
         circuitHistory = [];
+        resetPlayerPerks();
         customRandom = Math.random;
-
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('scorecard-modal').style.display = 'none';
+        document.getElementById('perk-modal').style.display = 'none';
         document.getElementById('btn-mode-toggle').innerText = t('multiplayer');
         document.getElementById('diff-tag').style.display = 'none';
         updateLanguageUI();
@@ -1378,12 +899,8 @@
         players = [];
         for (let i = 0; i < playerCount; i++) {
           players.push({
-            id: i,
-            name: "J" + (i + 1),
-            path: [{ x: teeX, y: teeY }],
-            strokeCount: 0,
-            completed: false,
-            mulliganAvailable: true
+            id: i, name: "J" + (i + 1), path: [{ x: teeX, y: teeY }],
+            strokeCount: 0, completed: false, mulliganAvailableCount: 1
           });
         }
         activePlayerIndex = 0;
@@ -1395,7 +912,7 @@
         let p = players[activePlayerIndex];
         path = p.path;
         strokeCount = p.strokeCount;
-        mulliganAvailable = p.mulliganAvailable;
+        mulliganAvailableCount = p.mulliganAvailableCount;
       }
 
       function saveActivePlayerData() {
@@ -1403,14 +920,12 @@
         let p = players[activePlayerIndex];
         p.path = path;
         p.strokeCount = strokeCount;
-        p.mulliganAvailable = mulliganAvailable;
+        p.mulliganAvailableCount = mulliganAvailableCount;
       }
 
       function determineNextTurnPlayer(showPrompt = true) {
         if (!isMultiplayer) return;
-
         saveActivePlayerData();
-
         let uncompleted = players.filter(p => !p.completed);
 
         if (uncompleted.length === 0) {
@@ -1418,14 +933,13 @@
           return;
         }
 
-        // Golf rule: player furthest from hole shoots first!
         uncompleted.sort(function(a, b) {
           let posA = a.path[a.path.length - 1];
           let posB = b.path[b.path.length - 1];
           let distA = getDistanceToHole(posA);
           let distB = getDistanceToHole(posB);
           if (distB !== distA) return distB - distA;
-          return a.id - b.id; // tie-breaker by player ID
+          return a.id - b.id;
         });
 
         let nextP = uncompleted[0];
@@ -1435,7 +949,6 @@
 
         let pos = nextP.path[nextP.path.length - 1];
         let dist = getDistanceToHole(pos);
-
         updateMultiplayerTurnBanner();
 
         if (showPrompt && prevIndex !== activePlayerIndex) {
@@ -1463,12 +976,11 @@
         currentDice = null;
         validMoves = [];
         isPuttMode = false;
-        mulliganAvailable = true;
+        mulliganAvailableCount = 1 + playerPerks.mulliganBonus;
 
         if (isCourseMode) {
           const dateSeed = parseInt(getDailyDateStr(0), 10);
           customRandom = createSeededRandom(dateSeed + currentHole * 997);
-
           currentDiff = currentHole <= 4 ? DIFF_LEVELS.MEDIUM : DIFF_LEVELS.HARD;
           document.getElementById('mode-display').innerText = t('dailyHole') + " " + currentHole + " / " + TOTAL_HOLES;
           document.getElementById('diff-tag').style.display = 'inline-block';
@@ -1577,37 +1089,18 @@
         if (!currentPos || !map || !map[currentPos.y] || map[currentPos.y][currentPos.x] === undefined) return;
         let currentTerrain = map[currentPos.y][currentPos.x];
 
-        document.querySelectorAll('.legend-item').forEach(function(el) {
-          el.classList.remove('active-legend');
-        });
+        document.querySelectorAll('.legend-item').forEach(function(el) { el.classList.remove('active-legend'); });
 
         let legId = '';
         switch (currentTerrain) {
-          case TERRAIN.FAIRWAY:
-          case TERRAIN.GREEN:
-            legId = 'leg-fairway';
-            break;
-          case TERRAIN.ROUGH:
-            legId = 'leg-rough';
-            break;
-          case TERRAIN.WATER:
-            legId = 'leg-water';
-            break;
-          case TERRAIN.SAND:
-            legId = 'leg-sand';
-            break;
-          case TERRAIN.PINE:
-            legId = 'leg-pine';
-            break;
-          case TERRAIN.DECIDUOUS:
-            legId = 'leg-tree';
-            break;
-          case TERRAIN.TEE:
-            legId = 'leg-tee';
-            break;
-          case TERRAIN.HOLE:
-            legId = 'leg-hole';
-            break;
+          case TERRAIN.FAIRWAY: case TERRAIN.GREEN: legId = 'leg-fairway'; break;
+          case TERRAIN.ROUGH: legId = 'leg-rough'; break;
+          case TERRAIN.WATER: legId = 'leg-water'; break;
+          case TERRAIN.SAND: legId = 'leg-sand'; break;
+          case TERRAIN.PINE: legId = 'leg-pine'; break;
+          case TERRAIN.DECIDUOUS: legId = 'leg-tree'; break;
+          case TERRAIN.TEE: legId = 'leg-tee'; break;
+          case TERRAIN.HOLE: legId = 'leg-hole'; break;
         }
         if (legId) {
           let item = document.getElementById(legId);
@@ -1621,7 +1114,16 @@
 
         playDiceSound();
 
-        currentDice = Math.floor(Math.random() * 6) + 1;
+        let rawDice = Math.floor(Math.random() * 6) + 1;
+
+        // Perk: Garantía de salida
+        if (path.length === 1 && playerPerks.teeGuarantee && (rawDice === 1 || rawDice === 2)) {
+          rawDice = 3;
+        }
+
+        // Perk: Bono de Dado (+1 o +2)
+        currentDice = rawDice + playerPerks.diceBonus;
+
         let currentPos = path[path.length - 1];
         let currentTerrain = map[currentPos.y][currentPos.x];
 
@@ -1632,16 +1134,24 @@
           effectiveDistance += 1;
           bonusText = t('fairwayBonus', { v: effectiveDistance });
         } else if (currentTerrain === TERRAIN.ROUGH) {
-          effectiveDistance = Math.max(1, currentDice - 1);
-          bonusText = t('roughPenalty', { v: effectiveDistance });
+          if (playerPerks.roughTires) {
+            bonusText = " (Neumáticos Rough)";
+          } else {
+            effectiveDistance = Math.max(1, currentDice - 1);
+            bonusText = t('roughPenalty', { v: effectiveDistance });
+          }
         } else if (currentTerrain === TERRAIN.SAND) {
-          effectiveDistance = Math.min(3, currentDice);
-          bonusText = t('sandLimit', { v: effectiveDistance });
+          if (playerPerks.immuneBunker) {
+            bonusText = " (Búnker Libre)";
+          } else {
+            effectiveDistance = Math.min(3, currentDice);
+            bonusText = t('sandLimit', { v: effectiveDistance });
+          }
         }
 
         document.getElementById('dice-val').innerText = currentDice + bonusText;
 
-        if (path.length === 1 && mulliganAvailable) {
+        if (mulliganAvailableCount > 0) {
           document.getElementById('btn-mulligan').style.display = 'flex';
         }
 
@@ -1650,13 +1160,15 @@
       }
 
       function useMulligan() {
-        if (path.length === 1 && mulliganAvailable) {
-          mulliganAvailable = false;
+        if (mulliganAvailableCount > 0) {
+          mulliganAvailableCount--;
           if (isMultiplayer && players[activePlayerIndex]) {
-            players[activePlayerIndex].mulliganAvailable = false;
+            players[activePlayerIndex].mulliganAvailableCount--;
           }
           playMulliganSound();
-          document.getElementById('btn-mulligan').style.display = 'none';
+          if (mulliganAvailableCount <= 0) {
+            document.getElementById('btn-mulligan').style.display = 'none';
+          }
           validMoves = [];
           rollDice();
         }
@@ -1678,7 +1190,7 @@
             let ny = currentPos.y + d.y * step;
 
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS) {
+              if (playerPerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
                 if (isLineClear(currentPos.x, currentPos.y, nx, ny)) {
                   if (!validMoves.some(function(m) { return m.x === nx && m.y === ny; })) {
                     validMoves.push({ x: nx, y: ny });
@@ -1715,15 +1227,19 @@
 
         if (targetMove) {
           strokeCount++;
-          mulliganAvailable = false;
           document.getElementById('btn-mulligan').style.display = 'none';
 
           let landTerrain = map[targetMove.y][targetMove.x];
 
           if (landTerrain === TERRAIN.WATER) {
-            playWaterSound();
-            alert(t('waterAlert'));
-            strokeCount++;
+            if (playerPerks.immuneWater) {
+              playMoveSound();
+              path.push({ x: targetMove.x, y: targetMove.y });
+            } else {
+              playWaterSound();
+              alert(t('waterAlert'));
+              strokeCount++;
+            }
           } else {
             if (landTerrain === TERRAIN.SAND) {
               playSandSound();
@@ -1740,12 +1256,10 @@
 
           if (isMultiplayer) {
             saveActivePlayerData();
-
             if (map[lastPos.y][lastPos.x] === TERRAIN.HOLE) {
               players[activePlayerIndex].completed = true;
               playHoleSound();
             }
-
             determineNextTurnPlayer(true);
             return;
           }
@@ -1767,24 +1281,26 @@
         let holePos = findHolePos();
         let dist = Math.max(Math.abs(currentPos.x - holePos.x), Math.abs(currentPos.y - holePos.y));
 
-        if (map[currentPos.y][currentPos.x] === TERRAIN.GREEN || dist <= 2) {
+        let maxPuttDist = playerPerks.extendedGreen ? 3 : 2;
+
+        if (map[currentPos.y][currentPos.x] === TERRAIN.GREEN || dist <= maxPuttDist) {
           isPuttMode = true;
           document.getElementById('putt-banner').style.display = 'block';
-          calculatePuttMoves(currentPos);
+          calculatePuttMoves(currentPos, maxPuttDist);
         } else {
           isPuttMode = false;
           document.getElementById('putt-banner').style.display = 'none';
         }
       }
 
-      function calculatePuttMoves(currentPos) {
+      function calculatePuttMoves(currentPos, maxDist = 2) {
         validMoves = [];
-        for (let r = -2; r <= 2; r++) {
-          for (let c = -2; c <= 2; c++) {
+        for (let r = -maxDist; r <= maxDist; r++) {
+          for (let c = -maxDist; c <= maxDist; c++) {
             if (r === 0 && c === 0) continue;
             let nx = currentPos.x + c, ny = currentPos.y + r;
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS) {
+              if (playerPerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
                 validMoves.push({ x: nx, y: ny });
               }
             }
@@ -1797,11 +1313,9 @@
         drawBoard();
         document.getElementById('btn-roll').style.display = 'none';
         document.getElementById('putt-banner').style.display = 'none';
-
         document.getElementById('leaderboard-section').style.display = 'none';
         document.getElementById('online-submission-box').style.display = 'none';
         document.getElementById('final-handicap').innerText = '';
-
         document.getElementById('scorecard-header').innerText = t('multiplayerTitle');
 
         let tableHeadRow = document.getElementById('table-head-row');
@@ -1815,23 +1329,16 @@
         players.forEach(function(p) {
           let diff = p.strokeCount - parVal;
           let diffStr = diff === 0 ? 'E' : (diff > 0 ? '+' + diff : '' + diff);
-          tbody.innerHTML += '<tr>' +
-            '<td><b>' + p.name + '</b></td>' +
-            '<td>' + parVal + '</td>' +
-            '<td>' + p.strokeCount + '</td>' +
-            '<td>' + diffStr + '</td>' +
-            '</tr>';
+          tbody.innerHTML += '<tr><td><b>' + p.name + '</b></td><td>' + parVal + '</td><td>' + p.strokeCount + '</td><td>' + diffStr + '</td></tr>';
         });
 
         document.getElementById('total-row-container').style.display = 'none';
-
         let btnContinue = document.getElementById('btn-continue-course');
         btnContinue.innerText = t('btnNextHole');
         btnContinue.onclick = function() {
           document.getElementById('scorecard-modal').style.display = 'none';
           forceEinkRefresh(generateHole);
         };
-
         document.getElementById('scorecard-modal').style.display = 'flex';
       }
 
@@ -1843,9 +1350,62 @@
 
         if (isCourseMode) {
           circuitHistory.push({ hole: currentHole, diff: currentDiff === DIFF_LEVELS.MEDIUM ? t('medium') : t('hard'), par: parVal, strokes: strokeCount });
-          showScorecardModal();
+          
+          if (currentHole === 2 || currentHole === 4 || currentHole === 6) {
+            triggerPerkSelection();
+          } else {
+            showScorecardModal();
+          }
         } else {
           document.getElementById('btn-next-quick').style.display = 'flex';
+        }
+      }
+
+      // --- MOSTRAR SELECCIÓN DE MEJORAS (PERKS) ---
+      function triggerPerkSelection() {
+        let availablePool = PERKS_POOL.filter(function(p) {
+          if (!p.unique) return true;
+          if (p.id === 'INMUNE_AGUA' && playerPerks.immuneWater) return false;
+          if (p.id === 'INMUNE_BUNKER' && playerPerks.immuneBunker) return false;
+          if (p.id === 'NEUMATICOS_ROUGH' && playerPerks.roughTires) return false;
+          if (p.id === 'ATAJO_ARBOLEDA' && playerPerks.woodlandShortcut) return false;
+          if (p.id === 'GREEN_AMPLIADO' && playerPerks.extendedGreen) return false;
+          return true;
+        });
+
+        // Seleccionar 3 ventajas al azar sin repetir
+        let shuffled = availablePool.sort(() => 0.5 - Math.random());
+        let choices = shuffled.slice(0, 3);
+
+        let container = document.getElementById('perk-options-container');
+        container.innerHTML = '';
+
+        choices.forEach(function(perk) {
+          let card = document.createElement('div');
+          card.className = 'perk-card';
+          card.innerHTML = `<div class="perk-name">${perk.name}</div><div class="perk-desc">${perk.desc}</div>`;
+          card.onclick = function() {
+            applyPerk(perk.id);
+            document.getElementById('perk-modal').style.display = 'none';
+            showScorecardModal();
+          };
+          container.appendChild(card);
+        });
+
+        document.getElementById('perk-modal').style.display = 'flex';
+      }
+
+      function applyPerk(perkId) {
+        switch (perkId) {
+          case 'DADO_PLUS_1': playerPerks.diceBonus += 1; break;
+          case 'DADO_PLUS_2': playerPerks.diceBonus += 2; break;
+          case 'MULLIGAN_PLUS_1': playerPerks.mulliganBonus += 1; break;
+          case 'GARANTIA_SALIDA': playerPerks.teeGuarantee = true; break;
+          case 'INMUNE_AGUA': playerPerks.immuneWater = true; break;
+          case 'INMUNE_BUNKER': playerPerks.immuneBunker = true; break;
+          case 'NEUMATICOS_ROUGH': playerPerks.roughTires = true; break;
+          case 'ATAJO_ARBOLEDA': playerPerks.woodlandShortcut = true; break;
+          case 'GREEN_AMPLIADO': playerPerks.extendedGreen = true; break;
         }
       }
 
@@ -1887,13 +1447,7 @@
           let diff = item.strokes - item.par;
           let diffStr = diff === 0 ? 'E' : (diff > 0 ? '+' + diff : '' + diff);
 
-          tbody.innerHTML += '<tr>' +
-            '<td>' + t('tableHole') + ' ' + item.hole + '</td>' +
-            '<td>' + item.diff + '</td>' +
-            '<td>' + item.par + '</td>' +
-            '<td>' + item.strokes + '</td>' +
-            '<td>' + diffStr + '</td>' +
-            '</tr>';
+          tbody.innerHTML += '<tr><td>' + t('tableHole') + ' ' + item.hole + '</td><td>' + item.diff + '</td><td>' + item.par + '</td><td>' + item.strokes + '</td><td>' + diffStr + '</td></tr>';
         });
 
         let totalDiff = totalStrokes - totalPar;
@@ -1923,9 +1477,7 @@
           handicapDiv.innerText = handicapText;
           submitBox.style.display = "block";
           btnContinue.innerText = t('btnNewCourse');
-          btnContinue.onclick = function() {
-            startCircuit();
-          };
+          btnContinue.onclick = function() { startCircuit(); };
         }
 
         loadLeaderboardOnline();
@@ -1973,9 +1525,7 @@
           return;
         }
 
-        entries.sort(function(a, b) {
-          return parseInt(a.score) - parseInt(b.score);
-        });
+        entries.sort((a, b) => parseInt(a.score) - parseInt(b.score));
 
         let html = '<table><tr><th>' + t('tableRank') + '</th><th>' + t('tablePlayer') + '</th><th>' + t('tableScore') + '</th></tr>';
         entries.slice(0, 10).forEach(function(item, index) {
@@ -1999,19 +1549,13 @@
             return response.json();
           })
           .then(function(rows) {
-            let entries = rows.map(function(r) {
-              return { name: r.initials + "_" + targetDateStr, score: String(r.strokes) };
-            });
+            let entries = rows.map(r => ({ name: r.initials + "_" + targetDateStr, score: String(r.strokes) }));
             renderLeaderboardTable(entries, container);
           })
           .catch(function(err) {
-            console.warn("Fallo al cargar el leaderboard online, cargando backup local:", err);
+            console.warn("Cargando backup local:", err);
             let localEntries = getLocalLeaderboard();
-            let filtered = localEntries.filter(function(item) {
-              if (!item || !item.name) return false;
-              let parts = String(item.name).split('_');
-              return parts.length >= 2 && parts[1] === targetDateStr;
-            });
+            let filtered = localEntries.filter(item => item && item.name && String(item.name).split('_')[1] === targetDateStr);
             renderLeaderboardTable(filtered, container);
           });
       }
@@ -2051,6 +1595,7 @@
       }
 
       function isLineClear(x0, y0, x1, y1) {
+        if (playerPerks.woodlandShortcut) return true;
         let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
         let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy, cx = x0, cy = y0;
         while (true) {
@@ -2074,21 +1619,16 @@
         return { x: 0, y: 0 };
       }
 
-      // --- DIBUJO DENTRO DE LOS MINI CANVASES DE LA LEYENDA ---
       function drawLegendIcons() {
         const bgColor = isDarkMode ? '#000000' : '#ffffff';
         const strokeColor = isDarkMode ? '#ffffff' : '#000000';
         const fairwayColor = isDarkMode ? '#222222' : '#e5e5e5';
 
         const icons = [
-          { id: 'icon-fairway', type: 'fairway' },
-          { id: 'icon-rough', type: 'rough' },
-          { id: 'icon-water', type: 'water' },
-          { id: 'icon-pine', type: 'pine' },
-          { id: 'icon-tree', type: 'tree' },
-          { id: 'icon-sand', type: 'sand' },
-          { id: 'icon-tee', type: 'tee' },
-          { id: 'icon-hole', type: 'hole' }
+          { id: 'icon-fairway', type: 'fairway' }, { id: 'icon-rough', type: 'rough' },
+          { id: 'icon-water', type: 'water' }, { id: 'icon-pine', type: 'pine' },
+          { id: 'icon-tree', type: 'tree' }, { id: 'icon-sand', type: 'sand' },
+          { id: 'icon-tee', type: 'tee' }, { id: 'icon-hole', type: 'hole' }
         ];
 
         icons.forEach(function(icon) {
@@ -2098,78 +1638,43 @@
           let w = c.width, h = c.height;
 
           cCtx.clearRect(0, 0, w, h);
-          cCtx.fillStyle = bgColor;
-          cCtx.fillRect(0, 0, w, h);
+          cCtx.fillStyle = bgColor; cCtx.fillRect(0, 0, w, h);
 
           if (icon.type === 'fairway') {
-            cCtx.fillStyle = fairwayColor;
-            cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
           } else if (icon.type === 'rough') {
-            cCtx.fillStyle = bgColor;
-            cCtx.fillRect(0, 0, w, h);
             cCtx.fillStyle = isDarkMode ? '#444444' : '#aaaaaa';
-            cCtx.beginPath();
-            cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2);
-            cCtx.fill();
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2); cCtx.fill();
           } else if (icon.type === 'water') {
-            cCtx.strokeStyle = strokeColor;
-            cCtx.lineWidth = 1;
-            cCtx.beginPath();
-            cCtx.moveTo(0, h); cCtx.lineTo(w, 0);
-            cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0);
-            cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2);
-            cCtx.stroke();
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1;
+            cCtx.beginPath(); cCtx.moveTo(0, h); cCtx.lineTo(w, 0); cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0); cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2); cCtx.stroke();
           } else if (icon.type === 'sand') {
             cCtx.fillStyle = strokeColor;
-            cCtx.beginPath();
-            cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2);
-            cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2);
-            cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2);
-            cCtx.fill();
+            cCtx.beginPath(); cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2); cCtx.fill();
           } else if (icon.type === 'pine') {
             cCtx.fillStyle = strokeColor;
-            cCtx.beginPath();
-            cCtx.moveTo(w/2, 1);
-            cCtx.lineTo(3, 7); cCtx.lineTo(w - 3, 7);
-            cCtx.closePath(); cCtx.fill();
-            cCtx.beginPath();
-            cCtx.moveTo(w/2, 4);
-            cCtx.lineTo(2, 12); cCtx.lineTo(w - 2, 12);
-            cCtx.closePath(); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 1); cCtx.lineTo(3, 7); cCtx.lineTo(w - 3, 7); cCtx.closePath(); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 4); cCtx.lineTo(2, 12); cCtx.lineTo(w - 2, 12); cCtx.closePath(); cCtx.fill();
             cCtx.fillRect(w/2 - 1, 12, 2, 3);
           } else if (icon.type === 'tree') {
             cCtx.fillStyle = strokeColor;
-            cCtx.beginPath();
-            cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
+            cCtx.beginPath(); cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
             cCtx.fillRect(w/2 - 1, 10, 2, 4);
           } else if (icon.type === 'tee') {
-            cCtx.fillStyle = fairwayColor;
-            cCtx.fillRect(0, 0, w, h);
-            cCtx.strokeStyle = strokeColor;
-            cCtx.lineWidth = 1.5;
-            cCtx.beginPath();
-            cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2);
-            cCtx.stroke();
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
           } else if (icon.type === 'hole') {
-            cCtx.fillStyle = fairwayColor;
-            cCtx.fillRect(0, 0, w, h);
-            cCtx.fillStyle = strokeColor;
-            cCtx.beginPath();
-            cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
-            cCtx.beginPath();
-            cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
-            cCtx.beginPath();
-            cCtx.moveTo(w/2, 2);
-            cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8);
-            cCtx.closePath(); cCtx.fill();
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
           }
         });
       }
 
-      // --- DIBUJO MONOCROMO EN CANVAS PRINCIPAL ---
       function drawBoard() {
         drawLegendIcons();
-
         if (!map || map.length === 0) return;
 
         const bgColor = isDarkMode ? '#000000' : '#ffffff';
@@ -2178,23 +1683,19 @@
         const gridColor = isDarkMode ? '#444444' : '#aaaaaa';
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = bgColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (let r = 0; r < ROWS; r++) {
           for (let c = 0; c < COLS; c++) {
             let x = c * TILE_SIZE, y = r * TILE_SIZE;
 
             if (map[r][c] === TERRAIN.FAIRWAY || map[r][c] === TERRAIN.GREEN || map[r][c] === TERRAIN.TEE) {
-              ctx.fillStyle = fairwayColor;
-              ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+              ctx.fillStyle = fairwayColor; ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
             }
 
             if (map[r][c] === TERRAIN.WATER) {
-              ctx.fillStyle = bgColor;
-              ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-              ctx.strokeStyle = strokeColor;
-              ctx.lineWidth = 1.2;
+              ctx.fillStyle = bgColor; ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+              ctx.strokeStyle = strokeColor; ctx.lineWidth = 1.2;
               ctx.beginPath();
               ctx.moveTo(x, y + TILE_SIZE); ctx.lineTo(x + TILE_SIZE, y);
               ctx.moveTo(x, y + TILE_SIZE/2); ctx.lineTo(x + TILE_SIZE/2, y);
@@ -2203,8 +1704,7 @@
             }
 
             if (map[r][c] === TERRAIN.SAND) {
-              ctx.fillStyle = bgColor;
-              ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+              ctx.fillStyle = bgColor; ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
               ctx.fillStyle = strokeColor;
               ctx.beginPath();
               ctx.arc(x + TILE_SIZE/2 - 7, y + TILE_SIZE/2 - 6, 2.5, 0, Math.PI * 2);
@@ -2217,11 +1717,8 @@
             if (map[r][c] === TERRAIN.DECIDUOUS) drawTree(x, y, strokeColor);
 
             if (map[r][c] === TERRAIN.TEE && path.length === 1) {
-              ctx.strokeStyle = strokeColor;
-              ctx.lineWidth = 2;
-              ctx.beginPath();
-              ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 7, 0, Math.PI * 2);
-              ctx.stroke();
+              ctx.strokeStyle = strokeColor; ctx.lineWidth = 2;
+              ctx.beginPath(); ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 7, 0, Math.PI * 2); ctx.stroke();
             }
 
             if (map[r][c] === TERRAIN.HOLE) drawHole(x, y, strokeColor);
@@ -2231,20 +1728,15 @@
         ctx.fillStyle = gridColor;
         for (let r = 0; r <= ROWS; r++) {
           for (let c = 0; c <= COLS; c++) {
-            ctx.beginPath();
-            ctx.arc(c * TILE_SIZE, r * TILE_SIZE, 1.2, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(c * TILE_SIZE, r * TILE_SIZE, 1.2, 0, Math.PI * 2); ctx.fill();
           }
         }
 
         if (isMultiplayer) {
-          // Map inactive player positions by cell
           let cellPlayersMap = {};
-
           players.forEach(function(p) {
             if (p.id !== activePlayerIndex) {
               let pos = p.path[p.path.length - 1];
-              // No mostrar etiqueta si está en la salida (TEE) o en el hoyo (HOLE)
               if (map[pos.y][pos.x] !== TERRAIN.TEE && map[pos.y][pos.x] !== TERRAIN.HOLE) {
                 let key = pos.x + "_" + pos.y;
                 if (!cellPlayersMap[key]) cellPlayersMap[key] = [];
@@ -2253,7 +1745,6 @@
             }
           });
 
-          // Draw inactive player tags on their cells
           Object.keys(cellPlayersMap).forEach(function(key) {
             let coords = key.split('_');
             let cx = parseInt(coords[0], 10) * TILE_SIZE + TILE_SIZE/2;
@@ -2263,25 +1754,15 @@
             let tagWidth = Math.max(22, label.length * 7 + 6);
             let tagHeight = 16;
 
-            ctx.fillStyle = strokeColor;
-            ctx.fillRect(cx - tagWidth/2, cy - tagHeight/2, tagWidth, tagHeight);
-
-            ctx.strokeStyle = bgColor;
-            ctx.lineWidth = 1;
-            ctx.strokeRect(cx - tagWidth/2, cy - tagHeight/2, tagWidth, tagHeight);
-
-            ctx.fillStyle = bgColor;
-            ctx.font = 'bold 10px monospace';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.fillStyle = strokeColor; ctx.fillRect(cx - tagWidth/2, cy - tagHeight/2, tagWidth, tagHeight);
+            ctx.strokeStyle = bgColor; ctx.lineWidth = 1; ctx.strokeRect(cx - tagWidth/2, cy - tagHeight/2, tagWidth, tagHeight);
+            ctx.fillStyle = bgColor; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             ctx.fillText(label, cx, cy);
           });
 
-          // Draw Active Player path trajectory & ball
           let activeP = players[activePlayerIndex];
           if (activeP && activeP.path && activeP.path.length > 1) {
-            ctx.strokeStyle = strokeColor;
-            ctx.lineWidth = 2.8;
+            ctx.strokeStyle = strokeColor; ctx.lineWidth = 2.8;
             ctx.beginPath();
             ctx.moveTo(activeP.path[0].x * TILE_SIZE + TILE_SIZE/2, activeP.path[0].y * TILE_SIZE + TILE_SIZE/2);
             for (let i = 1; i < activeP.path.length; i++) {
@@ -2293,37 +1774,26 @@
           if (activeP && activeP.path && activeP.path.length > 0) {
             activeP.path.forEach(function(pt) {
               let cx = pt.x * TILE_SIZE + TILE_SIZE/2, cy = pt.y * TILE_SIZE + TILE_SIZE/2;
-              ctx.beginPath();
-              ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+              ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
               ctx.fillStyle = bgColor; ctx.fill();
               ctx.strokeStyle = strokeColor; ctx.lineWidth = 2; ctx.stroke();
             });
 
-            // Draw active player label next to ball (solo si no está en TEE o HOLE)
             let lastPt = activeP.path[activeP.path.length - 1];
             if (map[lastPt.y][lastPt.x] !== TERRAIN.TEE && map[lastPt.y][lastPt.x] !== TERRAIN.HOLE) {
               let acx = lastPt.x * TILE_SIZE + TILE_SIZE/2;
               let acy = lastPt.y * TILE_SIZE + TILE_SIZE/2 - 14;
 
-              ctx.fillStyle = bgColor;
-              ctx.fillRect(acx - 11, acy - 8, 22, 14);
-              ctx.strokeStyle = strokeColor;
-              ctx.lineWidth = 1.5;
-              ctx.strokeRect(acx - 11, acy - 8, 22, 14);
-
-              ctx.fillStyle = strokeColor;
-              ctx.font = 'bold 10px monospace';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
+              ctx.fillStyle = bgColor; ctx.fillRect(acx - 11, acy - 8, 22, 14);
+              ctx.strokeStyle = strokeColor; ctx.lineWidth = 1.5; ctx.strokeRect(acx - 11, acy - 8, 22, 14);
+              ctx.fillStyle = strokeColor; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
               ctx.fillText(activeP.name, acx, acy);
             }
           }
 
         } else {
-          // Single player trajectory & ball drawing
           if (path.length > 1) {
-            ctx.strokeStyle = strokeColor;
-            ctx.lineWidth = 2.8;
+            ctx.strokeStyle = strokeColor; ctx.lineWidth = 2.8;
             ctx.beginPath();
             ctx.moveTo(path[0].x * TILE_SIZE + TILE_SIZE/2, path[0].y * TILE_SIZE + TILE_SIZE/2);
             for (let i = 1; i < path.length; i++) {
@@ -2334,8 +1804,7 @@
 
           path.forEach(function(pt) {
             let cx = pt.x * TILE_SIZE + TILE_SIZE/2, cy = pt.y * TILE_SIZE + TILE_SIZE/2;
-            ctx.beginPath();
-            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
             ctx.fillStyle = bgColor; ctx.fill();
             ctx.strokeStyle = strokeColor; ctx.lineWidth = 2; ctx.stroke();
           });
@@ -2343,38 +1812,52 @@
 
         validMoves.forEach(function(m) {
           let mx = m.x * TILE_SIZE + TILE_SIZE/2, my = m.y * TILE_SIZE + TILE_SIZE/2;
-          ctx.beginPath();
-          ctx.arc(mx, my, 9, 0, Math.PI * 2);
+          ctx.beginPath(); ctx.arc(mx, my, 9, 0, Math.PI * 2);
           ctx.strokeStyle = strokeColor; ctx.lineWidth = 2;
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
-        // Bottom status bar inside canvas
+        // BARRA INFERIOR DE ESTADO Y EQUIPAMIENTO (PERKS)
+        const barHeight = 44;
         ctx.fillStyle = bgColor;
-        ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
-        ctx.strokeStyle = strokeColor;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(0, canvas.height - 30, canvas.width, 30);
+        ctx.fillRect(0, canvas.height - barHeight, canvas.width, barHeight);
+        ctx.strokeStyle = strokeColor; ctx.lineWidth = 2;
+        ctx.strokeRect(0, canvas.height - barHeight, canvas.width, barHeight);
 
         ctx.fillStyle = strokeColor;
         ctx.font = 'bold 11px monospace';
         ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
+        ctx.textBaseline = 'top';
 
         if (isCourseMode) {
-          let totalAccStrokes = circuitHistory.reduce(function(acc, h) { return acc + h.strokes; }, 0) + strokeCount;
-          let totalAccPar = circuitHistory.reduce(function(acc, h) { return acc + h.par; }, 0) + parVal;
-          ctx.fillText(t('dailyHole') + " " + currentHole + "/8", 8, canvas.height - 15);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 165, canvas.height - 15);
-          ctx.fillText(t('total') + ": " + totalAccStrokes + "/" + totalAccPar, 325, canvas.height - 15);
+          let totalAccStrokes = circuitHistory.reduce((acc, h) => acc + h.strokes, 0) + strokeCount;
+          let totalAccPar = circuitHistory.reduce((acc, h) => acc + h.par, 0) + parVal;
+          ctx.fillText(t('dailyHole') + " " + currentHole + "/8", 8, canvas.height - barHeight + 5);
+          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 165, canvas.height - barHeight + 5);
+          ctx.fillText(t('total') + ": " + totalAccStrokes + "/" + totalAccPar, 325, canvas.height - barHeight + 5);
+
+          // ETIQUETAS DE EQUIPAMIENTO ACTIVAS (DEBAJO)
+          let perkTags = [];
+          if (playerPerks.diceBonus > 0) perkTags.push(`[DADO+${playerPerks.diceBonus}]`);
+          if (playerPerks.mulliganBonus > 0) perkTags.push(`[MULL+${playerPerks.mulliganBonus}]`);
+          if (playerPerks.immuneWater) perkTags.push('[NO-AGUA]');
+          if (playerPerks.immuneBunker) perkTags.push('[NO-BÚNKER]');
+          if (playerPerks.roughTires) perkTags.push('[R-TIRES]');
+          if (playerPerks.woodlandShortcut) perkTags.push('[ATAJO]');
+          if (playerPerks.extendedGreen) perkTags.push('[GREEN+]');
+          if (playerPerks.teeGuarantee) perkTags.push('[TEE-G]');
+
+          ctx.font = '9px monospace';
+          ctx.fillText(perkTags.length > 0 ? perkTags.join(' ') : '[SIN MEJORAS]', 8, canvas.height - barHeight + 24);
+
         } else if (isMultiplayer) {
           let activeP = players[activePlayerIndex];
           let pName = activeP ? activeP.name : 'J1';
-          ctx.fillText(t('multiplayerTitle') + " [" + pName + "]", 8, canvas.height - 15);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - 15);
+          ctx.fillText(t('multiplayerTitle') + " [" + pName + "]", 8, canvas.height - barHeight + 14);
+          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - barHeight + 14);
         } else {
-          ctx.fillText(t('freeModeTitle'), 8, canvas.height - 15);
-          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - 15);
+          ctx.fillText(t('freeModeTitle'), 8, canvas.height - barHeight + 14);
+          ctx.fillText(t('strokes') + ": " + strokeCount + "/" + parVal, 220, canvas.height - barHeight + 14);
         }
 
         highlightCurrentTerrain();
@@ -2395,21 +1878,15 @@
 
       function drawTree(x, y, color) {
         ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x + TILE_SIZE/2, y + 14, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + TILE_SIZE/2, y + 14, 9, 0, Math.PI * 2); ctx.fill();
         ctx.fillRect(x + TILE_SIZE/2 - 2, y + 23, 4, 7);
       }
 
       function drawHole(x, y, mainColor) {
         ctx.fillStyle = mainColor;
-        ctx.beginPath();
-        ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 6, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(x + TILE_SIZE/2, y + TILE_SIZE/2); ctx.lineTo(x + TILE_SIZE/2, y + 5); ctx.strokeStyle = mainColor; ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x + TILE_SIZE/2, y + 5);
-        ctx.lineTo(x + TILE_SIZE/2 - 10, y + 11); ctx.lineTo(x + TILE_SIZE/2, y + 17);
-        ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x + TILE_SIZE/2, y + TILE_SIZE/2); ctx.lineTo(x + TILE_SIZE/2, y + 5); ctx.strokeStyle = mainColor; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + TILE_SIZE/2, y + 5); ctx.lineTo(x + TILE_SIZE/2 - 10, y + 11); ctx.lineTo(x + TILE_SIZE/2, y + 17); ctx.closePath(); ctx.fill();
       }
 
       document.getElementById('btn-lang-toggle').onclick = function() {
@@ -2428,17 +1905,10 @@
       document.getElementById('btn-roll').onclick = rollDice;
       document.getElementById('btn-mulligan').onclick = useMulligan;
       document.getElementById('btn-submit-score').onclick = submitScoreOnline;
-      document.getElementById('btn-next-quick').onclick = function() {
-        forceEinkRefresh(generateHole);
-      };
+      document.getElementById('btn-next-quick').onclick = function() { forceEinkRefresh(generateHole); };
 
-      document.getElementById('btn-close-modal').onclick = function() {
-        document.getElementById('scorecard-modal').style.display = 'none';
-      };
-
-      document.getElementById('btn-close-player-select').onclick = function() {
-        document.getElementById('player-select-modal').style.display = 'none';
-      };
+      document.getElementById('btn-close-modal').onclick = function() { document.getElementById('scorecard-modal').style.display = 'none'; };
+      document.getElementById('btn-close-player-select').onclick = function() { document.getElementById('player-select-modal').style.display = 'none'; };
 
       document.getElementById('btn-select-2p').onclick = function() { startMultiplayerGame(2); };
       document.getElementById('btn-select-3p').onclick = function() { startMultiplayerGame(3); };
@@ -2479,9 +1949,7 @@
         } else if (isCourseMode) {
           openPlayerSelectModal();
         } else if (isMultiplayer) {
-          if (confirm(t('confirmFreeMode'))) {
-            startQuickGame();
-          }
+          if (confirm(t('confirmFreeMode'))) startQuickGame();
         }
       };
 
