@@ -529,45 +529,6 @@
       background: rgba(0, 0, 0, 0.98);
     }
 
-
-    #toast {
-      display: none;
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      max-width: 440px;
-      width: calc(100% - 24px);
-      padding: 10px 12px;
-      background: #ffffff;
-      color: #000000;
-      border: 3px solid #000000;
-      box-shadow: 4px 4px 0px #000000;
-      font-weight: bold;
-      font-size: 0.85rem;
-      line-height: 1.3;
-      text-align: center;
-      z-index: 300;
-      cursor: pointer;
-    }
-    body.dark-mode #toast {
-      background: #000000;
-      color: #ffffff;
-      border-color: #ffffff;
-      box-shadow: 4px 4px 0px #ffffff;
-    }
-    #confirm-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255, 255, 255, 0.98);
-      z-index: 250;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-    body.dark-mode #confirm-modal { background: rgba(0, 0, 0, 0.98); }
-
   </style>
 </head>
 <body class="dark-mode">
@@ -610,16 +571,16 @@
   <div id="control-panel">
     <div class="club-selector">
       <button id="club-driver" class="club-btn active" title="Driver (Dado 4 al 6)">
-        <span class="club-symbol" id="lbl-club-driver-sym">[DRIVER]</span>
-        <span class="club-label" id="lbl-club-driver-lbl">(Dado 4 - 6)</span>
+        <span class="club-symbol">[DRIVER]</span>
+        <span class="club-label">(Dado 4 - 6)</span>
       </button>
       <button id="club-iron" class="club-btn" title="Hierro (Dado 2 al 4)">
-        <span class="club-symbol" id="lbl-club-iron-sym">[HIERRO]</span>
-        <span class="club-label" id="lbl-club-iron-lbl">(Dado 2 - 4)</span>
+        <span class="club-symbol">[HIERRO]</span>
+        <span class="club-label">(Dado 2 - 4)</span>
       </button>
       <button id="club-wood" class="club-btn" title="Madera (Dado 1 al 3)">
-        <span class="club-symbol" id="lbl-club-wood-sym">[MADERA]</span>
-        <span class="club-label" id="lbl-club-wood-lbl">(Dado 1 - 3)</span>
+        <span class="club-symbol">[MADERA]</span>
+        <span class="club-label">(Dado 1 - 3)</span>
       </button>
     </div>
     <div class="action-group">
@@ -761,26 +722,65 @@
       <div id="guide-modal" style="display:none;">
     <div class="scorecard-box" style="max-width:480px; text-align:left; max-height:92vh; overflow-y:auto; padding:14px;">
       <div class="scorecard-title">
-        <span id="lbl-guide-title">[ GUÍA DEL JUEGO ]</span>
+        <span>[ GUÍA DEL JUEGO ]</span>
         <button id="btn-close-guide" style="padding:2px 8px;font-size:0.75rem;">[X]</button>
       </div>
       
-      <div id="guide-body" style="font-size:0.78rem; line-height:1.45; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+      <div style="font-size:0.78rem; line-height:1.45; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div>
+          <b>1. MECÁNICAS PRINCIPALES</b><br>
+          • <b>Selección de Palo:</b> <span class="perk-tag" style="padding:1px 4px;">[DRIVER]</span> (Dado 4-6), <span class="perk-tag" style="padding:1px 4px;">[HIERRO]</span> (Dado 2-4) y <span class="perk-tag" style="padding:1px 4px;">[MADERA]</span> (Dado 1-3).<br>
+          • <b>Tirada y Movimiento:</b> Tira el dado para avanzar por las casillas válidas <span style="border:1px dashed #000; padding:0 2px;">(···)</span> esquivando obstáculos.<br>
+          • <b>Green y Putt:</b> Al pisar el <span class="perk-tag" style="padding:1px 4px;">[GREEN]</span>, se activa el Putt directo (alcance de 2 casillas o 3 con mejora) para embocar al <span class="perk-tag" style="padding:1px 4px;">[HOYO]</span>.
+        </div>
+
+        <div>
+          <b>2. SÍMBOLOS Y TERRENOS</b><br>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:6px;">
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tee" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Salida (Tee):</b> Inicio del hoyo (+3 o +1 bono).</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-fairway" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Calle (Fairway):</b> Terreno óptimo y neutro.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-green" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Green:</b> Superficie para putt directo.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-rough" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Rough:</b> Resta -1 casilla a tu tirada.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-sand" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Búnker:</b> Limita tirada máxima a 3.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-water" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Agua:</b> +1 golpe y penalización.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-pine" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pino:</b> Obstáculo natural bloqueante.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tree" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Árbol:</b> Vegetación densa de ruta.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-bird" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pájaro:</b> Minijuego de reflejos.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-mystery" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Casilla ?:</b> Evento aleatorio sorpresa.</span></div>
+            <div style="display:flex; align-items:center; gap:5px; grid-column: span 2;"><canvas id="g-icon-hole" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Hoyo:</b> Meta final del recorrido.</span></div>
+          </div>
+        </div>
+
+        <div>
+          <b>3. CASILLA MISTERIOSA [?]</b><br>
+          Al caer en una casilla con interrogante <span class="perk-tag" style="padding:1px 4px;">[?]</span>, se activa un evento aleatorio de bonificación o riesgo:<br>
+          • <b>-1 Golpe:</b> Resta directamente un golpe a tu contador.<br>
+          • <b>+1 Golpe:</b> Añade un golpe de penalización.<br>
+          • <b>Teletransporte al Green:</b> Envía la bola directamente a una casilla aleatoria del Green.<br>
+          • <b>Retorno al Tee:</b> La bola vuelve penalizada al punto de salida inicial.<br>
+          • <b>Minijuego de Pájaros:</b> Minijuego interactivo donde debes tocar 5 pájaros rápidos en movimiento. Si aciertas todos, te salvas; si fallas alguno, sumas +3 golpes.
+        </div>
+
+        <div>
+          <b>4. SISTEMA DE MODIFICADORES (PERKS)</b><br>
+          Cada pocos hoyos en el Circuito Diario o Multijugador (y cada 3 hoyos en modo libre), puedes elegir ventajas permanentes:<br>
+          • <b>+1 / +2 a la Tirada:</b> Incrementa tu dado base.<br>
+          • <b>+1 Mulligan:</b> Permite repetir la tirada inicial de salida.<br>
+          • <b>Super Salida (+3):</b> Otorga mayor distancia de salida en el Tee.<br>
+          • <b>Inmune al Agua / Búnker / Rough:</b> Anula las penalizaciones de dichos terrenos.<br>
+          • <b>Atajo Arboleda:</b> Permite atravesar los árboles sin bloqueo.<br>
+          • <b>Putt Extendido:</b> Amplía el alcance del Putt directo en el Green de 2 a 3 casillas.
+        </div>
+
+        <div>
+          <b>5. MODOS DE JUEGO & LEADERBOARD</b><br>
+          • <b>Modo Libre:</b> Partidas rápidas personalizables (Normal, Avanzado, XXL).<br>
+          • <b>Daily Course:</b> Circuito oficial diario de 9 hoyos con progresión de dificultad y ranking mundial (Daily Leaderboard con tus iniciales).<br>
+          • <b>Multijugador Local:</b> Competición por turnos compartiendo dispositivo (2 a 4 jugadores) con draft de mejoras integrado.
+        </div>
       </div>
       
       <button id="btn-guide-ok" style="width:100%; padding:8px; font-size:0.85rem; margin-top:12px;">[ CERRAR GUÍA ]</button>
-    </div>
-  </div>
-
-  <div id="toast" role="status" aria-live="polite"></div>
-
-  <div id="confirm-modal">
-    <div class="scorecard-box" style="text-align:center;">
-      <p id="confirm-msg" style="font-size:1rem;font-weight:bold;margin-bottom:16px;"></p>
-      <div style="display:flex;gap:8px;">
-        <button id="btn-confirm-yes" style="flex:1;padding:10px;font-size:1rem;">[ SÍ ]</button>
-        <button id="btn-confirm-no" style="flex:1;padding:10px;font-size:1rem;">[ NO ]</button>
-      </div>
     </div>
   </div>
 
@@ -831,15 +831,15 @@
       let playerPerks = createEmptyPerks();
 
       const PERKS_POOL = [
-        { id: 'DADO_PLUS_1', nameKey: 'perkDice1Name', descKey: 'perkDice1Desc', name: '+1 a la Tirada', desc: 'Suma +1 a todas tus tiradas de dado.', unique: false },
-        { id: 'DADO_PLUS_2', nameKey: 'perkDice2Name', descKey: 'perkDice2Desc', name: '+2 a la Tirada', desc: 'Suma +2 a todas tus tiradas de dado.', unique: false },
-        { id: 'MULLIGAN_PLUS_1', nameKey: 'perkMulliganName', descKey: 'perkMulliganDesc', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo en la salida.', unique: false },
-        { id: 'GARANTIA_SALIDA', nameKey: 'perkTeeName', descKey: 'perkTeeDesc', name: 'Super Salida', desc: 'En la salida (Tee), consigues un bono especial de +3 a la distancia (en lugar de +1).', unique: false },
-        { id: 'INMUNE_AGUA', nameKey: 'perkWaterName', descKey: 'perkWaterDesc', name: 'Inmune al Agua', desc: 'La bola no cae al agua ni penaliza; rebota justo antes.', unique: true },
-        { id: 'INMUNE_BUNKER', nameKey: 'perkBunkerName', descKey: 'perkBunkerDesc', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
-        { id: 'NEUMATICOS_ROUGH', nameKey: 'perkRoughName', descKey: 'perkRoughDesc', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
-        { id: 'ATAJO_ARBOLEDA', nameKey: 'perkWoodlandName', descKey: 'perkWoodlandDesc', name: 'Atajo Arboleda', desc: 'La bola atraviesa la vegetación sin ser bloqueada.', unique: true },
-        { id: 'GREEN_AMPLIADO', nameKey: 'perkGreenName', descKey: 'perkGreenDesc', name: 'Putt Extendido', desc: 'Tu alcance de Putt directo en el Green se amplía de 2 a 3 casillas.', unique: true }
+        { id: 'DADO_PLUS_1', name: '+1 a la Tirada', desc: 'Suma +1 a todas tus tiradas de dado.', unique: false },
+        { id: 'DADO_PLUS_2', name: '+2 a la Tirada', desc: 'Suma +2 a todas tus tiradas de dado.', unique: false },
+        { id: 'MULLIGAN_PLUS_1', name: '+1 Mulligan', desc: 'Consigues +1 uso para repetir tiradas por hoyo en la salida.', unique: false },
+        { id: 'GARANTIA_SALIDA', name: 'Super Salida', desc: 'En la salida (Tee), consigues un bono especial de +3 a la distancia (en lugar de +1).', unique: false },
+        { id: 'INMUNE_AGUA', name: 'Inmune al Agua', desc: 'La bola no cae al agua ni penaliza; rebota justo antes.', unique: true },
+        { id: 'INMUNE_BUNKER', name: 'Inmune al Búnker', desc: 'El búnker ya no limita tu movimiento máximo.', unique: true },
+        { id: 'NEUMATICOS_ROUGH', name: 'Neumáticos Rough', desc: 'El Rough ya no descuenta -1 a la tirada.', unique: true },
+        { id: 'ATAJO_ARBOLEDA', name: 'Atajo Arboleda', desc: 'La bola atraviesa la vegetación sin ser bloqueada.', unique: true },
+        { id: 'GREEN_AMPLIADO', name: 'Putt Extendido', desc: 'Tu alcance de Putt directo en el Green se amplía de 2 a 3 casillas.', unique: true }
       ];
 
       let playerCount = 2;
@@ -861,13 +861,13 @@
       const I18N = {
         ES: {
           langBtn: "[ LANG: ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]", guide: "[ GUÍA ]",
+          day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
-          typeNormal: "[ TIPO: NORMAL ]", typeAvanzado: "[ TIPO: AVANZADO ]", typeXXL: "[ TIPO: XXL ]",
           fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo", bird: "Pájaro",
           freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", holeLabel: "Hoyo",
           normal: "NORMAL", avanzado: "AVANZADO", xxl: "XXL", dice: "Dado",
-          rollBtn: "[⚄ TIRAR]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ SIGUIENTE]",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Búnker)",
+          rollTitle: "Tirar Dado", mulliganTitle: "Mulligan (Repetir Tirada)", nextHoleTitle: "Siguiente Hoyo",
           puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO", waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
           strokes: "Golpes", total: "Total", scorecardTitle: "CLASIFICACIÓN", worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
           endDailyTitle: "FIN DEL CIRCUITO", scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
@@ -878,154 +878,8 @@
           tabToday: "HOY", tabYesterday: "AYER", tableRank: "#", tableScore: "GOLPES", noRecords: "Sin récords registrados aún.",
           loadingLb: "Cargando leaderboard...", btnClose: "[ CERRAR ]", btnNextHole: "[ HOYO SIGUIENTE ]", btnNewCourse: "[ NUEVO CIRCUITO ]",
           btnContinue: "[ CONTINUAR ]", confirmFreeMode: "¿Quieres volver al Modo Libre?", selectPlayersTitle: "MULTIJUGADOR LOCAL",
-          selectPlayersPrompt: "Selecciona el número de jugadores:", players2: "[ 2 JUGADORES ]", players3: "[ 3 JUGADORES ]", players4: "[ 4 JUGADORES ]",
-          passPhoneTitle: "¡PASA EL MÓVIL!", passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)", readyBtn: "[ ¡LISTO PARA TIRAR! ]", turnBannerText: "TURNO: {p} ({d} casillas al hoyo)",
-          perksHeaderTitle: "MODIFICADORES ACTIVOS", noActivePerks: "Sin modificadores activos",
-          perkChooseTitle: "ELIGE UNA MEJORA", perkChooseSubtitle: "Selecciona una ventaja para los siguientes hoyos:",
-          perkOwnedTag: " [YA POSEÍDO]", perkReservedTag: " [RESERVADO]", perkAlreadyOwnedToast: "¡No puedes escoger esta modificación porque ya la tienes!",
-          driverName: "[DRIVER]", ironName: "[HIERRO]", woodName: "[MADERA]",
-          driverRange: "(Dado 4 - 6)", ironRange: "(Dado 2 - 4)", woodRange: "(Dado 1 - 3)",
-          yesBtn: "[ SÍ ]", noBtn: "[ NO ]", closeGuideBtn: "[ CERRAR GUÍA ]", guideTitle: "[ GUÍA DEL JUEGO ]"
-        },
-        EN: {
-          langBtn: "[ LANG: EN ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ DAY ]", night: "[ NIGHT ]", ranking: "[ RANKING ]", guide: "[ GUIDE ]",
-          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREE MODE ]", multiplayer: "[ MULTIPLAYER ]",
-          typeNormal: "[ TYPE: NORMAL ]", typeAvanzado: "[ TYPE: ADVANCED ]", typeXXL: "[ TYPE: XXL ]",
-          fairway: "Fairway", green: "Green", rough: "Rough", water: "Water", pine: "Pine", tree: "Tree", sand: "Bunker", tee: "Tee", hole: "Hole", bird: "Bird",
-          freeModeTitle: "Free Mode", multiplayerTitle: "Multiplayer", dailyHole: "Daily Hole", holeLabel: "Hole",
-          normal: "NORMAL", avanzado: "ADVANCED", xxl: "XXL", dice: "Dice",
-          rollBtn: "[⚄ ROLL]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ NEXT]",
-          puttBanner: "[!] ON GREEN - DIRECT PUTT ACTIVE", waterAlert: "Water hazard! +1 Penalty stroke.",
-          strokes: "Strokes", total: "Total", scorecardTitle: "SCORECARD", worldLeaderboardTitle: "WORLD LEADERBOARD",
-          endDailyTitle: "COURSE COMPLETE", scorecardHoleHeader: "SCORECARD (HOLE {h})",
-          tableHole: "HOLE", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "STROKES", tableTotal: "TOTAL", tablePlayer: "PLAYER",
-          evenParResult: "Result: EVEN PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} UNDER PAR!",
-          registerRecord: "REGISTER DAILY RECORD", saveBtn: "[ SAVE ]", recordSubmitted: "Record submitted successfully!",
-          recordSavedLocal: "Record saved locally.", leaderboardTitle: "WORLD LEADERBOARD",
-          tabToday: "TODAY", tabYesterday: "YESTERDAY", tableRank: "#", tableScore: "STROKES", noRecords: "No records yet.",
-          loadingLb: "Loading leaderboard...", btnClose: "[ CLOSE ]", btnNextHole: "[ NEXT HOLE ]", btnNewCourse: "[ NEW COURSE ]",
-          btnContinue: "[ CONTINUE ]", confirmFreeMode: "Return to Free Mode?", selectPlayersTitle: "LOCAL MULTIPLAYER",
-          selectPlayersPrompt: "Select number of players:", players2: "[ 2 PLAYERS ]", players3: "[ 3 PLAYERS ]", players4: "[ 4 PLAYERS ]",
-          passPhoneTitle: "PASS THE PHONE!", passPhoneMsg: "Turn: {p} ({d} tiles to hole)", readyBtn: "[ READY TO ROLL! ]", turnBannerText: "TURN: {p} ({d} tiles to hole)",
-          perksHeaderTitle: "ACTIVE MODIFIERS", noActivePerks: "No active modifiers",
-          perkChooseTitle: "CHOOSE A PERK", perkChooseSubtitle: "Select a perk for upcoming holes:",
-          perkOwnedTag: " [OWNED]", perkReservedTag: " [RESERVED]", perkAlreadyOwnedToast: "You already own this modifier!",
-          driverName: "[DRIVER]", ironName: "[IRON]", woodName: "[WOOD]",
-          driverRange: "(Dice 4 - 6)", ironRange: "(Dice 2 - 4)", woodRange: "(Dice 1 - 3)",
-          yesBtn: "[ YES ]", noBtn: "[ NO ]", closeGuideBtn: "[ CLOSE GUIDE ]", guideTitle: "[ GAME GUIDE ]"
-        },
-        CA: {
-          langBtn: "[ LANG: CA ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ DIA ]", night: "[ NIT ]", ranking: "[ RÀNQUING ]", guide: "[ GUIA ]",
-          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LLIURE ]", multiplayer: "[ MULTIJUGADOR ]",
-          typeNormal: "[ TIPUS: NORMAL ]", typeAvanzado: "[ TIPUS: AVANÇAT ]", typeXXL: "[ TIPUS: XXL ]",
-          fairway: "Carrer", green: "Green", rough: "Rough", water: "Aigua", pine: "Pi", tree: "Arbre", sand: "Búnquer", tee: "Eixida", hole: "Forat", bird: "Ocell",
-          freeModeTitle: "Mode Lliure", multiplayerTitle: "Multijugador", dailyHole: "Daily Forat", holeLabel: "Forat",
-          normal: "NORMAL", avanzado: "AVANÇAT", xxl: "XXL", dice: "Dau",
-          rollBtn: "[⚄ TIRAR]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ SEGÜENT]",
-          puttBanner: "[!] AL GREEN - PUTT DIRECTE ACTIU", waterAlert: "¡Pila a l'aigua! +1 Cop de penalització.",
-          strokes: "Cops", total: "Total", scorecardTitle: "CLASSIFICACIÓ", worldLeaderboardTitle: "RÀNQUING MUNDIAL",
-          endDailyTitle: "FI DEL CIRCUIT", scorecardHoleHeader: "CLASSIFICACIÓ (FORAT {h})",
-          tableHole: "FORAT", tableDiff: "DIF", tablePar: "PAR", tableStrokes: "COPS", tableTotal: "TOTAL", tablePlayer: "JUGADOR",
-          evenParResult: "Resultat: PAR DEL CAMP (E)", overParResult: "Hàndicap: +{d}", underParResult: "Hàndicap: -{d} SOTA PAR!",
-          registerRecord: "REGISTRAR RÈCORD DIARI", saveBtn: "[ DESAR ]", recordSubmitted: "¡Rècord enviat amb èxit!",
-          recordSavedLocal: "Rècord desat localment.", leaderboardTitle: "RÀNQUING MUNDIAL",
-          tabToday: "AVUI", tabYesterday: "AHIR", tableRank: "#", tableScore: "COPS", noRecords: "Sense rècords encara.",
-          loadingLb: "Carregant rànquing...", btnClose: "[ TANCAR ]", btnNextHole: "[ SEGÜENT FORAT ]", btnNewCourse: "[ NOU CIRCUIT ]",
-          btnContinue: "[ CONTINUAR ]", confirmFreeMode: "Vols tornar al Mode Lliure?", selectPlayersTitle: "MULTIJUGADOR LOCAL",
-          selectPlayersPrompt: "Selecciona el nombre de jugadors:", players2: "[ 2 JUGADORS ]", players3: "[ 3 JUGADORS ]", players4: "[ 4 JUGADORS ]",
-          passPhoneTitle: "¡PASSA EL MÒBIL!", passPhoneMsg: "Torn de {p} ({d} caselles al forat)", readyBtn: "[ ¡PREPARAT PER TIRAR! ]", turnBannerText: "TORN: {p} ({d} caselles al forat)",
-          perksHeaderTitle: "MODIFICADORS ACTIUS", noActivePerks: "Sense modificadors actius",
-          perkChooseTitle: "TRIA UNA MILLORA", perkChooseSubtitle: "Selecciona un avantatge per als següents forats:",
-          perkOwnedTag: " [JA EN PROPIETAT]", perkReservedTag: " [RESERVAT]", perkAlreadyOwnedToast: "No pots escollir aquesta modificació perquè ja la tens!",
-          driverName: "[DRIVER]", ironName: "[FERRO]", woodName: "[FUSTA]",
-          driverRange: "(Dau 4 - 6)", ironRange: "(Dau 2 - 4)", woodRange: "(Dau 1 - 3)",
-          yesBtn: "[ SÍ ]", noBtn: "[ NO ]", closeGuideBtn: "[ TANCAR GUIA ]", guideTitle: "[ GUIA DEL JOC ]"
-        },
-        FR: {
-          langBtn: "[ LANG: FR ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ JOUR ]", night: "[ NUIT ]", ranking: "[ CLASSEMENT ]", guide: "[ GUIDE ]",
-          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LIBRE ]", multiplayer: "[ MULTIJOUEUR ]",
-          typeNormal: "[ TYPE: NORMAL ]", typeAvanzado: "[ TYPE: AVANCÉ ]", typeXXL: "[ TYPE: XXL ]",
-          fairway: "Fairway", green: "Green", rough: "Rough", water: "Eau", pine: "Pin", tree: "Arbre", sand: "Bunker", tee: "Départ", hole: "Trou", bird: "Oiseau",
-          freeModeTitle: "Mode Libre", multiplayerTitle: "Multijoueur", dailyHole: "Daily Trou", holeLabel: "Trou",
-          normal: "NORMAL", avanzado: "AVANCÉ", xxl: "XXL", dice: "Dé",
-          rollBtn: "[⚄ LANCER]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ SUIVANT]",
-          puttBanner: "[!] SUR LE GREEN - PUTT DIRECT ACTIF", waterAlert: "Balle à l'eau! +1 Coup de pénalité.",
-          strokes: "Coups", total: "Total", scorecardTitle: "CARTE DE SCORE", worldLeaderboardTitle: "CLASSEMENT MONDIAL",
-          endDailyTitle: "PARCOURS TERMINÉ", scorecardHoleHeader: "CARTE DE SCORE (TROU {h})",
-          tableHole: "TROU", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "COUPS", tableTotal: "TOTAL", tablePlayer: "JOUEUR",
-          evenParResult: "Résultat: PAR DU PARCOURS (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} SOUS LE PAR!",
-          registerRecord: "ENREGISTRER RECORD DU JOUR", saveBtn: "[ SAUVER ]", recordSubmitted: "Record envoyé avec succès!",
-          recordSavedLocal: "Record sauvegardé localement.", leaderboardTitle: "CLASSEMENT MONDIAL",
-          tabToday: "AUJOURD'HUI", tabYesterday: "HIER", tableRank: "#", tableScore: "COUPS", noRecords: "Aucun record enregistré.",
-          loadingLb: "Chargement du classement...", btnClose: "[ FERMER ]", btnNextHole: "[ TROU SUIVANT ]", btnNewCourse: "[ NOUVEAU PARCOURS ]",
-          btnContinue: "[ CONTINUER ]", confirmFreeMode: "Revenir au Mode Libre?", selectPlayersTitle: "MULTIJOUEUR LOCAL",
-          selectPlayersPrompt: "Sélectionnez le nombre de joueurs:", players2: "[ 2 JOUEURS ]", players3: "[ 3 JOUEURS ]", players4: "[ 4 JOUEURS ]",
-          passPhoneTitle: "PASSEZ LE TÉLÉPHONE!", passPhoneMsg: "Tour de {p} ({d} cases du trou)", readyBtn: "[ PRÊT À LANCER! ]", turnBannerText: "TOUR: {p} ({d} cases du trou)",
-          perksHeaderTitle: "MODIFICATEURS ACTIFS", noActivePerks: "Aucun modificateur actif",
-          perkChooseTitle: "CHOISISSEZ UN BONUS", perkChooseSubtitle: "Sélectionnez un avantage pour les prochains trous:",
-          perkOwnedTag: " [DÉJÀ POSSÉDÉ]", perkReservedTag: " [RÉSERVÉ]", perkAlreadyOwnedToast: "Vous possédez déjà ce modificateur!",
-          driverName: "[DRIVER]", ironName: "[FER]", woodName: "[BOIS]",
-          driverRange: "(Dé 4 - 6)", ironRange: "(Dé 2 - 4)", woodRange: "(Dé 1 - 3)",
-          yesBtn: "[ OUI ]", noBtn: "[ NON ]", closeGuideBtn: "[ FERMER LE GUIDE ]", guideTitle: "[ GUIDE DU JEU ]"
-        },
-        IT: {
-          langBtn: "[ LANG: IT ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ GIORNO ]", night: "[ NOTTE ]", ranking: "[ CLASSIFICA ]", guide: "[ GUIDA ]",
-          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODALITÀ LIBERA ]", multiplayer: "[ MULTIPLAYER ]",
-          typeNormal: "[ TIPO: NORMALE ]", typeAvanzado: "[ TIPO: AVANZATO ]", typeXXL: "[ TIPO: XXL ]",
-          fairway: "Fairway", green: "Green", rough: "Rough", water: "Acqua", pine: "Pino", tree: "Albero", sand: "Bunker", tee: "Partenza", hole: "Buca", bird: "Uccello",
-          freeModeTitle: "Modalità Libera", multiplayerTitle: "Multiplayer", dailyHole: "Daily Buca", holeLabel: "Buca",
-          normal: "NORMALE", avanzado: "AVANZATO", xxl: "XXL", dice: "Dado",
-          rollBtn: "[⚄ TIRARE]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ PROSSIMO]",
-          puttBanner: "[!] SUL GREEN - PUTT DIRETTO ATTIVO", waterAlert: "Palla in acqua! +1 Colpo di penalità.",
-          strokes: "Colpi", total: "Totale", scorecardTitle: "SCORECARD", worldLeaderboardTitle: "CLASSIFICA MONDIALE",
-          endDailyTitle: "PERCORSO COMPLETATO", scorecardHoleHeader: "SCORECARD (BUCA {h})",
-          tableHole: "BUCA", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "COLPI", tableTotal: "TOTALE", tablePlayer: "GIOCATORE",
-          evenParResult: "Risultato: PAR DEL CAMPO (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} SOTTO IL PAR!",
-          registerRecord: "REGISTRA RECORD GIORNALIERO", saveBtn: "[ SALVA ]", recordSubmitted: "Record inviato con successo!",
-          recordSavedLocal: "Record salvato localmente.", leaderboardTitle: "CLASSIFICA MONDIALE",
-          tabToday: "OGGI", tabYesterday: "IERI", tableRank: "#", tableScore: "COLPI", noRecords: "Nessun record salvato.",
-          loadingLb: "Caricamento classifica...", btnClose: "[ CHIUDI ]", btnNextHole: "[ PROSSIMA BUCA ]", btnNewCourse: "[ NUOVO PERCORSO ]",
-          btnContinue: "[ CONTINUA ]", confirmFreeMode: "Tornare alla Modalità Libera?", selectPlayersTitle: "MULTIPLAYER LOCALE",
-          selectPlayersPrompt: "Seleziona il numero di giocatori:", players2: "[ 2 GIOCATORI ]", players3: "[ 3 GIOCATORI ]", players4: "[ 4 GIOCATORI ]",
-          passPhoneTitle: "PASSA IL TELEFONO!", passPhoneMsg: "Turno di {p} ({d} caselle alla buca)", readyBtn: "[ PRONTO A TIRARE! ]", turnBannerText: "TURNO: {p} ({d} caselle alla buca)",
-          perksHeaderTitle: "MODIFICATORI ATTIVI", noActivePerks: "Nessun modificatore attivo",
-          perkChooseTitle: "SCEGLI UN POTENZIAMENTO", perkChooseSubtitle: "Seleziona un vantaggio per le prossime buche:",
-          perkOwnedTag: " [GIÀ POSSEDUTO]", perkReservedTag: " [RISERVATO]", perkAlreadyOwnedToast: "Possiedi già questo modificatore!",
-          driverName: "[DRIVER]", ironName: "[FERRO]", woodName: "[LEGNO]",
-          driverRange: "(Dado 4 - 6)", ironRange: "(Dado 2 - 4)", woodRange: "(Dado 1 - 3)",
-          yesBtn: "[ SÌ ]", noBtn: "[ NO ]", closeGuideBtn: "[ CHIUDI GUIDA ]", guideTitle: "[ GUIDA DEL GIOCO ]"
-        },
-        DE: {
-          langBtn: "[ LANG: DE ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ TAG ]", night: "[ NACHT ]", ranking: "[ RANGLISTE ]", guide: "[ ANLEITUNG ]",
-          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREIER MODUS ]", multiplayer: "[ MEHRSPIELER ]",
-          typeNormal: "[ TYP: NORMAL ]", typeAvanzado: "[ TYP: FORTGESCHRITTEN ]", typeXXL: "[ TYP: XXL ]",
-          fairway: "Fairway", green: "Green", rough: "Rough", water: "Wasser", pine: "Pinie", tree: "Baum", sand: "Bunker", tee: "Abschlag", hole: "Loch", bird: "Vogel",
-          freeModeTitle: "Freier Modus", multiplayerTitle: "Mehrspieler", dailyHole: "Daily Loch", holeLabel: "Loch",
-          normal: "NORMAL", avanzado: "FORTGESCHRITTEN", xxl: "XXL", dice: "Würfel",
-          rollBtn: "[⚄ WÜRFELN]", mulliganBtn: "[↺ MULLIGAN]", nextBtn: "[➔ NÄCHSTES]",
-          puttBanner: "[!] AUF DEM GREEN - DIREKTPUTT AKTIV", waterAlert: "Ball im Wasser! +1 Strafschlag.",
-          strokes: "Schläge", total: "Gesamt", scorecardTitle: "SCORECARD", worldLeaderboardTitle: "WELTRANGLISTE",
-          endDailyTitle: "KURS BEENDET", scorecardHoleHeader: "SCORECARD (LOCH {h})",
-          tableHole: "LOCH", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "SCHLÄGE", tableTotal: "GESAMT", tablePlayer: "SPIELER",
-          evenParResult: "Ergebnis: EVEN PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} UNTER PAR!",
-          registerRecord: "TAGESREKORD REGISTRIEREN", saveBtn: "[ SPEICHERN ]", recordSubmitted: "Rekord erfolgreich gesendet!",
-          recordSavedLocal: "Rekord lokal gespeichert.", leaderboardTitle: "WELTRANGLISTE",
-          tabToday: "HEUTE", tabYesterday: "GESTERN", tableRank: "#", tableScore: "SCHLÄGE", noRecords: "Noch keine Rekorde.",
-          loadingLb: "Lade Rangliste...", btnClose: "[ SCHLIESSEN ]", btnNextHole: "[ NÄCHSTES LOCH ]", btnNewCourse: "[ NEUER KURS ]",
-          btnContinue: "[ WEITER ]", confirmFreeMode: "Zum Freien Modus zurückkehren?", selectPlayersTitle: "LOKALER MEHRSPIELER",
-          selectPlayersPrompt: "Anzahl der Spieler auswählen:", players2: "[ 2 SPIELER ]", players3: "[ 3 SPIELER ]", players4: "[ 4 SPIELER ]",
-          passPhoneTitle: "HANDY WEITERGEBEN!", passPhoneMsg: "Zug von {p} ({d} Felder zum Loch)", readyBtn: "[ BEREIT ZUM WÜRFELN! ]", turnBannerText: "ZUG: {p} ({d} Felder zum Loch)",
-          perksHeaderTitle: "AKTIVE MODIFIKATOREN", noActivePerks: "Keine aktiven Modifikatoren",
-          perkChooseTitle: "BONUS WÄHLEN", perkChooseSubtitle: "Wähle einen Vorteil für die nächsten Löcher:",
-          perkOwnedTag: " [BEREITS BESITZT]", perkReservedTag: " [RESERVIERT]", perkAlreadyOwnedToast: "Du besitzt diesen Modifikator bereits!",
-          driverName: "[DRIVER]", ironName: "[EISEN]", woodName: "[HOLZ]",
-          driverRange: "(Würfel 4 - 6)", ironRange: "(Würfel 2 - 4)", woodRange: "(Würfel 1 - 3)",
-          yesBtn: "[ JA ]", noBtn: "[ NEIN ]", closeGuideBtn: "[ ANLEITUNG SCHLIESSEN ]", guideTitle: "[ SPIELANLEITUNG ]"
+          selectPlayersPrompt: "Selecciona número de jugadores:", players2: "[ 2 JUGADORES ]", players3: "[ 3 JUGADORES ]", players4: "[ 4 JUGADORES ]",
+          passPhoneTitle: "¡PASA EL MÓVIL!", passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)", readyBtn: "[ ¡LISTO PARA TIRAR! ]", turnBannerText: "TURNO: {p} ({d} casillas al hoyo)"
         }
       };
 
@@ -1033,32 +887,6 @@
         let text = (I18N[currentLang] && I18N[currentLang][key]) || (I18N['ES'][key]) || key;
         Object.keys(params).forEach(p => { text = text.replace('{' + p + '}', params[p]); });
         return text;
-      }
-
-      let toastTimer = null;
-      function showToast(msg, ms) {
-        const el = document.getElementById('toast');
-        if (!el) return;
-        el.innerText = msg;
-        el.style.display = 'block';
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(function() { el.style.display = 'none'; }, ms || 2600);
-      }
-      document.getElementById('toast').onclick = function() { this.style.display = 'none'; };
-
-      function showConfirm(msg, onYes) {
-        document.getElementById('confirm-msg').innerText = msg;
-        const modal = document.getElementById('confirm-modal');
-        modal.style.display = 'flex';
-        document.getElementById('btn-confirm-yes').innerText = t('yesBtn');
-        document.getElementById('btn-confirm-no').innerText = t('noBtn');
-        document.getElementById('btn-confirm-yes').onclick = function() {
-          modal.style.display = 'none';
-          if (onYes) onYes();
-        };
-        document.getElementById('btn-confirm-no').onclick = function() {
-          modal.style.display = 'none';
-        };
       }
 
       function getActivePlayerPerks() {
@@ -1077,31 +905,31 @@
         let activePerks = getActivePlayerPerks();
 
         if (isMultiplayer && players.length > 0 && players[activePlayerIndex]) {
-          headerTitle.innerText = t('perksHeaderTitle') + " (" + players[activePlayerIndex].name + ")";
+          headerTitle.innerText = "MODIFICADORES ACTIVOS (" + players[activePlayerIndex].name + ")";
         } else {
-          headerTitle.innerText = t('perksHeaderTitle');
+          headerTitle.innerText = "MODIFICADORES ACTIVOS";
         }
 
         let activeTags = [];
-        if (activePerks.diceBonus > 0) activeTags.push(`[${t('dice').toUpperCase()} +${activePerks.diceBonus}]`);
+        if (activePerks.diceBonus > 0) activeTags.push(`[DADO +${activePerks.diceBonus}]`);
         if (activePerks.mulliganBonus > 0) activeTags.push(`[MULLIGAN +${activePerks.mulliganBonus}]`);
-        if (activePerks.immuneWater) activeTags.push(`[${t('water').toUpperCase()}]`);
-        if (activePerks.immuneBunker) activeTags.push(`[${t('sand').toUpperCase()}]`);
-        if (activePerks.roughTires) activeTags.push(`[${t('rough').toUpperCase()}]`);
-        if (activePerks.woodlandShortcut) activeTags.push(`[${t('tree').toUpperCase()}]`);
-        if (activePerks.extendedGreen) activeTags.push(`[PUTT]`);
-        if (activePerks.teeGuarantee) activeTags.push(`[${t('tee').toUpperCase()} (+3)]`);
+        if (activePerks.immuneWater) activeTags.push('[INMUNE AGUA]');
+        if (activePerks.immuneBunker) activeTags.push('[INMUNE BÚNKER]');
+        if (activePerks.roughTires) activeTags.push('[NEUMÁTICOS ROUGH]');
+        if (activePerks.woodlandShortcut) activeTags.push('[ATAJO ARBOLEDA]');
+        if (activePerks.extendedGreen) activeTags.push('[PUTT EXTENDIDO]');
+        if (activePerks.teeGuarantee) activeTags.push('[SUPER SALIDA (+3)]');
 
         countLbl.innerText = activeTags.length;
 
         if (activeTags.length === 0) {
-          container.innerHTML = `<span class="perk-tag" style="background:transparent;color:inherit;padding:0;">${t('noActivePerks')}</span>`;
+          container.innerHTML = '<span class="perk-tag" style="background:transparent;color:inherit;padding:0;">Sin modificadores activos</span>';
         } else {
           container.innerHTML = activeTags.map(tag => `<span class="perk-tag">${tag}</span>`).join('');
         }
       }
 
-      function getCurrentMapType() {
+            function getCurrentMapType() {
         if (isCourseMode || isMultiplayer) {
           if (currentHole <= 3) return MAP_TYPES.NORMAL;
           if (currentHole <= 6) return MAP_TYPES.AVANZADO;
@@ -1115,7 +943,6 @@
         document.getElementById('btn-sound-toggle').innerText = soundEnabled ? t('soundOn') : t('soundOff');
         document.getElementById('btn-night-toggle').innerText = isDarkMode ? t('day') : t('night');
         document.getElementById('btn-ranking').innerText = t('ranking');
-        document.getElementById('btn-guide').innerText = t('guide');
         
         let modeBtnText = t('freeMode');
         if (isCourseMode) modeBtnText = t('dailyCourse');
@@ -1136,43 +963,11 @@
         document.getElementById('lbl-dice').innerText = t('dice');
         document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
 
-        document.getElementById('lbl-club-driver-sym').innerText = t('driverName');
-        document.getElementById('lbl-club-driver-lbl').innerText = t('driverRange');
-        document.getElementById('lbl-club-iron-sym').innerText = t('ironName');
-        document.getElementById('lbl-club-iron-lbl').innerText = t('ironRange');
-        document.getElementById('lbl-club-wood-sym').innerText = t('woodName');
-        document.getElementById('lbl-club-wood-lbl').innerText = t('woodRange');
-
-        document.getElementById('btn-roll').innerText = t('rollBtn');
-        document.getElementById('btn-mulligan').innerText = t('mulliganBtn');
-        document.getElementById('btn-next-quick').innerText = t('nextBtn');
-
-        document.getElementById('lbl-multi-select-title').innerText = t('selectPlayersTitle');
-        document.getElementById('lbl-select-num-players').innerText = t('selectPlayersPrompt');
-        document.getElementById('btn-select-2p').innerText = t('players2');
-        document.getElementById('btn-select-3p').innerText = t('players3');
-        document.getElementById('btn-select-4p').innerText = t('players4');
-
-        document.getElementById('pass-turn-title').innerText = t('passPhoneTitle');
-        document.getElementById('btn-start-turn').innerText = t('readyBtn');
-
-        document.getElementById('scorecard-header').innerText = t('scorecardTitle');
-        document.getElementById('lbl-register-record').innerText = t('registerRecord');
-        document.getElementById('btn-submit-score').innerText = t('saveBtn');
-        document.getElementById('lbl-world-lb').innerText = t('worldLeaderboardTitle');
-        document.getElementById('tab-today').innerText = t('tabToday');
-        document.getElementById('tab-yesterday').innerText = t('tabYesterday');
-        document.getElementById('btn-continue-course').innerText = t('btnContinue');
-
-        document.getElementById('btn-close-guide').innerText = "[X]";
-        document.getElementById('btn-guide-ok').innerText = t('closeGuideBtn');
-        document.getElementById('lbl-guide-title').innerText = t('guideTitle');
-
         let freemodeTypeBtn = document.getElementById('btn-freemode-type');
         if (!isCourseMode && !isMultiplayer) {
           freemodeTypeBtn.style.display = 'inline-block';
-          let typeText = freeModeMapType === MAP_TYPES.NORMAL ? t('typeNormal') : (freeModeMapType === MAP_TYPES.AVANZADO ? t('typeAvanzado') : t('typeXXL'));
-          freemodeTypeBtn.innerText = typeText;
+          let typeName = freeModeMapType === MAP_TYPES.NORMAL ? t('normal') : (freeModeMapType === MAP_TYPES.AVANZADO ? t('avanzado') : t('xxl'));
+          freemodeTypeBtn.innerText = '[ TIPO: ' + typeName + ' ]';
         } else {
           freemodeTypeBtn.style.display = 'none';
         }
@@ -1279,6 +1074,7 @@
       function playSandSound() {
         if (!soundEnabled) return;
         initAudio(); if (!audioCtx) return;
+        const now = audioCtx.currentTime;
         const bufferSize = audioCtx.sampleRate * 0.09;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
@@ -1391,7 +1187,7 @@
 
         if (option === 1) {
           strokeCount = Math.max(0, strokeCount - 1);
-          msgElem.innerText = "¡BUENA SUERTE!\nRestas -1 golpe a tu contador actual.";
+          msgElem.innerText = "¡BUENA SUERTE! \nRestas -1 golpe a tu contador actual.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1399,7 +1195,7 @@
           };
         } else if (option === 2) {
           strokeCount += 1;
-          msgElem.innerText = "¡MALA SUERTE!\nSumas +1 golpe a tu contador actual.";
+          msgElem.innerText = "¡MALA SUERTE! \nSumas +1 golpe a tu contador actual.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1419,7 +1215,7 @@
             let dest = greenCandidates[Math.floor(Math.random() * greenCandidates.length)];
             path.push({ x: dest.x, y: dest.y });
           }
-          msgElem.innerText = "¡MENUDO TIRO!\nTu bola ha volado directamente al Green.";
+          msgElem.innerText = "¡MENUDO TIRO! \nTu bola ha volado directamente al Green.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1434,7 +1230,7 @@
               }
             }
           }
-          msgElem.innerText = "¡MÁS SUERTE LA PRÓXIMA VEZ!\nLa bola se ha teletransportado de vuelta al Tee.";
+          msgElem.innerText = "¡MAS SUERTE LA PROXIMA VEZ! \nLa bola se ha teletransportado de vuelta al Tee.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1537,7 +1333,7 @@
               gameState = 'FINISHED';
               let uncaught = minigameBirds.filter(b => !b.caught).length;
               if (uncaught === 0) {
-                statusElem.innerText = "¡VICTORIA! Has esquivado los 5 pájaros. 0 Penalización.";
+                statusElem.innerText = "¡VICTORIA! has esquivado los 5 pájaros. 0 Penalización.";
               } else {
                 statusElem.innerText = `¡FALLO! Se escaparon ${uncaught} pájaros. +3 Golpes de penalización.`;
                 strokeCount += 3;
@@ -1601,6 +1397,7 @@
         resetPlayerPerks();
         customRandom = Math.random;
         document.getElementById('turn-banner').style.display = 'none';
+        document.getElementById('btn-mode-toggle').innerText = t('freeMode');
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
@@ -1615,6 +1412,7 @@
         circuitHistory = [];
         resetPlayerPerks();
         document.getElementById('turn-banner').style.display = 'none';
+        document.getElementById('btn-mode-toggle').innerText = t('dailyCourse');
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
@@ -1637,6 +1435,7 @@
         document.getElementById('player-select-modal').style.display = 'none';
         document.getElementById('scorecard-modal').style.display = 'none';
         document.getElementById('perk-modal').style.display = 'none';
+        document.getElementById('btn-mode-toggle').innerText = t('multiplayer');
         updateLanguageUI();
         forceEinkRefresh(generateHole);
       }
@@ -1838,42 +1637,46 @@
 
         map = Array.from({ length: ROWS }, function() { return Array(COLS).fill(TERRAIN.ROUGH); });
 
-        let teeX = Math.floor(customRandom() * (COLS - 6)) + 3;
+        // 1. DIVERSIFICACIÓN DE SALIDA Y HOYO (TEE & HOLE POSITIONS)
+        let teeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
         let teeY = ROWS - 2;
-        let holeX = Math.floor(customRandom() * (COLS - 6)) + 3;
+        let holeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
         let holeY = 2;
 
+        // 2. TIPOS DE DISEÑO Y PUNTOS DE CONTROL DE LA CALLE (CONTROL POINTS)
         let controlPoints = [{ x: teeX, y: teeY }];
-        let layoutType = Math.floor(customRandom() * 4);
+        let layoutType = Math.floor(customRandom() * 4); // 0: Recto/Sutil, 1: Dogleg Izq, 2: Dogleg Der, 3: S-Curve / Doble curva
 
-        if (layoutType === 1) {
+        if (layoutType === 1) { // Dogleg Izquierda
           let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
           let midX = Math.max(2, Math.min(teeX, holeX) - (2 + Math.floor(customRandom() * 3)));
           controlPoints.push({ x: midX, y: midY });
-        } else if (layoutType === 2) {
+        } else if (layoutType === 2) { // Dogleg Derecha
           let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
           let midX = Math.min(COLS - 3, Math.max(teeX, holeX) + (2 + Math.floor(customRandom() * 3)));
           controlPoints.push({ x: midX, y: midY });
-        } else if (layoutType === 3 && (isAvanzado || isXXL)) {
+        } else if (layoutType === 3 && (isAvanzado || isXXL)) { // S-Curve (Curva en S)
           let midY1 = Math.floor(ROWS * 0.7);
           let midX1 = Math.max(2, teeX + (customRandom() > 0.5 ? 3 : -3));
           let midY2 = Math.floor(ROWS * 0.35);
           let midX2 = Math.min(COLS - 3, Math.max(2, holeX + (customRandom() > 0.5 ? 3 : -3)));
           controlPoints.push({ x: midX1, y: midY1 });
           controlPoints.push({ x: midX2, y: midY2 });
-        } else {
+        } else { // Recto / Ondulado sutil
           let midY = Math.floor(ROWS * 0.5);
           let midX = Math.floor((teeX + holeX) / 2) + Math.floor(customRandom() * 3 - 1);
           controlPoints.push({ x: midX, y: midY });
         }
         controlPoints.push({ x: holeX, y: holeY });
 
+        // Trazado continuo de la calle a través de los puntos de control
         let fairwayPath = [];
         for (let i = 0; i < controlPoints.length - 1; i++) {
           let pts = interpolatePoints(controlPoints[i].x, controlPoints[i].y, controlPoints[i+1].x, controlPoints[i+1].y);
           fairwayPath.push.apply(fairwayPath, pts);
         }
 
+        // Ancho de calle según dificultad (Normal: 2.2, Avanzado: 1.8, XXL: 1.7)
         let fwRadius = !isAvanzado ? 2.2 : (isXXL ? 1.7 : 1.8);
 
         fairwayPath.forEach(function(pt) {
@@ -1888,6 +1691,7 @@
           }
         });
 
+        // 3. GENERACIÓN DE GREEN VARIADO Y LIMPIO
         let shapeType = Math.floor(customRandom() * 4);
         let baseRadius = 2.0;
 
@@ -1911,6 +1715,7 @@
           }
         }
 
+        // Núcleo garantizado del Green
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
             let nx = holeX + dc, ny = holeY + dr;
@@ -1944,6 +1749,7 @@
         }
 
         function isProtectedArea(x, y) {
+          // Protege área inmediata de salida, hoyo y la calle principal para evitar trampas infranqueables
           if (Math.abs(x - teeX) <= 1 && Math.abs(y - teeY) <= 1) return true;
           if (Math.abs(x - holeX) <= 1 && Math.abs(y - holeY) <= 1) return true;
           return false;
@@ -1955,9 +1761,10 @@
               let nx = cx + c, ny = cy + r;
               if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && Math.hypot(r, c) <= radius) {
                 if (!isProtectedArea(nx, ny) && map[ny][nx] !== TERRAIN.TEE && map[ny][nx] !== TERRAIN.HOLE) {
+                  // No tapar la calle por completo: si es calle, solo cambiar si mantenemos alternativa
                   if (map[ny][nx] === TERRAIN.FAIRWAY) {
                     if (terrainType === TERRAIN.SAND) {
-                      map[ny][nx] = terrainType;
+                      map[ny][nx] = terrainType; // Búnker en calle es jugable
                     }
                   } else {
                     map[ny][nx] = terrainType;
@@ -1968,6 +1775,8 @@
           }
         }
 
+        // 4. COLOCACIÓN ESTRATÉGICA Y SEGURA DE HAZARDS (BÚNKERS Y AGUA)
+        // Búnkers defensivos alrededor del Green
         let bunkerAngle = customRandom() * Math.PI * 2;
         let b1X = Math.round(holeX + Math.cos(bunkerAngle) * 3);
         let b1Y = Math.round(holeY + Math.sin(bunkerAngle) * 3);
@@ -1979,6 +1788,7 @@
           safeCreateHazard(b2X, b2Y, 1.5, TERRAIN.SAND);
         }
 
+        // Lagos / Agua según tipo de mapa
         let numWaterLakes = !isAvanzado ? (customRandom() > 0.5 ? 1 : 0) : (isXXL ? 2 : 1);
         for (let w = 0; w < numWaterLakes; w++) {
           let targetPathIdx = Math.floor(fairwayPath.length * (0.3 + customRandom() * 0.4));
@@ -1988,12 +1798,14 @@
           safeCreateHazard(lakeX, lakeY, isAvanzado ? 2.0 : 1.6, TERRAIN.WATER);
         }
 
+        // Búnkers de calle adicionales
         if (isAvanzado || isXXL) {
           let midIdx = Math.floor(fairwayPath.length * 0.5);
           let pt = fairwayPath[midIdx] || { x: Math.floor(COLS/2), y: Math.floor(ROWS/2) };
           safeCreateHazard(pt.x + (customRandom() > 0.5 ? 2 : -2), pt.y, 1.6, TERRAIN.SAND);
         }
 
+        // 5. VEGETACIÓN Y ÁRBOLES JUSTOS (NO BLOQUEANTES EN LA CALLE)
         for (let r = 0; r < ROWS; r++) {
           for (let c = 0; c < COLS; c++) {
             if (map[r][c] === TERRAIN.ROUGH && !isProtectedArea(c, r)) {
@@ -2008,6 +1820,7 @@
           }
         }
 
+        // 6. CÁLCULO DE PAR AJUSTADO Y JUSTO
         let divisor = !isAvanzado ? 3.4 : (isXXL ? 3.8 : 3.0);
         mysteryTile = null;
         if (customRandom() < 0.4) {
@@ -2077,7 +1890,7 @@
 
         let modifierDetails = [];
         if (perkBonus > 0) {
-          modifierDetails.push(`+${perkBonus}`);
+          modifierDetails.push(`+${perkBonus} Mejora`);
         }
 
         let effectiveDistance = currentDice;
@@ -2085,27 +1898,27 @@
         if (currentTerrain === TERRAIN.TEE) {
           let teeBonus = activePerks.teeGuarantee ? 3 : 1;
           effectiveDistance += teeBonus;
-          modifierDetails.push(`+${teeBonus} ${t('tee')}`);
+          modifierDetails.push(`+${teeBonus} Salida`);
         } else if (currentTerrain === TERRAIN.FAIRWAY) {
+          // Calle neutra
         } else if (currentTerrain === TERRAIN.ROUGH) {
           if (activePerks.roughTires) {
-            modifierDetails.push(t('rough'));
+            modifierDetails.push("Neumáticos Rough");
           } else {
             effectiveDistance = Math.max(1, currentDice - 1);
-            modifierDetails.push(`-1 ${t('rough')}`);
+            modifierDetails.push("-1 Rough");
           }
         } else if (currentTerrain === TERRAIN.SAND) {
           if (activePerks.immuneBunker) {
-            modifierDetails.push(t('sand'));
+            modifierDetails.push("Búnker Libre");
           } else {
             effectiveDistance = Math.min(3, currentDice);
-            modifierDetails.push(`Max 3 ${t('sand')}`);
+            modifierDetails.push("Max 3 Búnker");
           }
         }
 
-        let clubTranslatedName = selectedClub === CLUBS.DRIVER ? t('driverName') : (selectedClub === CLUBS.IRON ? t('ironName') : t('woodName'));
         let modStr = modifierDetails.length > 0 ? ` (${modifierDetails.join(', ')}) = ${effectiveDistance}` : ` = ${effectiveDistance}`;
-        document.getElementById('dice-val').innerText = `${clubTranslatedName} [${t('dice')} ${rawDice}]${modStr}`;
+        document.getElementById('dice-val').innerText = `${selectedClub.name} [Dado ${rawDice}]${modStr}`;
 
         if (path.length === 1 && mulliganAvailableCount > 0) {
           document.getElementById('btn-roll').style.display = 'none';
@@ -2155,14 +1968,16 @@
 
             if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) break;
 
+            // Arboles bloquean linea a menos que tenga Atajo Arboleda
             if (!activePerks.woodlandShortcut && (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS)) {
               break;
             }
 
+            // Comprobar si hay pajaro en esta casilla
             let hasBird = birds.some(b => b.x === nx && b.y === ny);
             if (hasBird) {
               blockedByBird = true;
-              birdBlockedStep = step - 1;
+              birdBlockedStep = step - 1; // La bola queda justo en la casilla anterior al pajaro
               break;
             }
           }
@@ -2224,7 +2039,7 @@
               path.push({ x: targetMove.x, y: targetMove.y });
             } else {
               playWaterSound();
-              showToast(t('waterAlert'));
+              alert(t('waterAlert'));
               strokeCount++;
             }
           } else {
@@ -2359,7 +2174,7 @@
           };
         } else {
           document.getElementById('scorecard-header').innerText = t('multiplayerTitle') + " - " + t('endDailyTitle');
-          document.getElementById('final-handicap').innerText = "¡WINNER: " + sorted[0].name + " (" + sorted[0].totalStrokes + " " + t('strokes').toUpperCase() + ")!";
+          document.getElementById('final-handicap').innerText = "¡GANADOR: " + sorted[0].name + " CON " + sorted[0].totalStrokes + " GOLPES!";
           btnContinue.innerText = t('btnNewCourse');
           btnContinue.onclick = function() {
             startMultiplayerGame(playerCount);
@@ -2403,8 +2218,8 @@
         let pId = multiplayerDraftQueue.shift();
         let p = players.find(player => player.id === pId);
 
-        document.getElementById('perk-modal-title').innerText = t('perkChooseTitle') + ": " + p.name;
-        document.getElementById('perk-modal-subtitle').innerText = t('perkChooseSubtitle');
+        document.getElementById('perk-modal-title').innerText = "ELECCIÓN DE MEJORA: " + p.name;
+        document.getElementById('perk-modal-subtitle').innerText = "Elige una ventaja para las siguientes rondas (El 1º elige primero):";
 
         let container = document.getElementById('perk-options-container');
         container.innerHTML = '';
@@ -2416,8 +2231,8 @@
 
           let isBlocked = isTakenByOther;
           let labelText = perk.name;
-          if (isTakenByOther) labelText += t('perkReservedTag');
-          else if (alreadyOwned) labelText += t('perkOwnedTag');
+          if (isTakenByOther) labelText += ' [RESERVADO]';
+          else if (alreadyOwned) labelText += ' [YA POSEÍDO]';
 
           card.className = 'perk-card' + (isBlocked ? ' disabled' : '');
           card.innerHTML = `<div class="perk-name">${labelText}</div><div class="perk-desc">${perk.desc}</div>`;
@@ -2425,7 +2240,7 @@
           card.onclick = function() {
             if (isTakenByOther) return;
             if (alreadyOwned) {
-              showToast(t('perkAlreadyOwnedToast'));
+              alert("¡No puedes escoger esta modificación porque ya la tienes!");
               return;
             }
 
@@ -2480,8 +2295,8 @@
       }
 
       function triggerPerkSelection() {
-        document.getElementById('perk-modal-title').innerText = t('perkChooseTitle');
-        document.getElementById('perk-modal-subtitle').innerText = t('perkChooseSubtitle');
+        document.getElementById('perk-modal-title').innerText = "ELIGE UNA MEJORA";
+        document.getElementById('perk-modal-subtitle').innerText = "Selecciona una ventaja para los siguientes hoyos:";
 
         let activePerks = getActivePlayerPerks();
 
@@ -2496,13 +2311,13 @@
           let card = document.createElement('div');
           let alreadyOwned = playerHasPerk({ perks: activePerks }, perk.id);
 
-          let labelText = perk.name + (alreadyOwned ? t('perkOwnedTag') : '');
+          let labelText = perk.name + (alreadyOwned ? ' [YA POSEÍDO]' : '');
           card.className = 'perk-card';
           card.innerHTML = `<div class="perk-name">${labelText}</div><div class="perk-desc">${perk.desc}</div>`;
 
           card.onclick = function() {
             if (alreadyOwned) {
-              showToast(t('perkAlreadyOwnedToast'));
+              alert("¡No puedes escoger esta modificación porque ya la tienes!");
               return;
             }
 
@@ -2629,12 +2444,12 @@
         })
           .then(function(response) {
             if (!response.ok) throw new Error("HTTP " + response.status);
-            showToast(t('recordSubmitted'));
+            alert(t('recordSubmitted'));
           })
           .catch(function(err) {
             console.error("Error enviando récord online:", err);
             saveLocalScore(initials, totalStrokes, dateTag);
-            showToast(t('recordSavedLocal'));
+            alert(t('recordSavedLocal'));
           })
           .finally(function() {
             submitBtn.disabled = false;
@@ -2736,12 +2551,13 @@
         return { x: 0, y: 0 };
       }
 
-      function drawBirdSymbol(cCtx, cx, cy, size, color) {
+            function drawBirdSymbol(cCtx, cx, cy, size, color) {
         cCtx.save();
         cCtx.fillStyle = color;
         cCtx.strokeStyle = color;
         cCtx.lineWidth = 2;
         cCtx.beginPath();
+        // Stylized vector flying bird silhouette in black/white monochrome
         cCtx.moveTo(cx - size, cy + size * 0.2);
         cCtx.quadraticCurveTo(cx - size * 0.5, cy - size * 0.8, cx, cy - size * 0.2);
         cCtx.quadraticCurveTo(cx + size * 0.5, cy - size * 0.8, cx + size, cy + size * 0.2);
@@ -3003,6 +2819,7 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
+        // Dibujar pájaros en el tablero con silueta vectorial monocroma
         if (birds && birds.length > 0) {
           birds.forEach(function(b) {
             let bx = b.x * TILE_SIZE + TILE_SIZE/2;
@@ -3125,10 +2942,91 @@
         } else if (isCourseMode) {
           openPlayerSelectModal();
         } else if (isMultiplayer) {
-          showConfirm(t('confirmFreeMode'), startQuickGame);
+          if (confirm(t('confirmFreeMode'))) 
+      function drawGuideIcons() {
+        const iconConfigs = [
+          { id: 'g-icon-tee', type: 'tee' },
+          { id: 'g-icon-fairway', type: 'fairway' },
+          { id: 'g-icon-green', type: 'green' },
+          { id: 'g-icon-rough', type: 'rough' },
+          { id: 'g-icon-sand', type: 'sand' },
+          { id: 'g-icon-water', type: 'water' },
+          { id: 'g-icon-pine', type: 'pine' },
+          { id: 'g-icon-tree', type: 'tree' },
+          { id: 'g-icon-bird', type: 'bird' },
+          { id: 'g-icon-mystery', type: 'mystery' },
+          { id: 'g-icon-hole', type: 'hole' }
+        ];
+        
+        const bgColor = isDarkMode ? '#000000' : '#ffffff';
+        const strokeColor = isDarkMode ? '#ffffff' : '#000000';
+        const fairwayColor = isDarkMode ? '#222222' : '#e5e5e5';
+
+        iconConfigs.forEach(function(icon) {
+          let c = document.getElementById(icon.id);
+          if (!c) return;
+          let cCtx = c.getContext('2d');
+          let w = c.width, h = c.height;
+
+          cCtx.clearRect(0, 0, w, h);
+          cCtx.fillStyle = bgColor; cCtx.fillRect(0, 0, w, h);
+
+          if (icon.type === 'fairway') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+          } else if (icon.type === 'green') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            for (let i = 2; i < w; i += 4) {
+              for (let j = 2; j < h; j += 4) {
+                cCtx.fillRect(i, j, 1.2, 1.2);
+              }
+            }
+          } else if (icon.type === 'rough') {
+            cCtx.fillStyle = isDarkMode ? '#444444' : '#aaaaaa';
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'water') {
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1;
+            cCtx.beginPath(); cCtx.moveTo(0, h); cCtx.lineTo(w, 0); cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0); cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2); cCtx.stroke();
+          } else if (icon.type === 'sand') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2); cCtx.fill();
+          } else if (icon.type === 'pine') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.moveTo(w/2, 1); cCtx.lineTo(2, 7); cCtx.lineTo(w - 2, 7); cCtx.closePath(); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 4); cCtx.lineTo(1, 12); cCtx.lineTo(w - 1, 12); cCtx.closePath(); cCtx.fill();
+            cCtx.fillRect(w/2 - 0.5, 12, 1, 3);
+          } else if (icon.type === 'tree') {
+            cCtx.fillStyle = strokeColor;
+            cCtx.beginPath(); cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
+            cCtx.fillRect(w/2 - 1, 10, 2, 4);
+          } else if (icon.type === 'tee') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
+            cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
+          } else if (icon.type === 'bird') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
+          } else if (icon.type === 'mystery') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor;
+            cCtx.font = 'bold 10px monospace';
+            cCtx.textAlign = 'center';
+            cCtx.textBaseline = 'middle';
+            cCtx.fillText('?', w/2, h/2 + 1);
+          } else if (icon.type === 'hole') {
+            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
+            cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
+            cCtx.beginPath(); cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
+            cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
+          }
+        });
+      }
+
+      startQuickGame();
         }
       };
 
+      
       function drawGuideIcons() {
         const iconConfigs = [
           { id: 'g-icon-tee', type: 'tee' },
