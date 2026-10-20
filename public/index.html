@@ -719,14 +719,14 @@
     </div>
   </div>
 
-      <div id="guide-modal" style="display:none;">
+  <div id="guide-modal" style="display:none;">
     <div class="scorecard-box" style="max-width:480px; text-align:left; max-height:92vh; overflow-y:auto; padding:14px;">
       <div class="scorecard-title">
-        <span>[ GUÍA DEL JUEGO ]</span>
+        <span id="guide-modal-title">[ GUÍA DEL JUEGO ]</span>
         <button id="btn-close-guide" style="padding:2px 8px;font-size:0.75rem;">[X]</button>
       </div>
       
-      <div style="font-size:0.78rem; line-height:1.45; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+      <div id="guide-content" style="font-size:0.78rem; line-height:1.45; display:flex; flex-direction:column; gap:12px; margin-top:8px;">
         <div>
           <b>1. MECÁNICAS PRINCIPALES</b><br>
           • <b>Selección de Palo:</b> <span class="perk-tag" style="padding:1px 4px;">[DRIVER]</span> (Dado 4-6), <span class="perk-tag" style="padding:1px 4px;">[HIERRO]</span> (Dado 2-4) y <span class="perk-tag" style="padding:1px 4px;">[MADERA]</span> (Dado 1-3).<br>
@@ -850,24 +850,30 @@
       let takenPerkIdsInDraft = [];
 
       const LANGS = ['ES', 'EN', 'CA', 'FR', 'IT', 'DE'];
+      function detectBrowserLang() {
+        let navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        let code = navLang.split('-')[0].toUpperCase();
+        if (LANGS.includes(code)) return code;
+        return 'EN';
+      }
       let currentLang = (function() {
         try {
           let saved = localStorage.getItem('einkgolf_lang');
           if (saved && LANGS.includes(saved)) return saved;
         } catch(e) {}
-        return 'ES';
+        return detectBrowserLang();
       })();
 
       const I18N = {
         ES: {
           langBtn: "[ LANG: ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
-          day: "[ DÍA ]", night: "[ NOCHE ]", ranking: "[ RANKING ]",
+          day: "[ DÍA ]", night: "[ NOCHE ]", btnGuide: "[ GUÍA ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
           fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo", bird: "Pájaro",
           freeModeTitle: "Modo Libre", multiplayerTitle: "Multijugador", dailyHole: "Daily Hoyo", holeLabel: "Hoyo",
           normal: "NORMAL", avanzado: "AVANZADO", xxl: "XXL", dice: "Dado",
           fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Búnker)",
-          rollTitle: "Tirar Dado", mulliganTitle: "Mulligan (Repetir Tirada)", nextHoleTitle: "Siguiente Hoyo",
+          rollTitle: "TIRAR", mulliganTitle: "MULLIGAN", nextHoleTitle: "SIGUIENTE",
           puttBanner: "[!] EN GREEN - PUTT DIRECTO ACTIVO", waterAlert: "¡Bola al agua! +1 Golpe de penalización.",
           strokes: "Golpes", total: "Total", scorecardTitle: "CLASIFICACIÓN", worldLeaderboardTitle: "LEADERBOARD MUNDIAL",
           endDailyTitle: "FIN DEL CIRCUITO", scorecardHoleHeader: "CLASIFICACIÓN (HOYO {h})",
@@ -878,8 +884,250 @@
           tabToday: "HOY", tabYesterday: "AYER", tableRank: "#", tableScore: "GOLPES", noRecords: "Sin récords registrados aún.",
           loadingLb: "Cargando leaderboard...", btnClose: "[ CERRAR ]", btnNextHole: "[ HOYO SIGUIENTE ]", btnNewCourse: "[ NUEVO CIRCUITO ]",
           btnContinue: "[ CONTINUAR ]", confirmFreeMode: "¿Quieres volver al Modo Libre?", selectPlayersTitle: "MULTIJUGADOR LOCAL",
-          selectPlayersPrompt: "Selecciona número de jugadores:", players2: "[ 2 JUGADORES ]", players3: "[ 3 JUGADORES ]", players4: "[ 4 JUGADORES ]",
-          passPhoneTitle: "¡PASA EL MÓVIL!", passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)", readyBtn: "[ ¡LISTO PARA TIRAR! ]", turnBannerText: "TURNO: {p} ({d} casillas al hoyo)"
+          selectPlayersPrompt: "Selecciona el número de jugadores:", players2: "[ 2 JUGADORES ]", players3: "[ 3 JUGADORES ]", players4: "[ 4 JUGADORES ]",
+          passPhoneTitle: "¡PASA EL MÓVIL!", passPhoneMsg: "Turno de {p} ({d} casillas al hoyo)", readyBtn: "[ ¡LISTO PARA TIRAR! ]", turnBannerText: "TURNO: {p} ({d} casillas al hoyo)",
+          perksHeader: "MODIFICADORS ACTIVOS", noPerks: "Sin modificadores activos",
+          guideTitle: "[ GUÍA DEL JUEGO ]",
+          guideSec1Title: "1. MECÁNICAS PRINCIPALES",
+          guideSec1Body: "• <b>Selección de Palo:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Dado 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[HIERRO]</span> (Dado 2-4) y <span class=\"perk-tag\" style=\"padding:1px 4px;\">[MADERA]</span> (Dado 1-3).<br>• <b>Tirada y Movimiento:</b> Tira el dado para avanzar por las casillas válidas <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> esquivando obstáculos.<br>• <b>Green y Putt:</b> Al pisar el <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span>, se activa el Putt directo (alcance de 2 casillas o 3 con mejora) para embocar al <span class=\"perk-tag\" style=\"padding:1px 4px;\">[HOYO]</span>.",
+          guideSec2Title: "2. SÍMBOLOS Y TERRENOS",
+          gTee: "<b>Salida (Tee):</b> Inicio del hoyo (+3 o +1 bono).",
+          gFairway: "<b>Calle (Fairway):</b> Terreno óptimo y neutro.",
+          gGreen: "<b>Green:</b> Superficie para putt directo.",
+          gRough: "<b>Rough:</b> Resta -1 casilla a tu tirada.",
+          gSand: "<b>Búnker:</b> Limita tirada máxima a 3.",
+          gWater: "<b>Agua:</b> +1 golpe y penalización.",
+          gPine: "<b>Pino:</b> Obstáculo natural bloqueante.",
+          gTree: "<b>Árbol:</b> Vegetación densa de ruta.",
+          gBird: "<b>Pájaro:</b> Minijuego de reflejos.",
+          gMystery: "<b>Casilla ?:</b> Evento aleatorio sorpresa.",
+          gHole: "<b>Hoyo:</b> Meta final del recorrido.",
+          guideSec3Title: "3. CASILLA MISTERIOSA [?]",
+          guideSec3Body: "Al caer en una casilla con interrogante <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span>, se activa un evento aleatorio de bonificación o riesgo:<br>• <b>-1 Golpe:</b> Resta directamente un golpe a tu contador.<br>• <b>+1 Golpe:</b> Añade un golpe de penalización.<br>• <b>Teletransporte al Green:</b> Envía la bola directamente a una casilla aleatoria del Green.<br>• <b>Retorno al Tee:</b> La bola vuelve penalizada al punto de salida inicial.<br>• <b>Minijuego de Pájaros:</b> Minijuego interactivo donde debes tocar 5 pájaros rápidos en movimiento. Si aciertas todos, te salvas; si fallas alguno, sumas +3 golpes.",
+          guideSec4Title: "4. SISTEMA DE MODIFICADORES (PERKS)",
+          guideSec4Body: "Cada pocos hoyos en el Circuito Diario o Multijugador (y cada 3 hoyos en modo libre), puedes elegir ventajas permanentes:<br>• <b>+1 / +2 a la Tirada:</b> Incrementa tu dado base.<br>• <b>+1 Mulligan:</b> Permite repetir la tirada inicial de salida.<br>• <b>Super Salida (+3):</b> Otorga mayor distancia de salida en el Tee.<br>• <b>Inmune al Agua / Búnker / Rough:</b> Anula las penalizaciones de dichos terrenos.<br>• <b>Atajo Arboleda:</b> Permite atravesar los árboles sin bloqueo.<br>• <b>Putt Extendido:</b> Amplía el alcance del Putt directo en el Green de 2 a 3 casillas.",
+          guideSec5Title: "5. MODOS DE JUEGO & LEADERBOARD",
+          guideSec5Body: "• <b>Modo Libre:</b> Partidas rápidas personalizables (Normal, Avanzado, XXL).<br>• <b>Daily Course:</b> Circuito oficial diario de 9 hoyos con progresión de dificultad y ranking mundial (Daily Leaderboard con tus iniciales).<br>• <b>Multijugador Local:</b> Competición por turnos compartiendo dispositivo (2 a 4 jugadores) con draft de mejoras integrado." 
+        },
+        EN: {
+          langBtn: "[ LANG: EN ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ DAY ]", night: "[ NIGHT ]", btnGuide: "[ GUIDE ]", ranking: "[ RANKING ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREE MODE ]", multiplayer: "[ MULTIPLAYER ]",
+          fairway: "Fairway", green: "Green", rough: "Rough", water: "Water", pine: "Pine", tree: "Tree", sand: "Bunker", tee: "Tee", hole: "Hole", bird: "Bird",
+          freeModeTitle: "Free Mode", multiplayerTitle: "Multiplayer", dailyHole: "Daily Hole", holeLabel: "Hole",
+          normal: "NORMAL", avanzado: "ADVANCED", xxl: "XXL", dice: "Dice",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Bunker)",
+          rollTitle: "ROLL", mulliganTitle: "MULLIGAN", nextHoleTitle: "NEXT",
+          puttBanner: "[!] ON GREEN - DIRECT PUTT ACTIVE", waterAlert: "Water hazard! +1 Penalty stroke.",
+          strokes: "Strokes", total: "Total", scorecardTitle: "SCORECARD", worldLeaderboardTitle: "WORLD LEADERBOARD",
+          endDailyTitle: "COURSE COMPLETE", scorecardHoleHeader: "SCORECARD (HOLE {h})",
+          tableHole: "HOLE", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "STROKES", tableTotal: "TOTAL", tablePlayer: "PLAYER",
+          evenParResult: "Result: EVEN PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} UNDER PAR!",
+          registerRecord: "SUBMIT DAILY SCORE", saveBtn: "[ SAVE ]", recordSubmitted: "Score submitted successfully!",
+          recordSavedLocal: "Score saved locally.", leaderboardTitle: "WORLD LEADERBOARD",
+          tabToday: "TODAY", tabYesterday: "YESTERDAY", tableRank: "#", tableScore: "STROKES", noRecords: "No scores recorded yet.",
+          loadingLb: "Loading leaderboard...", btnClose: "[ CLOSE ]", btnNextHole: "[ NEXT HOLE ]", btnNewCourse: "[ NEW COURSE ]",
+          btnContinue: "[ CONTINUE ]", confirmFreeMode: "Return to Free Mode?", selectPlayersTitle: "LOCAL MULTIPLAYER",
+          selectPlayersPrompt: "Select number of players:", players2: "[ 2 PLAYERS ]", players3: "[ 3 PLAYERS ]", players4: "[ 4 PLAYERS ]",
+          passPhoneTitle: "PASS THE PHONE!", passPhoneMsg: "{p}'s turn ({d} tiles to hole)", readyBtn: "[ READY TO ROLL! ]", turnBannerText: "TURN: {p} ({d} tiles to hole)",
+          perksHeader: "ACTIVE MODIFIERS", noPerks: "No active modifiers",
+          guideTitle: "[ GAME GUIDE ]",
+          guideSec1Title: "1. MAIN MECHANICS",
+          guideSec1Body: "• <b>Club Selection:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Dice 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[IRON]</span> (Dice 2-4) and <span class=\"perk-tag\" style=\"padding:1px 4px;\">[WOOD]</span> (Dice 1-3).<br>• <b>Roll & Move:</b> Roll the dice to move along valid tiles <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> avoiding hazards.<br>• <b>Green & Putt:</b> Upon landing on <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span>, direct Putt activates (range 2 tiles or 3 with upgrade) to sink into the <span class=\"perk-tag\" style=\"padding:1px 4px;\">[HOLE]</span>.",
+          guideSec2Title: "2. SYMBOLS AND TERRAIN",
+          gTee: "<b>Tee:</b> Hole starting point (+3 or +1 bonus).",
+          gFairway: "<b>Fairway:</b> Optimal, neutral terrain.",
+          gGreen: "<b>Green:</b> Surface for direct putting.",
+          gRough: "<b>Rough:</b> Subtracts -1 tile from roll.",
+          gSand: "<b>Bunker:</b> Limits max roll to 3.",
+          gWater: "<b>Water:</b> +1 stroke penalty.",
+          gPine: "<b>Pine:</b> Blocking natural obstacle.",
+          gTree: "<b>Tree:</b> Dense route vegetation.",
+          gBird: "<b>Bird:</b> Reflex minigame.",
+          gMystery: "<b>Tile ?:</b> Random surprise event.",
+          gHole: "<b>Hole:</b> Final destination.",
+          guideSec3Title: "3. MYSTERY TILE [?]",
+          guideSec3Body: "Landing on a question mark tile <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span> triggers a random reward or risk event:<br>• <b>-1 Stroke:</b> Directly subtracts a stroke from your total.<br>• <b>+1 Stroke:</b> Adds a penalty stroke.<br>• <b>Green Teleport:</b> Sends the ball directly to a random Green tile.<br>• <b>Tee Return:</b> The ball returns to the starting Tee.<br>• <b>Bird Minigame:</b> Interactive minigame where you must tap 5 fast moving birds. Tap all 5 to dodge penalty; fail any and get +3 strokes.",
+          guideSec4Title: "4. MODIFIERS SYSTEM (PERKS)",
+          guideSec4Body: "Every few holes in Daily Course or Multiplayer (and every 3 holes in free mode), you can select permanent perks:<br>• <b>+1 / +2 Roll:</b> Increases your base roll.<br>• <b>+1 Mulligan:</b> Allows rerolling off the Tee once per hole.<br>• <b>Super Tee (+3):</b> Grants greater Tee distance.<br>• <b>Water / Bunker / Rough Immunity:</b> Ignores terrain penalties.<br>• <b>Woodland Shortcut:</b> Pass through trees without blocking.<br>• <b>Extended Putt:</b> Expands Green putt range from 2 to 3 tiles.",
+          guideSec5Title: "5. GAME MODES & LEADERBOARD",
+          guideSec5Body: "• <b>Free Mode:</b> Customizable quick games (Normal, Advanced, XXL).<br>• <b>Daily Course:</b> Official 9-hole daily circuit with difficulty scaling and global ranking.<br>• <b>Local Multiplayer:</b> Pass & Play turn-based competition (2-4 players) with draft perks." 
+        },
+        CA: {
+          langBtn: "[ LANG: CA ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ DIA ]", night: "[ NIT ]", btnGuide: "[ GUIA ]", ranking: "[ RÀNQUING ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LLIURE ]", multiplayer: "[ MULTIJUGADOR ]",
+          fairway: "Carrer", green: "Green", rough: "Rough", water: "Aigua", pine: "Pi", tree: "Arbre", sand: "Búnquer", tee: "Sortida", hole: "Forat", bird: "Ocell",
+          freeModeTitle: "Mode Lliure", multiplayerTitle: "Multijugador", dailyHole: "Daily Forat", holeLabel: "Forat",
+          normal: "NORMAL", avanzado: "AVANÇAT", xxl: "XXL", dice: "Dau",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Búnquer)",
+          rollTitle: "TIRAR", mulliganTitle: "MULLIGAN", nextHoleTitle: "SEGÜENT",
+          puttBanner: "[!] EN GREEN - PUTT DIRECTE ACTIU", waterAlert: "¡Bola a l'aigua! +1 Cop de penalització.",
+          strokes: "Cops", total: "Total", scorecardTitle: "CLASSIFICACIÓ", worldLeaderboardTitle: "RÀNQUING MUNDIAL",
+          endDailyTitle: "FI DEL CIRCUIT", scorecardHoleHeader: "CLASSIFICACIÓ (FORAT {h})",
+          tableHole: "FORAT", tableDiff: "DIF", tablePar: "PAR", tableStrokes: "COPS", tableTotal: "TOTAL", tablePlayer: "JUGADOR",
+          evenParResult: "Resultat: PAR DEL CAMP (E)", overParResult: "Hàndicap: +{d}", underParResult: "Hàndicap: -{d} ¡SOTA PAR!",
+          registerRecord: "REGISTRAR RÈCORD DIARI", saveBtn: "[ DESAR ]", recordSubmitted: "¡Rècord enviat amb èxit!",
+          recordSavedLocal: "Rècord desat localment.", leaderboardTitle: "RÀNQUING MUNDIAL",
+          tabToday: "AVUI", tabYesterday: "AHIR", tableRank: "#", tableScore: "COPS", noRecords: "Sense rècords registrats encara.",
+          loadingLb: "Carregant rànquing...", btnClose: "[ TANCAR ]", btnNextHole: "[ FORAT SEGÜENT ]", btnNewCourse: "[ NOU CIRCUIT ]",
+          btnContinue: "[ CONTINUAR ]", confirmFreeMode: "¿Vols tornar al Mode Lliure?", selectPlayersTitle: "MULTIJUGADOR LOCAL",
+          selectPlayersPrompt: "Selecciona el nombre de jugadors:", players2: "[ 2 JUGADORS ]", players3: "[ 3 JUGADORS ]", players4: "[ 4 JUGADORS ]",
+          passPhoneTitle: "¡PASSA EL MÒBIL!", passPhoneMsg: "Torn de {p} ({d} caselles al forat)", readyBtn: "[ ¡LLEST PER TIRAR! ]", turnBannerText: "TORN: {p} ({d} caselles al forat)",
+          perksHeader: "MODIFICADORS ACTIUS", noPerks: "Sense modificadors actius",
+          guideTitle: "[ GUIA DEL JOC ]",
+          guideSec1Title: "1. MECÀNIQUES PRINCIPALS",
+          guideSec1Body: "• <b>Selecció de Pal:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Dau 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[FERRO]</span> (Dau 2-4) i <span class=\"perk-tag\" style=\"padding:1px 4px;\">[FUSTA]</span> (Dau 1-3).<br>• <b>Tirada i Moviment:</b> Tira el dau per avançar per les caselles vàlides <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> esquivant obstacles.<br>• <b>Green i Putt:</b> En trepitjar el <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span>, s'activa el Putt directe (abast de 2 caselles o 3 amb millora) per embocar al <span class=\"perk-tag\" style=\"padding:1px 4px;\">[FORAT]</span>.",
+          guideSec2Title: "2. SÍMBOLS I TERRENS",
+          gTee: "<b>Sortida (Tee):</b> Inici del forat (+3 o +1 bo).",
+          gFairway: "<b>Carrer (Fairway):</b> Terreny òptim i neutre.",
+          gGreen: "<b>Green:</b> Superfície per a putt directe.",
+          gRough: "<b>Rough:</b> Resta -1 casella a la tirada.",
+          gSand: "<b>Búnquer:</b> Limita tirada màxima a 3.",
+          gWater: "<b>Aigua:</b> +1 cop de penalització.",
+          gPine: "<b>Pi:</b> Obstacle natural bloquejant.",
+          gTree: "<b>Arbre:</b> Vegetació densa de ruta.",
+          gBird: "<b>Ocell:</b> Minijoc de reflexos.",
+          gMystery: "<b>Casella ?:</b> Esdeveniment aleatori sorpresa.",
+          gHole: "<b>Forat:</b> Objectiu final del recorregut.",
+          guideSec3Title: "3. CASELLA MISTERIOSA [?]",
+          guideSec3Body: "En caure en una casella amb interrogant <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span>, s'activa un esdeveniment aleatori de bonificació o risc:<br>• <b>-1 Cop:</b> Resta directament un cop al teu comptador.<br>• <b>+1 Cop:</b> Afegeix un cop de penalització.<br>• <b>Teletransport al Green:</b> Envia la bola directament a una casella del Green.<br>• <b>Retorn al Tee:</b> La bola torna al punt de sortida inicial.<br>• <b>Minijoc d'Ocells:</b> Minijoc on has de tocar 5 ocells ràpids en moviment. Si encertes tots, et salves; si en falles cap, sumes +3 cops.",
+          guideSec4Title: "4. SISTEMA DE MODIFICADORS (PERKS)",
+          guideSec4Body: "Cada pocs forats al Circuit Diari o Multijugador (i cada 3 forats en mode lliure), pots triar avantatges permanents:<br>• <b>+1 / +2 a la Tirada:</b> Incrementa el teu dau base.<br>• <b>+1 Mulligan:</b> Permet repetir la tirada inicial de sortida.<br>• <b>Super Sortida (+3):</b> Atorga major distància de sortida al Tee.<br>• <b>Inmune a l'Aigua / Búnquer / Rough:</b> Anul·la les penalitzacions de terreny.<br>• <b>Drecera Arbreda:</b> Permet travessar els arbres sense bloqueig.<br>• <b>Putt Estès:</b> Amplia l'abast del Putt directe al Green de 2 a 3 caselles.",
+          guideSec5Title: "5. MODES DE JOC & LEADERBOARD",
+          guideSec5Body: "• <b>Mode Lliure:</b> Partides ràpides personalizables (Normal, Avançat, XXL).<br>• <b>Daily Course:</b> Circuit oficial diari de 9 forats amb progressió de dificultat i rànquing mundial.<br>• <b>Multijugador Local:</b> Competició per torns compartint dispositiu (2 a 4 jugadors)." 
+        },
+        FR: {
+          langBtn: "[ LANG: FR ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ JOUR ]", night: "[ NUIT ]", btnGuide: "[ GUIDE ]", ranking: "[ CLASSEMENT ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LIBRE ]", multiplayer: "[ MULTIJOUEUR ]",
+          fairway: "Fairway", green: "Green", rough: "Rough", water: "Eau", pine: "Pin", tree: "Arbre", sand: "Bunker", tee: "Départ", hole: "Trou", bird: "Oiseau",
+          freeModeTitle: "Mode Libre", multiplayerTitle: "Multijoueur", dailyHole: "Trou Diurne", holeLabel: "Trou",
+          normal: "NORMAL", avanzado: "AVANCÉ", xxl: "XXL", dice: "Dé",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Bunker)",
+          rollTitle: "LANCER", mulliganTitle: "MULLIGAN", nextHoleTitle: "SUIVANT",
+          puttBanner: "[!] SUR LE GREEN - PUTT DIRECT ACTIF", waterAlert: "Balle à l'eau! +1 Coup de pénalité.",
+          strokes: "Coups", total: "Total", scorecardTitle: "CLASSEMENT", worldLeaderboardTitle: "CLASSEMENT MONDIAL",
+          endDailyTitle: "PARCOURS TERMINÉ", scorecardHoleHeader: "CLASSEMENT (TROU {h})",
+          tableHole: "TROU", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "COUPS", tableTotal: "TOTAL", tablePlayer: "JOUEUR",
+          evenParResult: "Résultat: DANS LE PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} SOUS LE PAR!",
+          registerRecord: "ENREGISTRER SCORE DIURNE", saveBtn: "[ SAUVEGARDER ]", recordSubmitted: "Score envoyé avec succès!",
+          recordSavedLocal: "Score enregistré localement.", leaderboardTitle: "CLASSEMENT MONDIAL",
+          tabToday: "AUJOURD'HUI", tabYesterday: "HIER", tableRank: "#", tableScore: "COUPS", noRecords: "Aucun score enregistré.",
+          loadingLb: "Chargement du classement...", btnClose: "[ FERMER ]", btnNextHole: "[ TROU SUIVANT ]", btnNewCourse: "[ NOUVEAU PARCOURS ]",
+          btnContinue: "[ CONTINUER ]", confirmFreeMode: "Retourner au Mode Libre?", selectPlayersTitle: "MULTIJOUEUR LOCAL",
+          selectPlayersPrompt: "Sélectionnez le nombre de joueurs:", players2: "[ 2 JOUEURS ]", players3: "[ 3 JOUEURS ]", players4: "[ 4 JOUEURS ]",
+          passPhoneTitle: "PASSEZ LE TÉLÉPHONE!", passPhoneMsg: "Tour de {p} ({d} cases du trou)", readyBtn: "[ PRÊT À LANCER! ]", turnBannerText: "TOUR: {p} ({d} cases du trou)",
+          perksHeader: "MODIFICATEURS ACTIFS", noPerks: "Aucun modificateur actif",
+          guideTitle: "[ GUIDE DU JEU ]",
+          guideSec1Title: "1. MÉCANIQUES PRINCIPALES",
+          guideSec1Body: "• <b>Choix du Club:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Dé 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[FER]</span> (Dé 2-4) et <span class=\"perk-tag\" style=\"padding:1px 4px;\">[BOIS]</span> (Dé 1-3).<br>• <b>Lancer & Déplacement:</b> Lancez le dé pour avancer sur les cases valides <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> en évitant les obstacles.<br>• <b>Green & Putt:</b> En atteignant le <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span>, le Putt direct s'active (portée de 2 cases ou 3 avec amélioration) pour entrer dans le <span class=\"perk-tag\" style=\"padding:1px 4px;\">[TROU]</span>.",
+          guideSec2Title: "2. SYMBOLES ET TERRAINS",
+          gTee: "<b>Départ (Tee):</b> Début du trou (+3 ou +1 bonus).",
+          gFairway: "<b>Fairway:</b> Terrain optimal et neutre.",
+          gGreen: "<b>Green:</b> Surface de putt direct.",
+          gRough: "<b>Rough:</b> Soustrait -1 case au lancer.",
+          gSand: "<b>Bunker:</b> Limite le lancer max à 3.",
+          gWater: "<b>Eau:</b> +1 coup de pénalité.",
+          gPine: "<b>Pin:</b> Obstacle naturel bloquant.",
+          gTree: "<b>Arbre:</b> Végétation dense de route.",
+          gBird: "<b>Oiseau:</b> Mini-jeu de réflexes.",
+          gMystery: "<b>Case ?:</b> Événement mystère aléatoire.",
+          gHole: "<b>Trou:</b> Destination finale.",
+          guideSec3Title: "3. CASE MYSTÈRE [?]",
+          guideSec3Body: "En tombant sur une case point d'interrogation <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span>, déclenche un événement aléatoire:<br>• <b>-1 Coup:</b> Soustrait directement un coup de votre total.<br>• <b>+1 Coup:</b> Ajoute un coup de pénalité.<br>• <b>Téléportation Green:</b> Envoie la balle directement sur le Green.<br>• <b>Retour au Tee:</b> La balle retourne au point de départ.<br>• <b>Mini-jeu d'Oiseaux:</b> Mini-jeu interactif où vous devez toucher 5 oiseaux rapides. Touchez les 5 pour esquiver la pénalité; sinon +3 coups.",
+          guideSec4Title: "4. SYSTÈME DE MODIFICATEURS (PERKS)",
+          guideSec4Body: "Tous les quelques trous en Parcours Diurne ou Multi-joueurs (et tous les 3 trous en mode libre), choisissez des avantages permanents:<br>• <b>+1 / +2 au Lancer:</b> Augmente votre dé de base.<br>• <b>+1 Mulligan:</b> Permet de relancer le coup de départ par trou.<br>• <b>Super Départ (+3):</b> Confère plus de distance au Tee.<br>• <b>Immunité Eau / Bunker / Rough:</b> Annule les pénalités de terrain.<br>• <b>Raccourci Boisé:</b> Traverser les arbres sans blocage.<br>• <b>Putt Étendu:</b> Étend la portée du Putt de 2 à 3 cases.",
+          guideSec5Title: "5. MODES DE JEU & CLASSEMENT",
+          guideSec5Body: "• <b>Mode Libre:</b> Parties rapides personnalisables (Normal, Avancé, XXL).<br>• <b>Daily Course:</b> Parcours officiel quotidien de 9 trous avec progression et classement mondial.<br>• <b>Multi-joueurs Local:</b> Compétition par tours en passant l'appareil (2-4 joueurs)." 
+        },
+        IT: {
+          langBtn: "[ LANG: IT ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ GIORNO ]", night: "[ NOTTE ]", btnGuide: "[ GUIDA ]", ranking: "[ CLASSIFICA ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODALITÀ LIBERA ]", multiplayer: "[ MULTIGIOCA ]",
+          fairway: "Pista", green: "Green", rough: "Rough", water: "Acqua", pine: "Pino", tree: "Albero", sand: "Bunker", tee: "Partenza", hole: "Buca", bird: "Uccello",
+          freeModeTitle: "Modalità Libera", multiplayerTitle: "Multigiocatore", dailyHole: "Buca Giornaliera", holeLabel: "Buca",
+          normal: "NORMALE", avanzado: "AVANZATO", xxl: "XXL", dice: "Dado",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Bunker)",
+          rollTitle: "TIRARE", mulliganTitle: "MULLIGAN", nextHoleTitle: "PROSSIMA",
+          puttBanner: "[!] SUL GREEN - PUTT DIRETTO ATTIVO", waterAlert: "Palla in acqua! +1 Colpo di penalità.",
+          strokes: "Colpi", total: "Totale", scorecardTitle: "CLASSIFICA", worldLeaderboardTitle: "CLASSIFICA MONDIALE",
+          endDailyTitle: "CIRCUITO COMPLETATO", scorecardHoleHeader: "CLASSIFICA (BUCA {h})",
+          tableHole: "BUCA", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "COLPI", tableTotal: "TOTALE", tablePlayer: "GIOCATORE",
+          evenParResult: "Risultato: PAR DEL CAMPO (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} SOTTO IL PAR!",
+          registerRecord: "REGISTRA RECORD GIORNALIERO", saveBtn: "[ SALVA ]", recordSubmitted: "Record inviato con successo!",
+          recordSavedLocal: "Record salvato localmente.", leaderboardTitle: "CLASSIFICA MONDIALE",
+          tabToday: "OGGI", tabYesterday: "IERI", tableRank: "#", tableScore: "COLPI", noRecords: "Nessun record registrato.",
+          loadingLb: "Caricamento classifica...", btnClose: "[ CHIUDI ]", btnNextHole: "[ PROSSIMA BUCA ]", btnNewCourse: "[ NUOVO CIRCUITO ]",
+          btnContinue: "[ CONTINUA ]", confirmFreeMode: "Tornare alla Modalità Libera?", selectPlayersTitle: "MULTIGIOCATORE LOCALE",
+          selectPlayersPrompt: "Seleziona il numero di giocatori:", players2: "[ 2 GIOCATORI ]", players3: "[ 3 GIOCATORI ]", players4: "[ 4 GIOCATORI ]",
+          passPhoneTitle: "PASSA IL TELEFONO!", passPhoneMsg: "Turno di {p} ({d} caselle alla buca)", readyBtn: "[ PRONTO A TIRARE! ]", turnBannerText: "TURNO: {p} ({d} caselle alla buca)",
+          perksHeader: "MODIFICATORI ATTIVI", noPerks: "Nessun modificatore attivo",
+          guideTitle: "[ GUIDA DEL GIOCO ]",
+          guideSec1Title: "1. MECCANICHE PRINCIPALI",
+          guideSec1Body: "• <b>Scelta della Mazza:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Dado 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[FERRO]</span> (Dado 2-4) e <span class=\"perk-tag\" style=\"padding:1px 4px;\">[LEGNO]</span> (Dado 1-3).<br>• <b>Lancio e Movimento:</b> Lancia il dado per avanzare sulle caselle valide <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> evitando gli ostacoli.<br>• <b>Green e Putt:</b> Raggiungendo il <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span>, si attiva il Putt diretto (raggio di 2 caselle o 3 con potenziamento) per imboccare la <span class=\"perk-tag\" style=\"padding:1px 4px;\">[BUCA]</span>.",
+          guideSec2Title: "2. SIMBOLI E TERRENI",
+          gTee: "<b>Partenza (Tee):</b> Inizio buca (+3 o +1 bonus).",
+          gFairway: "<b>Pista (Fairway):</b> Terreno ottimale e neutro.",
+          gGreen: "<b>Green:</b> Superficie per putt diretto.",
+          gRough: "<b>Rough:</b> Sottrae -1 casella al lancio.",
+          gSand: "<b>Bunker:</b> Limita il lancio massimo a 3.",
+          gWater: "<b>Acqua:</b> +1 colpo di penalità.",
+          gPine: "<b>Pino:</b> Ostacolo naturale bloccante.",
+          gTree: "<b>Albero:</b> Vegetazione densa.",
+          gBird: "<b>Uccello:</b> Minigioco di riflessi.",
+          gMystery: "<b>Casella ?:</b> Evento a sorpresa casuale.",
+          gHole: "<b>Buca:</b> Obiettivo finale.",
+          guideSec3Title: "3. CASELLA MISTERO [?]",
+          guideSec3Body: "Atterrando su una casella con punto interrogativo <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span>, si attiva un evento casuale:<br>• <b>-1 Colpo:</b> Sottrae direttamente un colpo dal totale.<br>• <b>+1 Colpo:</b> Aggiunge un colpo di penalità.<br>• <b>Teletrasporto Green:</b> Invia la palla direttamente sul Green.<br>• <b>Ritorno al Tee:</b> La palla torna al punto di partenza.<br>• <b>Minigioco Uccelli:</b> Minigioco interattivo dove toccare 5 uccelli veloci. Toccali tutti e 5 per evitare la penalità; altrimenti +3 colpi.",
+          guideSec4Title: "4. SISTEMA DI MODIFICATORI (PERKS)",
+          guideSec4Body: "Ogni pochi buche nel Circuito Giornaliero o Multigiocatore (e ogni 3 buche in modalità libera), scegli vantaggi permanenti:<br>• <b>+1 / +2 al Lancio:</b> Aumenta il dado base.<br>• <b>+1 Mulligan:</b> Permette di ripetere il lancio dal Tee.<br>• <b>Super Partenza (+3):</b> Concede più distanza dal Tee.<br>• <b>Immunità Acqua / Bunker / Rough:</b> Annulla le penalità del terreno.<br>• <b>Scorciatoia Bosco:</b> Attraversa gli alberi senza blocco.<br>• <b>Putt Esteso:</b> Estende il raggio del Putt sul Green da 2 a 3 caselle.",
+          guideSec5Title: "5. MODALITÀ DI GIOCO & CLASSIFICA",
+          guideSec5Body: "• <b>Modalità Libera:</b> Partite rapide personalizzabili (Normale, Avanzato, XXL).<br>• <b>Daily Course:</b> Circuito ufficiale giornaliero di 9 buche con classifica mondiale.<br>• <b>Multigiocatore Locale:</b> Competizione a turni passando il telefono (2-4 giocatori)." 
+        },
+        DE: {
+          langBtn: "[ LANG: DE ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          day: "[ TAG ]", night: "[ NACHT ]", btnGuide: "[ ANLEITUNG ]", ranking: "[ RANGLISTE ]",
+          dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREIER MODUS ]", multiplayer: "[ MEHRSPIELER ]",
+          fairway: "Fairway", green: "Green", rough: "Rough", water: "Wasser", pine: "Kiefer", tree: "Baum", sand: "Bunker", tee: "Abschlag", hole: "Loch", bird: "Vogel",
+          freeModeTitle: "Freier Modus", multiplayerTitle: "Mehrspieler", dailyHole: "Tägliches Loch", holeLabel: "Loch",
+          normal: "NORMAL", avanzado: "FORTGESCHRITTEN", xxl: "XXL", dice: "Würfel",
+          fairwayBonus: "", roughPenalty: " (-1 Rough)", sandLimit: " (Max 3 Bunker)",
+          rollTitle: "WÜRFELN", mulliganTitle: "MULLIGAN", nextHoleTitle: "WEITER",
+          puttBanner: "[!] AUF DEM GREEN - DIREKTPUTT AKTIV", waterAlert: "Wasserhindernis! +1 Strafschlag.",
+          strokes: "Schläge", total: "Gesamt", scorecardTitle: "PUNKTESTAND", worldLeaderboardTitle: "WELTRANGLISTE",
+          endDailyTitle: "KURS BEENDET", scorecardHoleHeader: "PUNKTESTAND (LOCH {h})",
+          tableHole: "LOCH", tableDiff: "DIFF", tablePar: "PAR", tableStrokes: "SCHLÄGE", tableTotal: "GESAMT", tablePlayer: "SPIELER",
+          evenParResult: "Ergebnis: PAR (E)", overParResult: "Handicap: +{d}", underParResult: "Handicap: -{d} UNTER PAR!",
+          registerRecord: "TÄGLICHEN REKORD SPEICHERN", saveBtn: "[ SPEICHERN ]", recordSubmitted: "Rekord erfolgreich gesendet!",
+          recordSavedLocal: "Rekord lokal gespeichert.", leaderboardTitle: "WELTRANGLISTE",
+          tabToday: "HEUTE", tabYesterday: "GESTERN", tableRank: "#", tableScore: "SCHLÄGE", noRecords: "Noch keine Rekorde gespeichert.",
+          loadingLb: "Lade Rangliste...", btnClose: "[ SCHLIESSEN ]", btnNextHole: "[ NÄCHSTES LOCH ]", btnNewCourse: "[ NEUER KURS ]",
+          btnContinue: "[ WEITER ]", confirmFreeMode: "Zum Freien Modus zurückkehren?", selectPlayersTitle: "LOKALER MEHRSPIELER",
+          selectPlayersPrompt: "Wähle die Anzahl der Spieler:", players2: "[ 2 SPIELER ]", players3: "[ 3 SPIELER ]", players4: "[ 4 SPIELER ]",
+          passPhoneTitle: "HANDY WEITERGEBEN!", passPhoneMsg: "Am Zug: {p} ({d} Felder zum Loch)", readyBtn: "[ BEREIT ZUM WÜRFELN! ]", turnBannerText: "ZUG: {p} ({d} Felder zum Loch)",
+          perksHeader: "AKTIVE MODIFIKATOREN", noPerks: "Keine aktiven Modifikatoren",
+          guideTitle: "[ SPIELANLEITUNG ]",
+          guideSec1Title: "1. HAUPTMECHANIKEN",
+          guideSec1Body: "• <b>Schlägerwahl:</b> <span class=\"perk-tag\" style=\"padding:1px 4px;\">[DRIVER]</span> (Würfel 4-6), <span class=\"perk-tag\" style=\"padding:1px 4px;\">[EISEN]</span> (Würfel 2-4) und <span class=\"perk-tag\" style=\"padding:1px 4px;\">[HOLZ]</span> (Würfel 1-3).<br>• <b>Würfeln & Bewegen:</b> Würfele, um auf gültigen Feldern voranzukommen <span style=\"border:1px dashed #000; padding:0 2px;\">(···)</span> und Hindernisse zu umgehen.<br>• <b>Green & Putt:</b> Beim Betreten des <span class=\"perk-tag\" style=\"padding:1px 4px;\">[GREEN]</span> wird der Direktputt aktiviert (Reichweite 2 Felder oder 3 mit Upgrade), um ins <span class=\"perk-tag\" style=\"padding:1px 4px;\">[LOCH]</span> einzulochen.",
+          guideSec2Title: "2. SYMBOLE UND TERRAIN",
+          gTee: "<b>Abschlag (Tee):</b> Startpunkt (+3 oder +1 Bonus).",
+          gFairway: "<b>Fairway:</b> Optimales, neutrales Terrain.",
+          gGreen: "<b>Green:</b> Fläche für Direktputt.",
+          gRough: "<b>Rough:</b> Zieht -1 Feld vom Wurf ab.",
+          gSand: "<b>Bunker:</b> Begrenzt max. Wurf auf 3.",
+          gWater: "<b>Wasser:</b> +1 Strafschlag.",
+          gPine: "<b>Kiefer:</b> Blockierendes Hindernis.",
+          gTree: "<b>Baum:</b> Dichte Dschungelvegetation.",
+          gBird: "<b>Vogel:</b> Reflex-Minispiel.",
+          gMystery: "<b>Feld ?:</b> Zufälliges Ereignis.",
+          gHole: "<b>Loch:</b> Endziel des Kurses.",
+          guideSec3Title: "3. GEHEIMNIS-FELD [?]",
+          guideSec3Body: "Beim Landen auf einem Fragezeichenfeld <span class=\"perk-tag\" style=\"padding:1px 4px;\">[?]</span> wird ein Zufallsereignis ausgelöst:<br>• <b>-1 Schlag:</b> Zieht direkt einen Schlag ab.<br>• <b>+1 Schlag:</b> Fügt einen Strafschlag hinzu.<br>• <b>Green Teleport:</b> Teleportiert den Ball direkt auf das Green.<br>• <b>Tee Rückkehr:</b> Der Ball kehrt zum Start-Tee zurück.<br>• <b>Vogel-Minispiel:</b> Interaktives Minispiel, bei dem du 5 schnelle Vögel tippen musst. Tippe alle 5 für 0 Strafe; sonst +3 Schläge.",
+          guideSec4Title: "4. MODIFIKATOR-SYSTEM (PERKS)",
+          guideSec4Body: "Alle paar Löcher im Täglichen Kurs oder Mehrspieler (und alle 3 Löcher im freien Modus) wählst du permanente Boni:<br>• <b>+1 / +2 Wurf:</b> Erhöht deinen Basiswurf.<br>• <b>+1 Mulligan:</b> Erlaubt Wiederholung des Abschlags pro Loch.<br>• <b>Super Abschlag (+3):</b> Gewährt mehr Reichweite vom Tee.<br>• <b>Wasser / Bunker / Rough Immunität:</b> Ignoriert Terrain-Strafen.<br>• <b>Wald-Abkürzung:</b> Durchquere Bäume ohne Blockade.<br>• <b>Erweiterter Putt:</b> Erweitert Green-Putt-Reichweite von 2 auf 3 Felder.",
+          guideSec5Title: "5. SPIELMODI & RANGLISTE",
+          guideSec5Body: "• <b>Freier Modus:</b> Anpassbare Schnellspiele (Normal, Fortgeschritten, XXL).<br>• <b>Daily Course:</b> Offizieller täglicher 9-Loch-Kurs mit Weltrangliste.<br>• <b>Lokaler Mehrspieler:</b> Rundenbasierter Wettkampf an einem Gerät (2-4 Spieler)." 
         }
       };
 
@@ -904,10 +1152,11 @@
 
         let activePerks = getActivePlayerPerks();
 
+        let headerText = t('perksHeader');
         if (isMultiplayer && players.length > 0 && players[activePlayerIndex]) {
-          headerTitle.innerText = "MODIFICADORES ACTIVOS (" + players[activePlayerIndex].name + ")";
+          headerTitle.innerText = headerText + " (" + players[activePlayerIndex].name + ")";
         } else {
-          headerTitle.innerText = "MODIFICADORES ACTIVOS";
+          headerTitle.innerText = headerText;
         }
 
         let activeTags = [];
@@ -923,13 +1172,13 @@
         countLbl.innerText = activeTags.length;
 
         if (activeTags.length === 0) {
-          container.innerHTML = '<span class="perk-tag" style="background:transparent;color:inherit;padding:0;">Sin modificadores activos</span>';
+          container.innerHTML = `<span class="perk-tag" style="background:transparent;color:inherit;padding:0;">${t('noPerks')}</span>`;
         } else {
           container.innerHTML = activeTags.map(tag => `<span class="perk-tag">${tag}</span>`).join('');
         }
       }
 
-            function getCurrentMapType() {
+      function getCurrentMapType() {
         if (isCourseMode || isMultiplayer) {
           if (currentHole <= 3) return MAP_TYPES.NORMAL;
           if (currentHole <= 6) return MAP_TYPES.AVANZADO;
@@ -938,10 +1187,55 @@
         return freeModeMapType;
       }
 
+      function updateGuideUI() {
+        document.getElementById('guide-modal-title').innerText = t('guideTitle');
+        document.getElementById('btn-close-guide').innerText = t('btnClose');
+        document.getElementById('btn-guide-ok').innerText = t('btnClose');
+        
+        let container = document.getElementById('guide-content');
+        if (!container) return;
+        container.innerHTML = `
+          <div>
+            <b>${t('guideSec1Title')}</b><br>
+            ${t('guideSec1Body')}
+          </div>
+          <div>
+            <b>${t('guideSec2Title')}</b><br>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:6px;">
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tee" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gTee')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-fairway" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gFairway')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-green" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gGreen')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-rough" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gRough')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-sand" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gSand')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-water" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gWater')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-pine" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gPine')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tree" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gTree')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-bird" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gBird')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-mystery" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gMystery')}</span></div>
+              <div style="display:flex; align-items:center; gap:5px; grid-column: span 2;"><canvas id="g-icon-hole" width="16" height="16" style="border:1px solid #000;"></canvas><span>${t('gHole')}</span></div>
+            </div>
+          </div>
+          <div>
+            <b>${t('guideSec3Title')}</b><br>
+            ${t('guideSec3Body')}
+          </div>
+          <div>
+            <b>${t('guideSec4Title')}</b><br>
+            ${t('guideSec4Body')}
+          </div>
+          <div>
+            <b>${t('guideSec5Title')}</b><br>
+            ${t('guideSec5Body')}
+          </div>
+        `;
+        drawGuideIcons();
+      }
+
       function updateLanguageUI() {
         document.getElementById('btn-lang-toggle').innerText = t('langBtn');
         document.getElementById('btn-sound-toggle').innerText = soundEnabled ? t('soundOn') : t('soundOff');
         document.getElementById('btn-night-toggle').innerText = isDarkMode ? t('day') : t('night');
+        document.getElementById('btn-guide').innerText = t('btnGuide');
         document.getElementById('btn-ranking').innerText = t('ranking');
         
         let modeBtnText = t('freeMode');
@@ -962,6 +1256,30 @@
 
         document.getElementById('lbl-dice').innerText = t('dice');
         document.getElementById('lbl-strokes-info').innerText = t('strokes') + ": " + strokeCount + "/" + parVal;
+
+        document.getElementById('btn-roll').innerText = "[⚄ " + t('rollTitle') + "]";
+        document.getElementById('btn-mulligan').innerText = "[↺ " + t('mulliganTitle') + "]";
+        document.getElementById('btn-next-quick').innerText = "[➔ " + t('nextHoleTitle') + "]";
+
+        // Modal static labels
+        document.getElementById('lbl-multi-select-title').innerText = t('selectPlayersTitle');
+        document.getElementById('lbl-select-num-players').innerText = t('selectPlayersPrompt');
+        document.getElementById('btn-select-2p').innerText = t('players2');
+        document.getElementById('btn-select-3p').innerText = t('players3');
+        document.getElementById('btn-select-4p').innerText = t('players4');
+
+        document.getElementById('pass-turn-title').innerText = t('passPhoneTitle');
+        document.getElementById('btn-start-turn').innerText = t('readyBtn');
+
+        document.getElementById('scorecard-header').innerText = t('scorecardTitle');
+        document.getElementById('lbl-register-record').innerText = t('registerRecord');
+        document.getElementById('btn-submit-score').innerText = t('saveBtn');
+        document.getElementById('lbl-world-lb').innerText = t('worldLeaderboardTitle');
+        document.getElementById('tab-today').innerText = t('tabToday');
+        document.getElementById('tab-yesterday').innerText = t('tabYesterday');
+        document.getElementById('btn-continue-course').innerText = t('btnContinue');
+
+        updateGuideUI();
 
         let freemodeTypeBtn = document.getElementById('btn-freemode-type');
         if (!isCourseMode && !isMultiplayer) {
@@ -1074,16 +1392,15 @@
       function playSandSound() {
         if (!soundEnabled) return;
         initAudio(); if (!audioCtx) return;
-        const now = audioCtx.currentTime;
         const bufferSize = audioCtx.sampleRate * 0.09;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
         const noise = audioCtx.createBufferSource(); noise.buffer = buffer;
-        const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.setValueAtTime(450, now);
-        const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+        const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.12, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
         noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-        noise.start(now);
+        noise.start(audioCtx.currentTime);
       }
 
       function playMulliganSound() {
@@ -1230,7 +1547,7 @@
               }
             }
           }
-          msgElem.innerText = "¡MAS SUERTE LA PROXIMA VEZ! \nLa bola se ha teletransportado de vuelta al Tee.";
+          msgElem.innerText = "¡MÁS SUERTE LA PRÓXIMA VEZ! \nLa bola se ha teletransportado de vuelta al Tee.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1519,7 +1836,6 @@
         banner.innerText = t('turnBannerText', { p: p.name, d: dist });
       }
 
-      
       function placeBirdInRowRange(minY, maxY) {
         let candidates = [];
         for (let r = minY; r <= maxY; r++) {
@@ -1637,46 +1953,42 @@
 
         map = Array.from({ length: ROWS }, function() { return Array(COLS).fill(TERRAIN.ROUGH); });
 
-        // 1. DIVERSIFICACIÓN DE SALIDA Y HOYO (TEE & HOLE POSITIONS)
-        let teeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
+        let teeX = Math.floor(customRandom() * (COLS - 6)) + 3;
         let teeY = ROWS - 2;
-        let holeX = Math.floor(customRandom() * (COLS - 6)) + 3; // Columna 3 a 10
+        let holeX = Math.floor(customRandom() * (COLS - 6)) + 3;
         let holeY = 2;
 
-        // 2. TIPOS DE DISEÑO Y PUNTOS DE CONTROL DE LA CALLE (CONTROL POINTS)
         let controlPoints = [{ x: teeX, y: teeY }];
-        let layoutType = Math.floor(customRandom() * 4); // 0: Recto/Sutil, 1: Dogleg Izq, 2: Dogleg Der, 3: S-Curve / Doble curva
+        let layoutType = Math.floor(customRandom() * 4);
 
-        if (layoutType === 1) { // Dogleg Izquierda
+        if (layoutType === 1) {
           let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
           let midX = Math.max(2, Math.min(teeX, holeX) - (2 + Math.floor(customRandom() * 3)));
           controlPoints.push({ x: midX, y: midY });
-        } else if (layoutType === 2) { // Dogleg Derecha
+        } else if (layoutType === 2) {
           let midY = Math.floor(ROWS * (0.4 + customRandom() * 0.2));
           let midX = Math.min(COLS - 3, Math.max(teeX, holeX) + (2 + Math.floor(customRandom() * 3)));
           controlPoints.push({ x: midX, y: midY });
-        } else if (layoutType === 3 && (isAvanzado || isXXL)) { // S-Curve (Curva en S)
+        } else if (layoutType === 3 && (isAvanzado || isXXL)) {
           let midY1 = Math.floor(ROWS * 0.7);
           let midX1 = Math.max(2, teeX + (customRandom() > 0.5 ? 3 : -3));
           let midY2 = Math.floor(ROWS * 0.35);
           let midX2 = Math.min(COLS - 3, Math.max(2, holeX + (customRandom() > 0.5 ? 3 : -3)));
           controlPoints.push({ x: midX1, y: midY1 });
           controlPoints.push({ x: midX2, y: midY2 });
-        } else { // Recto / Ondulado sutil
+        } else {
           let midY = Math.floor(ROWS * 0.5);
           let midX = Math.floor((teeX + holeX) / 2) + Math.floor(customRandom() * 3 - 1);
           controlPoints.push({ x: midX, y: midY });
         }
         controlPoints.push({ x: holeX, y: holeY });
 
-        // Trazado continuo de la calle a través de los puntos de control
         let fairwayPath = [];
         for (let i = 0; i < controlPoints.length - 1; i++) {
           let pts = interpolatePoints(controlPoints[i].x, controlPoints[i].y, controlPoints[i+1].x, controlPoints[i+1].y);
           fairwayPath.push.apply(fairwayPath, pts);
         }
 
-        // Ancho de calle según dificultad (Normal: 2.2, Avanzado: 1.8, XXL: 1.7)
         let fwRadius = !isAvanzado ? 2.2 : (isXXL ? 1.7 : 1.8);
 
         fairwayPath.forEach(function(pt) {
@@ -1691,7 +2003,6 @@
           }
         });
 
-        // 3. GENERACIÓN DE GREEN VARIADO Y LIMPIO
         let shapeType = Math.floor(customRandom() * 4);
         let baseRadius = 2.0;
 
@@ -1715,7 +2026,6 @@
           }
         }
 
-        // Núcleo garantizado del Green
         for (let dr = -1; dr <= 1; dr++) {
           for (let dc = -1; dc <= 1; dc++) {
             let nx = holeX + dc, ny = holeY + dr;
@@ -1749,7 +2059,6 @@
         }
 
         function isProtectedArea(x, y) {
-          // Protege área inmediata de salida, hoyo y la calle principal para evitar trampas infranqueables
           if (Math.abs(x - teeX) <= 1 && Math.abs(y - teeY) <= 1) return true;
           if (Math.abs(x - holeX) <= 1 && Math.abs(y - holeY) <= 1) return true;
           return false;
@@ -1761,10 +2070,9 @@
               let nx = cx + c, ny = cy + r;
               if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && Math.hypot(r, c) <= radius) {
                 if (!isProtectedArea(nx, ny) && map[ny][nx] !== TERRAIN.TEE && map[ny][nx] !== TERRAIN.HOLE) {
-                  // No tapar la calle por completo: si es calle, solo cambiar si mantenemos alternativa
                   if (map[ny][nx] === TERRAIN.FAIRWAY) {
                     if (terrainType === TERRAIN.SAND) {
-                      map[ny][nx] = terrainType; // Búnker en calle es jugable
+                      map[ny][nx] = terrainType;
                     }
                   } else {
                     map[ny][nx] = terrainType;
@@ -1775,8 +2083,6 @@
           }
         }
 
-        // 4. COLOCACIÓN ESTRATÉGICA Y SEGURA DE HAZARDS (BÚNKERS Y AGUA)
-        // Búnkers defensivos alrededor del Green
         let bunkerAngle = customRandom() * Math.PI * 2;
         let b1X = Math.round(holeX + Math.cos(bunkerAngle) * 3);
         let b1Y = Math.round(holeY + Math.sin(bunkerAngle) * 3);
@@ -1788,7 +2094,6 @@
           safeCreateHazard(b2X, b2Y, 1.5, TERRAIN.SAND);
         }
 
-        // Lagos / Agua según tipo de mapa
         let numWaterLakes = !isAvanzado ? (customRandom() > 0.5 ? 1 : 0) : (isXXL ? 2 : 1);
         for (let w = 0; w < numWaterLakes; w++) {
           let targetPathIdx = Math.floor(fairwayPath.length * (0.3 + customRandom() * 0.4));
@@ -1798,14 +2103,12 @@
           safeCreateHazard(lakeX, lakeY, isAvanzado ? 2.0 : 1.6, TERRAIN.WATER);
         }
 
-        // Búnkers de calle adicionales
         if (isAvanzado || isXXL) {
           let midIdx = Math.floor(fairwayPath.length * 0.5);
           let pt = fairwayPath[midIdx] || { x: Math.floor(COLS/2), y: Math.floor(ROWS/2) };
           safeCreateHazard(pt.x + (customRandom() > 0.5 ? 2 : -2), pt.y, 1.6, TERRAIN.SAND);
         }
 
-        // 5. VEGETACIÓN Y ÁRBOLES JUSTOS (NO BLOQUEANTES EN LA CALLE)
         for (let r = 0; r < ROWS; r++) {
           for (let c = 0; c < COLS; c++) {
             if (map[r][c] === TERRAIN.ROUGH && !isProtectedArea(c, r)) {
@@ -1820,7 +2123,6 @@
           }
         }
 
-        // 6. CÁLCULO DE PAR AJUSTADO Y JUSTO
         let divisor = !isAvanzado ? 3.4 : (isXXL ? 3.8 : 3.0);
         mysteryTile = null;
         if (customRandom() < 0.4) {
@@ -1918,7 +2220,7 @@
         }
 
         let modStr = modifierDetails.length > 0 ? ` (${modifierDetails.join(', ')}) = ${effectiveDistance}` : ` = ${effectiveDistance}`;
-        document.getElementById('dice-val').innerText = `${selectedClub.name} [Dado ${rawDice}]${modStr}`;
+        document.getElementById('dice-val').innerText = `${selectedClub.name} [${t('dice')} ${rawDice}]${modStr}`;
 
         if (path.length === 1 && mulliganAvailableCount > 0) {
           document.getElementById('btn-roll').style.display = 'none';
@@ -1968,16 +2270,14 @@
 
             if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) break;
 
-            // Arboles bloquean linea a menos que tenga Atajo Arboleda
             if (!activePerks.woodlandShortcut && (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS)) {
               break;
             }
 
-            // Comprobar si hay pajaro en esta casilla
             let hasBird = birds.some(b => b.x === nx && b.y === ny);
             if (hasBird) {
               blockedByBird = true;
-              birdBlockedStep = step - 1; // La bola queda justo en la casilla anterior al pajaro
+              birdBlockedStep = step - 1;
               break;
             }
           }
@@ -2075,25 +2375,28 @@
         let lastPos = path[path.length - 1];
 
         if (isMultiplayer) {
-            saveActivePlayerData();
-            if (map[lastPos.y][lastPos.x] === TERRAIN.HOLE) {
-              players[activePlayerIndex].completed = true;
-              playHoleSound();
-            }
-            determineNextTurnPlayer(true);
-            return;
-          }
-
+          saveActivePlayerData();
           if (map[lastPos.y][lastPos.x] === TERRAIN.HOLE) {
-            holeCompleted();
-            return;
+            players[activePlayerIndex].completed = true;
+            playHoleSound();
           }
-
-          checkPuttCondition();
-          drawBoard();
+          determineNextTurnPlayer(true);
+          return;
         }
 
+        if (map[lastPos.y][lastPos.x] === TERRAIN.HOLE) {
+          holeCompleted();
+          return;
+        }
+
+        checkPuttCondition();
+        drawBoard();
+      }
+
       canvas.addEventListener('click', handleCanvasClick);
+      canvas.addEventListener('touchend', function(e) {
+        handleCanvasClick(e);
+      }, { passive: false });
 
       function checkPuttCondition() {
         let currentPos = path[path.length - 1];
@@ -2551,13 +2854,12 @@
         return { x: 0, y: 0 };
       }
 
-            function drawBirdSymbol(cCtx, cx, cy, size, color) {
+      function drawBirdSymbol(cCtx, cx, cy, size, color) {
         cCtx.save();
         cCtx.fillStyle = color;
         cCtx.strokeStyle = color;
         cCtx.lineWidth = 2;
         cCtx.beginPath();
-        // Stylized vector flying bird silhouette in black/white monochrome
         cCtx.moveTo(cx - size, cy + size * 0.2);
         cCtx.quadraticCurveTo(cx - size * 0.5, cy - size * 0.8, cx, cy - size * 0.2);
         cCtx.quadraticCurveTo(cx + size * 0.5, cy - size * 0.8, cx + size, cy + size * 0.2);
@@ -2819,7 +3121,6 @@
           ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
         });
 
-        // Dibujar pájaros en el tablero con silueta vectorial monocroma
         if (birds && birds.length > 0) {
           birds.forEach(function(b) {
             let bx = b.x * TILE_SIZE + TILE_SIZE/2;
@@ -2942,91 +3243,12 @@
         } else if (isCourseMode) {
           openPlayerSelectModal();
         } else if (isMultiplayer) {
-          if (confirm(t('confirmFreeMode'))) 
-      function drawGuideIcons() {
-        const iconConfigs = [
-          { id: 'g-icon-tee', type: 'tee' },
-          { id: 'g-icon-fairway', type: 'fairway' },
-          { id: 'g-icon-green', type: 'green' },
-          { id: 'g-icon-rough', type: 'rough' },
-          { id: 'g-icon-sand', type: 'sand' },
-          { id: 'g-icon-water', type: 'water' },
-          { id: 'g-icon-pine', type: 'pine' },
-          { id: 'g-icon-tree', type: 'tree' },
-          { id: 'g-icon-bird', type: 'bird' },
-          { id: 'g-icon-mystery', type: 'mystery' },
-          { id: 'g-icon-hole', type: 'hole' }
-        ];
-        
-        const bgColor = isDarkMode ? '#000000' : '#ffffff';
-        const strokeColor = isDarkMode ? '#ffffff' : '#000000';
-        const fairwayColor = isDarkMode ? '#222222' : '#e5e5e5';
-
-        iconConfigs.forEach(function(icon) {
-          let c = document.getElementById(icon.id);
-          if (!c) return;
-          let cCtx = c.getContext('2d');
-          let w = c.width, h = c.height;
-
-          cCtx.clearRect(0, 0, w, h);
-          cCtx.fillStyle = bgColor; cCtx.fillRect(0, 0, w, h);
-
-          if (icon.type === 'fairway') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-          } else if (icon.type === 'green') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-            cCtx.fillStyle = strokeColor;
-            for (let i = 2; i < w; i += 4) {
-              for (let j = 2; j < h; j += 4) {
-                cCtx.fillRect(i, j, 1.2, 1.2);
-              }
-            }
-          } else if (icon.type === 'rough') {
-            cCtx.fillStyle = isDarkMode ? '#444444' : '#aaaaaa';
-            cCtx.beginPath(); cCtx.arc(w/2, h/2, 1, 0, Math.PI * 2); cCtx.fill();
-          } else if (icon.type === 'water') {
-            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1;
-            cCtx.beginPath(); cCtx.moveTo(0, h); cCtx.lineTo(w, 0); cCtx.moveTo(0, h/2); cCtx.lineTo(w/2, 0); cCtx.moveTo(w/2, h); cCtx.lineTo(w, h/2); cCtx.stroke();
-          } else if (icon.type === 'sand') {
-            cCtx.fillStyle = strokeColor;
-            cCtx.beginPath(); cCtx.arc(w/2 - 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2 + 3, h/2 - 2, 1.2, 0, Math.PI * 2); cCtx.arc(w/2, h/2 + 3, 1.2, 0, Math.PI * 2); cCtx.fill();
-          } else if (icon.type === 'pine') {
-            cCtx.fillStyle = strokeColor;
-            cCtx.beginPath(); cCtx.moveTo(w/2, 1); cCtx.lineTo(2, 7); cCtx.lineTo(w - 2, 7); cCtx.closePath(); cCtx.fill();
-            cCtx.beginPath(); cCtx.moveTo(w/2, 4); cCtx.lineTo(1, 12); cCtx.lineTo(w - 1, 12); cCtx.closePath(); cCtx.fill();
-            cCtx.fillRect(w/2 - 0.5, 12, 1, 3);
-          } else if (icon.type === 'tree') {
-            cCtx.fillStyle = strokeColor;
-            cCtx.beginPath(); cCtx.arc(w/2, 6, 4.5, 0, Math.PI * 2); cCtx.fill();
-            cCtx.fillRect(w/2 - 1, 10, 2, 4);
-          } else if (icon.type === 'tee') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-            cCtx.strokeStyle = strokeColor; cCtx.lineWidth = 1.5;
-            cCtx.beginPath(); cCtx.arc(w/2, h/2, 3.5, 0, Math.PI * 2); cCtx.stroke();
-          } else if (icon.type === 'bird') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-            drawBirdSymbol(cCtx, w/2, h/2, 5, strokeColor);
-          } else if (icon.type === 'mystery') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-            cCtx.fillStyle = strokeColor;
-            cCtx.font = 'bold 10px monospace';
-            cCtx.textAlign = 'center';
-            cCtx.textBaseline = 'middle';
-            cCtx.fillText('?', w/2, h/2 + 1);
-          } else if (icon.type === 'hole') {
-            cCtx.fillStyle = fairwayColor; cCtx.fillRect(0, 0, w, h);
-            cCtx.fillStyle = strokeColor; cCtx.beginPath(); cCtx.arc(w/2, h/2, 3, 0, Math.PI * 2); cCtx.fill();
-            cCtx.beginPath(); cCtx.moveTo(w/2, h/2); cCtx.lineTo(w/2, 2); cCtx.strokeStyle = strokeColor; cCtx.stroke();
-            cCtx.beginPath(); cCtx.moveTo(w/2, 2); cCtx.lineTo(w/2 - 4, 5); cCtx.lineTo(w/2, 8); cCtx.closePath(); cCtx.fill();
+          if (confirm(t('confirmFreeMode'))) {
+            startQuickGame();
           }
-        });
-      }
-
-      startQuickGame();
         }
       };
 
-      
       function drawGuideIcons() {
         const iconConfigs = [
           { id: 'g-icon-tee', type: 'tee' },
