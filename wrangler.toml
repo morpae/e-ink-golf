@@ -1,10 +1,14 @@
 name = "e-ink-golf"
-compatibility_date = "2024-03-20"
+main = "src/worker.ts"
+compatibility_date = "2025-01-01"
 
 [assets]
 directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"
 database_name = "eink-golf-db"
 database_id = "5bbfc819-cce9-486d-8fbe-9776f1c2b921"
+migrations_dir = "migrations"
