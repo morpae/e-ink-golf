@@ -1391,8 +1391,7 @@
 
         if (option === 1) {
           strokeCount = Math.max(0, strokeCount - 1);
-          msgElem.innerText = "¡BUENA SUERTE! 
-Restas -1 golpe a tu contador actual.";
+          msgElem.innerText = "¡BUENA SUERTE!\nRestas -1 golpe a tu contador actual.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1400,8 +1399,7 @@ Restas -1 golpe a tu contador actual.";
           };
         } else if (option === 2) {
           strokeCount += 1;
-          msgElem.innerText = "¡MALA SUERTE! 
-Sumas +1 golpe a tu contador actual.";
+          msgElem.innerText = "¡MALA SUERTE!\nSumas +1 golpe a tu contador actual.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1421,8 +1419,7 @@ Sumas +1 golpe a tu contador actual.";
             let dest = greenCandidates[Math.floor(Math.random() * greenCandidates.length)];
             path.push({ x: dest.x, y: dest.y });
           }
-          msgElem.innerText = "¡MENUDO TIRO! 
-Tu bola ha volado directamente al Green.";
+          msgElem.innerText = "¡MENUDO TIRO!\nTu bola ha volado directamente al Green.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
@@ -1437,8 +1434,7 @@ Tu bola ha volado directamente al Green.";
               }
             }
           }
-          msgElem.innerText = "¡MÁS SUERTE LA PRÓXIMA VEZ! 
-La bola se ha teletransportado de vuelta al Tee.";
+          msgElem.innerText = "¡MÁS SUERTE LA PRÓXIMA VEZ!\nLa bola se ha teletransportado de vuelta al Tee.";
           modal.style.display = 'flex';
           btnOk.onclick = function() {
             modal.style.display = 'none';
