@@ -536,7 +536,7 @@
   <div class="top-bar">
     <div class="header-title">E-INK GOLF</div>
     <div class="top-buttons">
-      <button id="btn-lang-toggle" class="btn-top">[ LANG: ES ]</button>
+      <button id="btn-lang-toggle" class="btn-top">[ EN ]</button>
       <button id="btn-sound-toggle" class="btn-top">[ SOUND: ON ]</button>
       <button id="btn-night-toggle" class="btn-top">[ DÍA ]</button>
       <button id="btn-guide" class="btn-top">[ GUÍA ]</button>
@@ -850,23 +850,17 @@
       let takenPerkIdsInDraft = [];
 
       const LANGS = ['ES', 'EN', 'CA', 'FR', 'IT', 'DE'];
-      function detectBrowserLang() {
-        let navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-        let code = navLang.split('-')[0].toUpperCase();
-        if (LANGS.includes(code)) return code;
-        return 'EN';
-      }
       let currentLang = (function() {
         try {
           let saved = localStorage.getItem('einkgolf_lang');
           if (saved && LANGS.includes(saved)) return saved;
         } catch(e) {}
-        return detectBrowserLang();
+        return 'EN';
       })();
 
       const I18N = {
         ES: {
-          langBtn: "[ LANG: ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ ES ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ DÍA ]", night: "[ NOCHE ]", btnGuide: "[ GUÍA ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODO LIBRE ]", multiplayer: "[ MULTIJUGADOR ]",
           fairway: "Calle", green: "Green", rough: "Rough", water: "Agua", pine: "Pino", tree: "Árbol", sand: "Búnker", tee: "Salida", hole: "Hoyo", bird: "Pájaro",
@@ -910,7 +904,7 @@
           guideSec5Body: "• <b>Modo Libre:</b> Partidas rápidas personalizables (Normal, Avanzado, XXL).<br>• <b>Daily Course:</b> Circuito oficial diario de 9 hoyos con progresión de dificultad y ranking mundial (Daily Leaderboard con tus iniciales).<br>• <b>Multijugador Local:</b> Competición por turnos compartiendo dispositivo (2 a 4 jugadores) con draft de mejoras integrado." 
         },
         EN: {
-          langBtn: "[ LANG: EN ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ EN ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ DAY ]", night: "[ NIGHT ]", btnGuide: "[ GUIDE ]", ranking: "[ RANKING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREE MODE ]", multiplayer: "[ MULTIPLAYER ]",
           fairway: "Fairway", green: "Green", rough: "Rough", water: "Water", pine: "Pine", tree: "Tree", sand: "Bunker", tee: "Tee", hole: "Hole", bird: "Bird",
@@ -954,7 +948,7 @@
           guideSec5Body: "• <b>Free Mode:</b> Customizable quick games (Normal, Advanced, XXL).<br>• <b>Daily Course:</b> Official 9-hole daily circuit with difficulty scaling and global ranking.<br>• <b>Local Multiplayer:</b> Pass & Play turn-based competition (2-4 players) with draft perks." 
         },
         CA: {
-          langBtn: "[ LANG: CA ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ CA ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ DIA ]", night: "[ NIT ]", btnGuide: "[ GUIA ]", ranking: "[ RÀNQUING ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LLIURE ]", multiplayer: "[ MULTIJUGADOR ]",
           fairway: "Carrer", green: "Green", rough: "Rough", water: "Aigua", pine: "Pi", tree: "Arbre", sand: "Búnquer", tee: "Sortida", hole: "Forat", bird: "Ocell",
@@ -998,7 +992,7 @@
           guideSec5Body: "• <b>Mode Lliure:</b> Partides ràpides personalizables (Normal, Avançat, XXL).<br>• <b>Daily Course:</b> Circuit oficial diari de 9 forats amb progressió de dificultat i rànquing mundial.<br>• <b>Multijugador Local:</b> Competició per torns compartint dispositiu (2 a 4 jugadors)." 
         },
         FR: {
-          langBtn: "[ LANG: FR ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ FR ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ JOUR ]", night: "[ NUIT ]", btnGuide: "[ GUIDE ]", ranking: "[ CLASSEMENT ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODE LIBRE ]", multiplayer: "[ MULTIJOUEUR ]",
           fairway: "Fairway", green: "Green", rough: "Rough", water: "Eau", pine: "Pin", tree: "Arbre", sand: "Bunker", tee: "Départ", hole: "Trou", bird: "Oiseau",
@@ -1042,7 +1036,7 @@
           guideSec5Body: "• <b>Mode Libre:</b> Parties rapides personnalisables (Normal, Avancé, XXL).<br>• <b>Daily Course:</b> Parcours officiel quotidien de 9 trous avec progression et classement mondial.<br>• <b>Multi-joueurs Local:</b> Compétition par tours en passant l'appareil (2-4 joueurs)." 
         },
         IT: {
-          langBtn: "[ LANG: IT ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ IT ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ GIORNO ]", night: "[ NOTTE ]", btnGuide: "[ GUIDA ]", ranking: "[ CLASSIFICA ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ MODALITÀ LIBERA ]", multiplayer: "[ MULTIGIOCA ]",
           fairway: "Pista", green: "Green", rough: "Rough", water: "Acqua", pine: "Pino", tree: "Albero", sand: "Bunker", tee: "Partenza", hole: "Buca", bird: "Uccello",
@@ -1086,7 +1080,7 @@
           guideSec5Body: "• <b>Modalità Libera:</b> Partite rapide personalizzabili (Normale, Avanzato, XXL).<br>• <b>Daily Course:</b> Circuito ufficiale giornaliero di 9 buche con classifica mondiale.<br>• <b>Multigiocatore Locale:</b> Competizione a turni passando il telefono (2-4 giocatori)." 
         },
         DE: {
-          langBtn: "[ LANG: DE ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
+          langBtn: "[ DE ]", soundOn: "[ SOUND: ON ]", soundOff: "[ SOUND: OFF ]",
           day: "[ TAG ]", night: "[ NACHT ]", btnGuide: "[ ANLEITUNG ]", ranking: "[ RANGLISTE ]",
           dailyCourse: "[ DAILY COURSE ]", freeMode: "[ FREIER MODUS ]", multiplayer: "[ MEHRSPIELER ]",
           fairway: "Fairway", green: "Green", rough: "Rough", water: "Wasser", pine: "Kiefer", tree: "Baum", sand: "Bunker", tee: "Abschlag", hole: "Loch", bird: "Vogel",
@@ -2748,19 +2742,18 @@
           .then(function(response) {
             if (!response.ok) throw new Error("HTTP " + response.status);
             alert(t('recordSubmitted'));
-          })
-          .catch(function(err) {
-            console.error("Error enviando récord online:", err);
-            saveLocalScore(initials, totalStrokes, dateTag);
-            alert(t('recordSavedLocal'));
-          })
-          .finally(function() {
-            submitBtn.disabled = false;
             document.getElementById('online-submission-box').style.display = 'none';
             activeLbTab = 'today';
             document.getElementById('tab-today').classList.add('active-tab');
             document.getElementById('tab-yesterday').classList.remove('active-tab');
             loadLeaderboardOnline();
+          })
+          .catch(function(err) {
+            console.error("Error enviando récord online:", err);
+            alert("Error al conectar con el servidor. No se pudo guardar la puntuación online.");
+          })
+          .finally(function() {
+            submitBtn.disabled = false;
           });
       }
 
@@ -2798,10 +2791,8 @@
             renderLeaderboardTable(entries, container);
           })
           .catch(function(err) {
-            console.warn("Cargando backup local:", err);
-            let localEntries = getLocalLeaderboard();
-            let filtered = localEntries.filter(item => item && item.name && String(item.name).split('_')[1] === targetDateStr);
-            renderLeaderboardTable(filtered, container);
+            console.error("Error al cargar la clasificación online:", err);
+            container.innerHTML = "<p style='font-size:0.75rem;padding:6px;color:red;'>Error al cargar el ranking online.</p>";
           });
       }
 
