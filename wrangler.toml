@@ -3,6 +3,7 @@ compatibility_date = "2024-03-20"
 
 [assets]
 directory = "."
+exclude = ["node_modules/**", "drizzle/**", ".git/**"]
 
 [[d1_databases]]
 binding = "DB"
