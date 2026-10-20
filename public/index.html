@@ -2271,9 +2271,11 @@
           {x: -1, y: -1}, {x: 1, y: -1}, {x: -1, y: 1}, {x: 1, y: 1}
         ];
 
+        // La bola avanza casilla a casilla en cada dirección y se detiene en la última
+        // casilla libre antes de: un árbol/pino (salvo con Atajo Arboleda), un pájaro o
+        // el borde del mapa. Si no puede avanzar ni una casilla, esa dirección no es válida.
         dirs.forEach(function(d) {
-          let blockedByBird = false;
-          let birdBlockedStep = -1;
+          let lastFree = null;
 
           for (let step = 1; step <= distance; step++) {
             let nx = currentPos.x + d.x * step;
@@ -2281,36 +2283,16 @@
 
             if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) break;
 
-            if (!activePerks.woodlandShortcut && (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS)) {
-              break;
-            }
+            let isTree = (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS);
+            if (isTree && !activePerks.woodlandShortcut) break;
 
-            let hasBird = birds.some(b => b.x === nx && b.y === ny);
-            if (hasBird) {
-              blockedByBird = true;
-              birdBlockedStep = step - 1;
-              break;
-            }
+            if (birds.some(b => b.x === nx && b.y === ny)) break;
+
+            lastFree = { x: nx, y: ny };
           }
 
-          if (blockedByBird) {
-            if (birdBlockedStep > 0) {
-              let bx = currentPos.x + d.x * birdBlockedStep;
-              let by = currentPos.y + d.y * birdBlockedStep;
-              if (!validMoves.some(m => m.x === bx && m.y === by)) {
-                validMoves.push({ x: bx, y: by });
-              }
-            }
-          } else {
-            let targetX = currentPos.x + d.x * distance;
-            let targetY = currentPos.y + d.y * distance;
-            if (targetX >= 0 && targetX < COLS && targetY >= 0 && targetY < ROWS) {
-              if (activePerks.woodlandShortcut || (map[targetY][targetX] !== TERRAIN.PINE && map[targetY][targetX] !== TERRAIN.DECIDUOUS)) {
-                if (!validMoves.some(m => m.x === targetX && m.y === targetY)) {
-                  validMoves.push({ x: targetX, y: targetY });
-                }
-              }
-            }
+          if (lastFree && !validMoves.some(m => m.x === lastFree.x && m.y === lastFree.y)) {
+            validMoves.push(lastFree);
           }
         });
       }
