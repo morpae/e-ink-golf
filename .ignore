@@ -1,7 +1,9 @@
 node_modules
 .git
 .github
+.wrangler
 drizzle
-package*.json
+package.json
+package-lock.json
 tsconfig.json
 wrangler.toml
