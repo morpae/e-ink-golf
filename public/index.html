@@ -2414,7 +2414,11 @@
             if (r === 0 && c === 0) continue;
             let nx = currentPos.x + c, ny = currentPos.y + r;
             if (nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS) {
-              if (activePerks.woodlandShortcut || (map[ny][nx] !== TERRAIN.PINE && map[ny][nx] !== TERRAIN.DECIDUOUS)) {
+              let isTree = (map[ny][nx] === TERRAIN.PINE || map[ny][nx] === TERRAIN.DECIDUOUS);
+              let blockedDest = (isTree && !activePerks.woodlandShortcut) || birds.some(b => b.x === nx && b.y === ny);
+              // Un obstáculo en el camino bloquea el putt: la bola solo llega hasta justo antes,
+              // y esa casilla anterior ya está entre los destinos si está dentro del alcance.
+              if (!blockedDest && isLineClear(currentPos.x, currentPos.y, nx, ny)) {
                 validMoves.push({ x: nx, y: ny });
               }
             }
@@ -2819,14 +2823,17 @@
         return false;
       }
 
+      // Recorre la línea entre dos casillas (sin contar origen ni destino) y devuelve false si
+      // hay un árbol/pino (salvo con Atajo Arboleda) o un pájaro que la bloquee.
       function isLineClear(x0, y0, x1, y1) {
         let activePerks = getActivePlayerPerks();
-        if (activePerks.woodlandShortcut) return true;
         let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
         let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy, cx = x0, cy = y0;
         while (true) {
           if ((cx !== x0 || cy !== y0) && (cx !== x1 || cy !== y1)) {
-            if (map[cy][cx] === TERRAIN.PINE || map[cy][cx] === TERRAIN.DECIDUOUS) return false;
+            let isTree = (map[cy][cx] === TERRAIN.PINE || map[cy][cx] === TERRAIN.DECIDUOUS);
+            if (isTree && !activePerks.woodlandShortcut) return false;
+            if (birds.some(b => b.x === cx && b.y === cy)) return false;
           }
           if (cx === x1 && cy === y1) break;
           let e2 = 2 * err;
