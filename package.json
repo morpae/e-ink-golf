@@ -2,14 +2,19 @@
   "name": "e-inkgolf",
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:remote": "wrangler d1 migrations apply eink-golf-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply eink-golf-db --local"
+  },
   "dependencies": {
-    "@netlify/database": "^2.0.1",
-    "better-sqlite3": "^11.10.0",
-    "drizzle-orm": "^1.0.0-beta.22"
+    "drizzle-orm": "^0.44.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261019.1",
-    "drizzle-kit": "^0.31.11",
-    "wrangler": "^4.151.3"
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "drizzle-kit": "^0.31.4",
+    "wrangler": "^4.0.0"
   }
 }
