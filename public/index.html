@@ -743,8 +743,8 @@
             <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-rough" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Rough:</b> Resta -1 casilla a tu tirada.</span></div>
             <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-sand" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Búnker:</b> Limita tirada máxima a 3.</span></div>
             <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-water" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Agua:</b> +1 golpe y penalización.</span></div>
-            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-pine" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pino:</b> Obstáculo natural bloqueante.</span></div>
-            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tree" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Árbol:</b> Vegetación densa de ruta.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-pine" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pino:</b> Bloquea el tiro: la bola se detiene justo delante.</span></div>
+            <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-tree" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Árbol:</b> Igual que el pino. Los bordes del mapa también frenan la bola.</span></div>
             <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-bird" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Pájaro:</b> Minijuego de reflejos.</span></div>
             <div style="display:flex; align-items:center; gap:5px;"><canvas id="g-icon-mystery" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Casilla ?:</b> Evento aleatorio sorpresa.</span></div>
             <div style="display:flex; align-items:center; gap:5px; grid-column: span 2;"><canvas id="g-icon-hole" width="16" height="16" style="border:1px solid #000;"></canvas><span><b>Hoyo:</b> Meta final del recorrido.</span></div>
@@ -891,8 +891,8 @@
           gRough: "<b>Rough:</b> Resta -1 casilla a tu tirada.",
           gSand: "<b>Búnker:</b> Limita tirada máxima a 3.",
           gWater: "<b>Agua:</b> +1 golpe y penalización.",
-          gPine: "<b>Pino:</b> Obstáculo natural bloqueante.",
-          gTree: "<b>Árbol:</b> Vegetación densa de ruta.",
+          gPine: "<b>Pino:</b> Bloquea el tiro: la bola se detiene justo delante.",
+          gTree: "<b>Árbol:</b> Igual que el pino. Los bordes del mapa también frenan la bola.",
           gBird: "<b>Pájaro:</b> Minijuego de reflejos.",
           gMystery: "<b>Casilla ?:</b> Evento aleatorio sorpresa.",
           gHole: "<b>Hoyo:</b> Meta final del recorrido.",
@@ -935,8 +935,8 @@
           gRough: "<b>Rough:</b> Subtracts -1 tile from roll.",
           gSand: "<b>Bunker:</b> Limits max roll to 3.",
           gWater: "<b>Water:</b> +1 stroke penalty.",
-          gPine: "<b>Pine:</b> Blocking natural obstacle.",
-          gTree: "<b>Tree:</b> Dense route vegetation.",
+          gPine: "<b>Pine:</b> Blocks the shot: the ball stops right in front.",
+          gTree: "<b>Tree:</b> Same as pine. Map edges also stop the ball.",
           gBird: "<b>Bird:</b> Reflex minigame.",
           gMystery: "<b>Tile ?:</b> Random surprise event.",
           gHole: "<b>Hole:</b> Final destination.",
@@ -979,8 +979,8 @@
           gRough: "<b>Rough:</b> Resta -1 casella a la tirada.",
           gSand: "<b>Búnquer:</b> Limita tirada màxima a 3.",
           gWater: "<b>Aigua:</b> +1 cop de penalització.",
-          gPine: "<b>Pi:</b> Obstacle natural bloquejant.",
-          gTree: "<b>Arbre:</b> Vegetació densa de ruta.",
+          gPine: "<b>Pi:</b> Bloqueja el tir: la bola s'atura just davant.",
+          gTree: "<b>Arbre:</b> Igual que el pi. Les vores del mapa també frenen la bola.",
           gBird: "<b>Ocell:</b> Minijoc de reflexos.",
           gMystery: "<b>Casella ?:</b> Esdeveniment aleatori sorpresa.",
           gHole: "<b>Forat:</b> Objectiu final del recorregut.",
@@ -1023,8 +1023,8 @@
           gRough: "<b>Rough:</b> Soustrait -1 case au lancer.",
           gSand: "<b>Bunker:</b> Limite le lancer max à 3.",
           gWater: "<b>Eau:</b> +1 coup de pénalité.",
-          gPine: "<b>Pin:</b> Obstacle naturel bloquant.",
-          gTree: "<b>Arbre:</b> Végétation dense de route.",
+          gPine: "<b>Pin:</b> Bloque le tir : la balle s'arrête juste devant.",
+          gTree: "<b>Arbre:</b> Comme le pin. Les bords de la carte arrêtent aussi la balle.",
           gBird: "<b>Oiseau:</b> Mini-jeu de réflexes.",
           gMystery: "<b>Case ?:</b> Événement mystère aléatoire.",
           gHole: "<b>Trou:</b> Destination finale.",
@@ -1067,8 +1067,8 @@
           gRough: "<b>Rough:</b> Sottrae -1 casella al lancio.",
           gSand: "<b>Bunker:</b> Limita il lancio massimo a 3.",
           gWater: "<b>Acqua:</b> +1 colpo di penalità.",
-          gPine: "<b>Pino:</b> Ostacolo naturale bloccante.",
-          gTree: "<b>Albero:</b> Vegetazione densa.",
+          gPine: "<b>Pino:</b> Blocca il tiro: la palla si ferma subito davanti.",
+          gTree: "<b>Albero:</b> Come il pino. Anche i bordi della mappa fermano la palla.",
           gBird: "<b>Uccello:</b> Minigioco di riflessi.",
           gMystery: "<b>Casella ?:</b> Evento a sorpresa casuale.",
           gHole: "<b>Buca:</b> Obiettivo finale.",
@@ -1111,8 +1111,8 @@
           gRough: "<b>Rough:</b> Zieht -1 Feld vom Wurf ab.",
           gSand: "<b>Bunker:</b> Begrenzt max. Wurf auf 3.",
           gWater: "<b>Wasser:</b> +1 Strafschlag.",
-          gPine: "<b>Kiefer:</b> Blockierendes Hindernis.",
-          gTree: "<b>Baum:</b> Dichte Dschungelvegetation.",
+          gPine: "<b>Kiefer:</b> Blockiert den Schlag: der Ball bleibt direkt davor liegen.",
+          gTree: "<b>Baum:</b> Wie die Kiefer. Auch der Kartenrand stoppt den Ball.",
           gBird: "<b>Vogel:</b> Reflex-Minispiel.",
           gMystery: "<b>Feld ?:</b> Zufälliges Ereignis.",
           gHole: "<b>Loch:</b> Endziel des Kurses.",
