@@ -12,3 +12,7 @@ binding = "DB"
 database_name = "eink-golf-db"
 database_id = "5bbfc819-cce9-486d-8fbe-9776f1c2b921"
 migrations_dir = "migrations"
+
+
+[observability]
+enabled = true
